@@ -1,5 +1,7 @@
 {
-  "extends": "eslint-config",
+  "extends": [
+	"@oskarwrobel/eslint-config"
+  ],
   "env": {
 	"browser": true
   }
