@@ -9,7 +9,7 @@ const HtmlWebpackPlugin = require( 'html-webpack-plugin' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 
 module.exports = ( env = {} ) => {
-	const projectDir = path.dir( __filename );
+	const projectDir = path.dirname( __filename );
 
 	const main = [ path.join( projectDir, 'src', 'scripts', 'app.ts' ) ];
 
@@ -65,7 +65,7 @@ module.exports = ( env = {} ) => {
 					]
 				},
 				{
-					test: /.(png|jpg|jpeg|gif|svg|woff|woff2|wav|mp3|m4a)$/,
+					test: /.(png|jpg|jpeg|gif|svg)$/,
 					use: 'file-loader'
 				},
 				{
