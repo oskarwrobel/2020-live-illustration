@@ -1,4 +1,4 @@
-import { throttle } from 'lodash';
+import { throttle } from 'lodash-es';
 import setProportions from './utils/setproportions';
 import parallax from './utils/parallax';
 import blinds from './blinds';
@@ -31,7 +31,7 @@ parallax( {
 		{ element: hall, friction: 0.05 },
 		{ element: dog, friction: 0.065 },
 		{ element: wall, friction: 0.03 },
-		{ element: tv, friction: 0.05 },
+		{ element: tv, friction: 0.05 }
 	]
 } );
 

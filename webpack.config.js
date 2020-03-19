@@ -9,14 +9,14 @@ const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 
 module.exports = ( env = {} ) => {
 	const projectDir = path.dirname( __filename );
-	const main = [ path.join( projectDir, 'src', 'scripts', 'app.ts' ) ];
+	const entry = [ path.join( projectDir, 'src', 'scripts', 'app.ts' ) ];
 
 	if ( env.analytics ) {
-		main.push( path.join( projectDir, 'src', 'scripts', 'analytics.js' ) );
+		entry.push( path.join( projectDir, 'src', 'scripts', 'analytics.js' ) );
 	}
 
 	return {
-		entry: { main },
+		entry,
 
 		output: {
 			filename: '[name].[contenthash].js',
@@ -24,28 +24,25 @@ module.exports = ( env = {} ) => {
 			publicPath: '/'
 		},
 
+		context: path.resolve( projectDir ),
+
 		resolve: {
-			// Add `.ts` and `.tsx` as a resolvable extension.
 			extensions: [ '.ts' ]
 		},
 
 		module: {
 			rules: [
-
 				{
-					test: /\.ts$/,
+					test: /\.(js|ts)$/,
 					exclude: /node_modules/,
 					use: [
 						{
-							loader: 'ts-loader'
+							loader: 'ts-loader',
+							options: {
+								context: projectDir
+							}
 						}
 					]
-				},
-				// All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-				{
-					enforce: 'pre',
-					test: /\.js$/,
-					loader: 'source-map-loader'
 				},
 				{
 					test: /\.css$/,
@@ -86,7 +83,6 @@ module.exports = ( env = {} ) => {
 
 		plugins: [
 			new HtmlWebpackPlugin( {
-				chunks: [ 'main' ],
 				template: path.join( projectDir, 'src', 'index.html' ),
 				filename: '2020.html'
 			} ),

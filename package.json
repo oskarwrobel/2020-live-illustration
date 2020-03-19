@@ -11,12 +11,12 @@
   },
   "author": "Oskar Wrobel <kontakt@oskarwrobel.pl> (https://www.oskarwrobel.pl/)",
   "dependencies": {
-    "lodash": "^4.17.15"
+    "lodash-es": "^4.17.15"
   },
   "devDependencies": {
     "@oskarwrobel/eslint-config": "git@github.com:oskarwrobel/eslint-config.git#1.0.0",
     "@types/eslint": "^6.1.8",
-    "@types/lodash": "^4.14.149",
+    "@types/lodash-es": "^4.17.3",
     "css-loader": "^3.4.2",
     "eslint": "^6.8.0",
     "file-loader": "^5.1.0",
