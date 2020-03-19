@@ -1,0 +1,56 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	background: #000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.illustration {
+	width: 100%;
+	height: 100%;
+	background: #fff;
+	position: relative;
+	overflow: hidden;
+
+	.scene {
+		position: absolute;
+		transition: transform .3s ease-out;
+	}
+
+	&.animation-in-progress {
+		.scene {
+			will-change: transform;
+		}
+	}
+}
+
+#hall {
+	top: 0;
+	left: -3%;
+	height: 100%;
+}
+
+#dog {
+	left: 4%;
+	bottom: 0;
+	height: 37%;
+}
+
+#wall {
+	right: -7%;
+	height: 100%;
+}
+
+#tv {
+	right: -3.8%;
+	bottom: 0;
+	width: 75%;
+	pointer-events: none;
+
+	& > g > g {
+		pointer-events: auto;
+	}
+}
