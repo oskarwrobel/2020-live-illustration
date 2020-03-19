@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "lint": "eslint --quiet '**/*.js'",
+    "lint": "eslint --quiet '**/*.ts'",
     "clean": "rm -rf ./dist",
     "build": "npm run clean && webpack --mode development",
     "build:production": "npm run clean && webpack --mode production --optimize-minimize",
