@@ -4,13 +4,11 @@
 
 const path = require( 'path' );
 const { DefinePlugin } = require( 'webpack' );
-const { CleanWebpackPlugin } = require( 'clean-webpack-plugin' );
 const HtmlWebpackPlugin = require( 'html-webpack-plugin' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 
 module.exports = ( env = {} ) => {
 	const projectDir = path.dirname( __filename );
-
 	const main = [ path.join( projectDir, 'src', 'scripts', 'app.ts' ) ];
 
 	if ( env.analytics ) {
@@ -26,10 +24,16 @@ module.exports = ( env = {} ) => {
 			publicPath: '/'
 		},
 
+		resolve: {
+			// Add `.ts` and `.tsx` as a resolvable extension.
+			extensions: [ '.ts' ]
+		},
+
 		module: {
 			rules: [
+
 				{
-					test: /\.ts(x?)$/,
+					test: /\.ts$/,
 					exclude: /node_modules/,
 					use: [
 						{
@@ -46,7 +50,7 @@ module.exports = ( env = {} ) => {
 				{
 					test: /\.css$/,
 					use: [
-						'style-loader',
+						MiniCssExtractPlugin.loader,
 						{
 							loader: 'css-loader',
 							options: {
@@ -81,7 +85,6 @@ module.exports = ( env = {} ) => {
 		},
 
 		plugins: [
-			new CleanWebpackPlugin(),
 			new HtmlWebpackPlugin( {
 				chunks: [ 'main' ],
 				template: path.join( projectDir, 'src', 'index.html' )
