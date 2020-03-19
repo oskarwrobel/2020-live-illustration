@@ -87,7 +87,8 @@ module.exports = ( env = {} ) => {
 		plugins: [
 			new HtmlWebpackPlugin( {
 				chunks: [ 'main' ],
-				template: path.join( projectDir, 'src', 'index.html' )
+				template: path.join( projectDir, 'src', 'index.html' ),
+				filename: '2020.html'
 			} ),
 			new MiniCssExtractPlugin( {
 				filename: '[name].[contenthash].css'
