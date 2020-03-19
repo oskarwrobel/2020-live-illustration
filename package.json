@@ -4,8 +4,9 @@
   "description": "",
   "scripts": {
     "lint": "eslint --quiet '**/*.js'",
-    "build": "webpack --mode development",
-    "build:production": "webpack --mode production --optimize-minimize",
+    "clean": "rm -rf ./dist",
+    "build": "npm run clean && webpack --mode development",
+    "build:production": "npm run clean && webpack --mode production --optimize-minimize",
     "serve": "http-server ./dist/"
   },
   "author": "Oskar Wrobel <kontakt@oskarwrobel.pl> (https://www.oskarwrobel.pl/)",
