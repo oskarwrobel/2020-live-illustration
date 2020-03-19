@@ -3,6 +3,7 @@ import animate, { easeOutQuad, Animate } from './utils/animate';
 const blinds: SVGGElement[] = Array.from( document.querySelectorAll( '#blinds > g' ) );
 const singleShift = 25;
 const maxShift = 18 * singleShift + 10;
+const duration = 1800;
 
 let animation: Animate;
 let currentValue: number;
@@ -12,7 +13,7 @@ function openBlinds(): void {
 	animation = animate( {
 		from: currentValue,
 		to: maxShift,
-		duration: 2000,
+		duration,
 		easing: easeOutQuad,
 		onUpdate( value: number ) {
 			currentValue = value;
@@ -32,7 +33,7 @@ function closeBlinds(): void {
 	animation = animate( {
 		from: currentValue,
 		to: 0,
-		duration: 2000,
+		duration,
 		easing: easeOutQuad,
 		onUpdate( value: number ) {
 			currentValue = value;
