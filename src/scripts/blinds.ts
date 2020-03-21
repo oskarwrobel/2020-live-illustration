@@ -1,9 +1,9 @@
 import animate, { easeOutQuad, Animate } from './utils/animate';
 
 const blinds: SVGGElement[] = Array.from( document.querySelectorAll( '#blinds > g' ) );
-const singleShift = 25;
-const maxShift = 18 * singleShift + 10;
-const duration = 1800;
+const singleShift = 26;
+const maxShift = 17 * singleShift + 14;
+const duration = 1200;
 
 let animation: Animate;
 let currentValue: number;
