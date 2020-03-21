@@ -1,4 +1,5 @@
-import { random } from 'lodash-es';
+import { random, throttle } from 'lodash-es';
+import lookAtCursor from './utils/lookatcursor';
 
 let leftEyeOpened: HTMLElement;
 let leftEyeClosed: HTMLElement;
@@ -9,34 +10,28 @@ let timerId: number;
 let isLeftEyeHovered = false;
 let isRightEyeHovered = false;
 
+const eyeBounds = {
+	maxShiftTop: -.11,
+	maxShiftBottom: .16,
+	maxShiftLeft: -.27,
+	maxShiftRight: .27
+};
+
 export default function toodEyes(): void {
 	leftEyeOpened = document.querySelector( '#left-eye-opened' );
 	leftEyeClosed = document.querySelector( '#left-eye-closed' );
 	rightEyeOpened = document.querySelector( '#right-eye-opened' );
 	rightEyeClosed = document.querySelector( '#right-eye-closed' );
 
-	leftEyeClosed.addEventListener( 'mouseenter', () => {
-		closeLeftEye();
-		isLeftEyeHovered = true;
-	} );
-	leftEyeClosed.addEventListener( 'mouseleave', () => {
-		openLeftEye();
-		openRightEye();
-		isLeftEyeHovered = false;
-		resetTimer();
-	} );
+	const leftPupil = leftEyeOpened.querySelector( 'circle' );
+	const rightPupil = rightEyeOpened.querySelector( 'circle' );
 
-	rightEyeClosed.addEventListener( 'mouseenter', () => {
-		closeRightEye();
-		isRightEyeHovered = true;
-	} );
-	rightEyeClosed.addEventListener( 'mouseleave', () => {
-		openRightEye();
-		openLeftEye();
-		isRightEyeHovered = false;
-		resetTimer();
-	} );
+	document.addEventListener( 'mousemove', throttle( ( evt: MouseEvent ) => {
+		lookAtCursor( evt.clientX, evt.clientY, Object.assign( { element: leftPupil }, eyeBounds ) );
+		lookAtCursor( evt.clientX, evt.clientY, Object.assign( { element: rightPupil }, eyeBounds ) );
+	}, 20, { leading: true } ) );
 
+	enableCloseOnHover();
 	startBlinking();
 }
 
@@ -85,4 +80,30 @@ function stopBlinking(): void {
 function resetTimer(): void {
 	stopBlinking();
 	startBlinking();
+}
+
+function enableCloseOnHover(): void {
+	leftEyeClosed.addEventListener( 'mouseenter', () => {
+		closeLeftEye();
+		isLeftEyeHovered = true;
+	} );
+
+	leftEyeClosed.addEventListener( 'mouseleave', () => {
+		openLeftEye();
+		openRightEye();
+		isLeftEyeHovered = false;
+		resetTimer();
+	} );
+
+	rightEyeClosed.addEventListener( 'mouseenter', () => {
+		closeRightEye();
+		isRightEyeHovered = true;
+	} );
+
+	rightEyeClosed.addEventListener( 'mouseleave', () => {
+		openRightEye();
+		openLeftEye();
+		isRightEyeHovered = false;
+		resetTimer();
+	} );
 }

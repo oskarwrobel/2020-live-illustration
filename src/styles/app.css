@@ -65,4 +65,8 @@ html, body {
 #left-eye-opened,
 #right-eye-opened {
 	pointer-events: none;
+
+	circle {
+		transition: transform .2s;
+	}
 }
