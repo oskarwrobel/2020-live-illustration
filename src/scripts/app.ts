@@ -2,6 +2,7 @@ import { throttle } from 'lodash-es';
 import setProportions from './utils/setproportions';
 import parallax from './utils/parallax';
 import blinds from './blinds';
+import toodEyes from './toodeyes';
 import '../styles/app.css';
 
 const optimalWidth = 1280;
@@ -11,6 +12,7 @@ const illustration = document.querySelector( '.illustration' ) as HTMLDivElement
 const hall = document.querySelector( '#hall' ) as SVGAElement;
 const dog = document.querySelector( '#dog' ) as SVGAElement;
 const wall = document.querySelector( '#wall' ) as SVGAElement;
+const lamp = document.querySelector( '#lamp' ) as SVGAElement;
 const tv = document.querySelector( '#tv' ) as SVGAElement;
 
 // Keeps proper proportions.
@@ -31,9 +33,10 @@ parallax( {
 		{ element: hall, friction: 0.05 },
 		{ element: dog, friction: 0.065 },
 		{ element: wall, friction: 0.03 },
+		{ element: lamp, friction: 0.2 },
 		{ element: tv, friction: 0.05 }
 	]
 } );
 
-// Open window blinds.
 blinds();
+toodEyes();
