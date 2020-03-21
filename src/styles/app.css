@@ -6,6 +6,7 @@ html, body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	color: #fff;
 }
 
 .illustration {
@@ -34,14 +35,20 @@ html, body {
 }
 
 #dog {
-	left: 4%;
+	left: 5%;
 	bottom: 0;
 	height: 37%;
 }
 
 #wall {
-	right: -7%;
+	right: -6%;
 	height: 100%;
+}
+
+#lamp {
+	height: 70%;
+	bottom: 10%;
+	right: 25%;
 }
 
 #tv {
@@ -53,4 +60,9 @@ html, body {
 	& > g > g {
 		pointer-events: auto;
 	}
+}
+
+#left-eye-opened,
+#right-eye-opened {
+	pointer-events: none;
 }
