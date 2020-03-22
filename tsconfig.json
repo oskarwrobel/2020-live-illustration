@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "es6",
-    "target": "es6",
+    "target": "ESNext",
     "allowJs": true,
     "noImplicitAny": true,
     "sourceMap": true,
