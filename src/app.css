@@ -1,0 +1,29 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	background: #000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #fff;
+}
+
+.illustration {
+	width: 100%;
+	height: 100%;
+	background: #fff;
+	position: relative;
+	overflow: hidden;
+
+	.scene {
+		position: absolute;
+		transition: transform .3s ease-out;
+	}
+
+	&.animation-in-progress {
+		.scene {
+			will-change: transform;
+		}
+	}
+}

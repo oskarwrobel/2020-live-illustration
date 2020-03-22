@@ -1,4 +1,4 @@
-import animate, { easeOutQuad, Animate } from './utils/animate';
+import animate, { easeOutQuad, Animate } from '../../utils/animate';
 
 const singleShift = 26;
 const maxShift = 17 * singleShift + 14;

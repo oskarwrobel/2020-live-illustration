@@ -9,10 +9,10 @@ const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 
 module.exports = ( env = {} ) => {
 	const projectDir = path.dirname( __filename );
-	const entry = [ path.join( projectDir, 'src', 'scripts', 'app.ts' ) ];
+	const entry = [ path.join( projectDir, 'src', 'app.ts' ) ];
 
 	if ( env.analytics ) {
-		entry.push( path.join( projectDir, 'src', 'scripts', 'analytics.js' ) );
+		entry.push( path.join( projectDir, 'src', 'analytics.js' ) );
 	}
 
 	return {

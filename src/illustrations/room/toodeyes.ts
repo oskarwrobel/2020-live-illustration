@@ -1,5 +1,5 @@
 import { random, throttle } from 'lodash-es';
-import lookAtCursor from './utils/lookatcursor';
+import lookAtCursor from '../../utils/lookatcursor';
 
 let leftEyeOpened: HTMLElement;
 let leftEyeClosed: HTMLElement;

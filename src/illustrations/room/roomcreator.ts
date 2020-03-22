@@ -1,21 +1,19 @@
-import Illustrations, { Illustration } from './utils/illustrations';
-import createSvgElement from './utils/createsvgelement';
-import parallax from './utils/parallax';
+import Illustrations, { Illustration } from '../../utils/illustrations';
+
+import createSvgElement from '../../utils/createsvgelement';
+import parallax from '../../utils/parallax';
 import blinds from './blinds';
 import toodEyes from './toodeyes';
 
-import hallSvgString from '../images/hall.svg';
-import dogSvgString from '../images/dog.svg';
-import wallSvgString from '../images/wall.svg';
-import lampSvgString from '../images/lamp.svg';
-import tvSvgString from '../images/tv.svg';
+import hallSvgString from './images/hall.svg';
+import dogSvgString from './images/dog.svg';
+import wallSvgString from './images/wall.svg';
+import lampSvgString from './images/lamp.svg';
+import tvSvgString from './images/tv.svg';
 
-import '../styles/app.css';
+import './room.css';
 
-const wrapperElement = document.querySelector( '.illustration' ) as HTMLDivElement;
-const illustrations = new Illustrations( wrapperElement, '1280x720' );
-
-illustrations.add( 'room', ( illustrations: Illustrations ) => {
+export default function roomIllustrationCreator( illustrations: Illustrations ): Illustration {
 	const element = illustrations.element;
 
 	const hall = createSvgElement( hallSvgString, { id: 'hall', classes: 'scene' }, element );
@@ -44,6 +42,4 @@ illustrations.add( 'room', ( illustrations: Illustrations ) => {
 			[ hall, dog, wall, lamp, tv ].forEach( el => el.remove() );
 		}
 	} as Illustration;
-} );
-
-illustrations.show( 'room' );
+}

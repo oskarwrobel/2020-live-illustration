@@ -43,7 +43,7 @@
   },
   "eslintIgnore": [
     "dist/**",
-    "src/scripts/analytics.js"
+    "src/analytics.js"
   ],
   "husky": {
     "hooks": {
