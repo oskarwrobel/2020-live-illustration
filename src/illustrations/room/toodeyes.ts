@@ -17,7 +17,7 @@ const eyeBounds = {
 	maxShiftRight: .27
 };
 
-export default function toodEyes(): void {
+export default function toodEyes(): () => void {
 	leftEyeOpened = document.querySelector( '#left-eye-opened' );
 	leftEyeClosed = document.querySelector( '#left-eye-closed' );
 	rightEyeOpened = document.querySelector( '#right-eye-opened' );
@@ -26,13 +26,21 @@ export default function toodEyes(): void {
 	const leftPupil = leftEyeOpened.querySelector( 'circle' );
 	const rightPupil = rightEyeOpened.querySelector( 'circle' );
 
-	document.addEventListener( 'mousemove', throttle( ( evt: MouseEvent ) => {
+	const throttledMouseMoveHandler = throttle( mouseMoveHandler, 20, { leading: true } );
+
+	document.addEventListener( 'mousemove', throttledMouseMoveHandler );
+
+	function mouseMoveHandler( evt: MouseEvent ): void {
 		lookAtCursor( evt.clientX, evt.clientY, Object.assign( { element: leftPupil }, eyeBounds ) );
 		lookAtCursor( evt.clientX, evt.clientY, Object.assign( { element: rightPupil }, eyeBounds ) );
-	}, 20, { leading: true } ) );
+	}
 
 	enableCloseOnHover();
 	startBlinking();
+
+	return function destroy(): void {
+		document.removeEventListener( 'mousemove', throttledMouseMoveHandler );
+	};
 }
 
 function closeLeftEye(): void {

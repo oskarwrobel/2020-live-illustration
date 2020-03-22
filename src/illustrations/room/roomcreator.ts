@@ -23,7 +23,7 @@ export default function roomIllustrationCreator( illustrations: Illustrations ):
 	const tv = createSvgElement( tvSvgString, { id: 'tv', classes: 'scene' }, element );
 
 	// Initialize parallax.
-	parallax( {
+	const parallaxDestructor = parallax( {
 		scene: illustrations.element,
 		items: [
 			{ element: hall, friction: 0.05 },
@@ -34,12 +34,18 @@ export default function roomIllustrationCreator( illustrations: Illustrations ):
 		]
 	} );
 
+	document.querySelector( '#oscar-small' ).addEventListener( 'click', () => {
+		illustrations.show( 'oscar' );
+	} );
+
 	blinds();
-	toodEyes();
+	const toodEyesDestructor = toodEyes();
 
 	return {
-		destroy: () => {
+		destroy() {
 			[ hall, dog, wall, lamp, tv ].forEach( el => el.remove() );
+			parallaxDestructor();
+			toodEyesDestructor();
 		}
 	} as Illustration;
 }
