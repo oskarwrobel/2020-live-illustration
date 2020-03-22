@@ -1,19 +1,27 @@
 import { throttle } from 'lodash-es';
 import setProportions from './utils/setproportions';
+import createSvgElement from './utils/createsvgelement';
 import parallax from './utils/parallax';
 import blinds from './blinds';
 import toodEyes from './toodeyes';
+
 import '../styles/app.css';
+
+import hallSvgString from '../images/hall.svg';
+import dogSvgString from '../images/dog.svg';
+import wallSvgString from '../images/wall.svg';
+import lampSvgString from '../images/lamp.svg';
+import tvSvgString from '../images/tv.svg';
 
 const optimalWidth = 1280;
 const optimalHeight = 720;
 
 const illustration = document.querySelector( '.illustration' ) as HTMLDivElement;
-const hall = document.querySelector( '#hall' ) as SVGAElement;
-const dog = document.querySelector( '#dog' ) as SVGAElement;
-const wall = document.querySelector( '#wall' ) as SVGAElement;
-const lamp = document.querySelector( '#lamp' ) as SVGAElement;
-const tv = document.querySelector( '#tv' ) as SVGAElement;
+const hall = createSvgElement( hallSvgString, { id: 'hall', classes: 'scene' }, illustration );
+const dog = createSvgElement( dogSvgString, { id: 'dog', classes: 'scene' }, illustration );
+const wall = createSvgElement( wallSvgString, { id: 'wall', classes: 'scene' }, illustration );
+const lamp = createSvgElement( lampSvgString, { id: 'lamp', classes: 'scene' }, illustration );
+const tv = createSvgElement( tvSvgString, { id: 'tv', classes: 'scene' }, illustration );
 
 // Keeps proper proportions.
 window.addEventListener( 'resize', throttle( () => {

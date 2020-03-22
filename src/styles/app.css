@@ -43,6 +43,19 @@ html, body {
 #wall {
 	right: -6%;
 	height: 100%;
+
+	#blinds {
+		cursor: pointer;
+	}
+
+	#left-eye-opened,
+	#right-eye-opened {
+		pointer-events: none;
+
+		circle {
+			transition: transform .2s;
+		}
+	}
 }
 
 #lamp {
@@ -59,14 +72,5 @@ html, body {
 
 	& > g > g {
 		pointer-events: auto;
-	}
-}
-
-#left-eye-opened,
-#right-eye-opened {
-	pointer-events: none;
-
-	circle {
-		transition: transform .2s;
 	}
 }

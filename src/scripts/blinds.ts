@@ -1,6 +1,5 @@
 import animate, { easeOutQuad, Animate } from './utils/animate';
 
-const blinds: SVGGElement[] = Array.from( document.querySelectorAll( '#blinds > g' ) );
 const singleShift = 26;
 const maxShift = 17 * singleShift + 14;
 const duration = 1200;
@@ -9,7 +8,15 @@ let animation: Animate;
 let currentValue: number;
 let direction: string;
 
-function openBlinds(): void {
+export default function initBlinds(): void {
+	const blinds: SVGGElement[] = Array.from( document.querySelectorAll( '#blinds > g' ) );
+
+	document.querySelector( '#blinds' ).addEventListener( 'click', () => {
+		toggleBlinds( blinds );
+	} );
+}
+
+function openBlinds( blinds: Element[] ): void {
 	animation = animate( {
 		from: currentValue,
 		to: maxShift,
@@ -29,7 +36,7 @@ function openBlinds(): void {
 	} );
 }
 
-function closeBlinds(): void {
+function closeBlinds( blinds: Element[] ): void {
 	animation = animate( {
 		from: currentValue,
 		to: 0,
@@ -49,22 +56,16 @@ function closeBlinds(): void {
 	} );
 }
 
-function toggleBlinds(): void {
+function toggleBlinds( blinds: Element[] ): void {
 	if ( animation ) {
 		animation.stop();
 	}
 
 	if ( !direction || direction === 'bottom' ) {
 		direction = 'top';
-		openBlinds();
+		openBlinds( blinds );
 	} else {
 		direction = 'bottom';
-		closeBlinds();
+		closeBlinds( blinds );
 	}
-}
-
-export default function initBlinds(): void {
-	document.querySelector( '#blinds' ).addEventListener( 'click', () => {
-		toggleBlinds();
-	} );
 }
