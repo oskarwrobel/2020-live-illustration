@@ -11,6 +11,7 @@
   },
   "author": "Oskar Wrobel <kontakt@oskarwrobel.pl> (https://www.oskarwrobel.pl/)",
   "dependencies": {
+    "@svgdotjs/svg.js": "^3.0.16",
     "lodash-es": "^4.17.15"
   },
   "devDependencies": {

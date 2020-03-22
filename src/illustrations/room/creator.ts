@@ -1,4 +1,5 @@
 import Illustrations, { Illustration } from '../../utils/illustrations';
+import { SVG as svg } from '@svgdotjs/svg.js';
 
 import createSvgElement from '../../utils/createsvgelement';
 import parallax from '../../utils/parallax';
@@ -13,7 +14,7 @@ import tvSvgString from './images/tv.svg';
 
 import './room.css';
 
-export default function roomIllustrationCreator( illustrations: Illustrations ): Illustration {
+export default function creator( illustrations: Illustrations ): Illustration {
 	const element = illustrations.element;
 
 	const hall = createSvgElement( hallSvgString, { id: 'hall', classes: 'scene' }, element );
@@ -36,6 +37,20 @@ export default function roomIllustrationCreator( illustrations: Illustrations ):
 
 	document.querySelector( '#oscar-small' ).addEventListener( 'click', () => {
 		illustrations.show( 'oscar' );
+	} );
+
+	const leash = document.querySelector( '#leash' );
+	const originalSmileData = document.querySelector( '#smile' ).getAttribute( 'd' );
+	const newSmileData = 'M41.1,100.5 c0,0,22.9-6.5,22.9-19';
+
+	const smilePath = svg( '#smile' );
+
+	leash.addEventListener( 'mouseenter', () => {
+		smilePath.animate().attr( { d: newSmileData } );
+	} );
+
+	leash.addEventListener( 'mouseleave', () => {
+		smilePath.animate().attr( { d: originalSmileData } );
 	} );
 
 	blinds();
