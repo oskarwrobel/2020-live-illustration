@@ -8,7 +8,7 @@ import plantSvgData from './images/plant.svg';
 
 import './oscar.css';
 
-export default function oscarIllustrationCreator( illustrations: Illustrations ): Illustration {
+export default function creator( illustrations: Illustrations ): Illustration {
 	const element = illustrations.element;
 
 	const oscar = createSvgElement( oscarSvgData, { id: 'oscar', classes: 'scene' }, element );

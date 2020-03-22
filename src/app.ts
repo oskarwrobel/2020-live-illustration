@@ -1,7 +1,7 @@
 import Illustrations from './utils/illustrations';
 
-import roomCreator from './illustrations/room/roomcreator';
-import oscarCreator from './illustrations/oscar/oscarcreator';
+import roomCreator from './illustrations/room/creator';
+import oscarCreator from './illustrations/oscar/creator';
 
 import './app.css';
 
