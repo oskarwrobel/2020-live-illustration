@@ -11,7 +11,6 @@ type Config = {
 };
 
 export default function parallax( config: Config ): () => void {
-	let isAnimationInProgress = false;
 	let lastValue: number;
 
 	const throttledMouseMoveHandler = throttle( mouseMoveHandler, 50, { leading: true } );
@@ -47,18 +46,6 @@ export default function parallax( config: Config ): () => void {
 
 		lastValue = value;
 		requestAnimationFrame( () => {
-			if ( !isAnimationInProgress ) {
-				isAnimationInProgress = true;
-				config.scene.classList.add( 'animation-in-progress' );
-
-				config.scene.addEventListener( 'transitionend', () => {
-					if ( isAnimationInProgress ) {
-						config.scene.classList.remove( 'animation-in-progress' );
-						isAnimationInProgress = false;
-					}
-				}, true );
-			}
-
 			for ( const item of config.items ) {
 				const element = item.element as HTMLElement;
 				const friction = item.friction;
