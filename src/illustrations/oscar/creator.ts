@@ -1,4 +1,4 @@
-import Illustrations, { Illustration } from '../../utils/illustrations';
+import Illustrations, { IllustrationDestructor } from '../../utils/illustrations';
 
 import createSvgElement from '../../utils/createsvgelement';
 import parallax from '../../utils/parallax';
@@ -8,7 +8,7 @@ import plantSvgData from './images/plant.svg';
 
 import './oscar.css';
 
-export default function creator( illustrations: Illustrations ): Illustration {
+export default function creator( illustrations: Illustrations ): IllustrationDestructor {
 	const element = illustrations.element;
 
 	const oscar = createSvgElement( oscarSvgData, { id: 'oscar', classes: 'scene' }, element );

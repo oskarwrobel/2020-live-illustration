@@ -1,8 +1,8 @@
 import { throttle } from 'lodash-es';
 import setProportions from './setproportions';
 
-type IllustrationCreator = ( illustrations: Illustrations ) => IllustrationDestructor;
-type IllustrationDestructor = () => void;
+export type IllustrationCreator = ( illustrations: Illustrations ) => IllustrationDestructor;
+export type IllustrationDestructor = () => void;
 
 export default class Illustrations {
 	private readonly _illustrations: Map<string, Illustration> = new Map();

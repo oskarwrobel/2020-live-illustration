@@ -39,9 +39,9 @@
 }
 
 #tv {
-	right: -3.8%;
+	right: -11%;
 	bottom: 0;
-	width: 75%;
+	width: 85%;
 	pointer-events: none;
 
 	& > g > g {

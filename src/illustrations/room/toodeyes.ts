@@ -40,6 +40,7 @@ export default function toodEyes(): () => void {
 
 	return function destroy(): void {
 		document.removeEventListener( 'mousemove', throttledMouseMoveHandler );
+		stopBlinking();
 	};
 }
 

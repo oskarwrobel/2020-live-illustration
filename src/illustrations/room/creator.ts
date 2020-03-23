@@ -1,4 +1,4 @@
-import Illustrations, { Illustration } from '../../utils/illustrations';
+import Illustrations, { IllustrationDestructor } from '../../utils/illustrations';
 import { SVG as svg } from '@svgdotjs/svg.js';
 
 import createSvgElement from '../../utils/createsvgelement';
@@ -14,7 +14,7 @@ import tvSvgString from './images/tv.svg';
 
 import './room.css';
 
-export default function creator( illustrations: Illustrations ): Illustration {
+export default function creator( illustrations: Illustrations ): IllustrationDestructor {
 	const element = illustrations.element;
 
 	const hall = createSvgElement( hallSvgString, { id: 'hall', classes: 'scene' }, element );

@@ -1,4 +1,4 @@
-import Illustrations, { Illustration } from '../../utils/illustrations';
+import Illustrations, { IllustrationDestructor } from '../../utils/illustrations';
 
 import createSvgElement from '../../utils/createsvgelement';
 
@@ -6,7 +6,7 @@ import drawerSvgData from './images/drawer.svg';
 
 import './drawer.css';
 
-export default function creator( illustrations: Illustrations ): Illustration {
+export default function creator( illustrations: Illustrations ): IllustrationDestructor {
 	const element = illustrations.element;
 
 	const drawer = createSvgElement( drawerSvgData, { id: 'drawer-inside', classes: 'scene' }, element );
