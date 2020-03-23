@@ -52,3 +52,10 @@
 #drawer {
 	cursor: pointer;
 }
+
+#button-0-on,
+#button-1-on,
+#button-2-on,
+#button-3-on {
+	cursor: pointer;
+}

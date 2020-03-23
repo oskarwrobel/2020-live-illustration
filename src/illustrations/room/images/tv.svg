@@ -303,52 +303,52 @@
 			<path style="stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="M119.6,273.9H88.2
 				c-1.2,0-2.3-1-2.3-2.3v-0.5c0-1.2,1-2.3,2.3-2.3h31.4c1.2,0,2.3,1,2.3,2.3v0.5C121.8,272.9,120.8,273.9,119.6,273.9z"/>
 		</g>
-		<g id="buttons-off">
-			<g id="button-3">
+		<g>
+			<g id="button-3-off">
 				<path style="fill:#D89844;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="M256.2,275.7
 					h-2c-3.7,0-6.7,3.2-6.7,7.1s3,7.1,6.7,7.1h2V275.7z"/>
 
 					<ellipse style="fill:#F2B45A;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" cx="256.2" cy="282.8" rx="6.7" ry="7.1"/>
 			</g>
-			<g id="button-2">
+			<g id="button-2-off">
 				<path style="fill:#D89844;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="M281.3,275.7
 					h-2c-3.7,0-6.7,3.2-6.7,7.1s3,7.1,6.7,7.1h2V275.7z"/>
 
 					<ellipse style="fill:#F2B45A;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" cx="281.3" cy="282.8" rx="6.7" ry="7.1"/>
 			</g>
-			<g id="button-1">
+			<g id="button-1-off">
 				<path style="fill:#D89844;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="M306.3,275.7
 					h-2c-3.7,0-6.7,3.2-6.7,7.1s3,7.1,6.7,7.1h2V275.7z"/>
 
 					<ellipse style="fill:#F2B45A;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" cx="306.3" cy="282.8" rx="6.7" ry="7.1"/>
 			</g>
-			<g id="button-off">
+			<g id="button-0-off">
 
 					<rect x="210.5" y="274.6" style="fill:#B74B2E;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" width="7" height="15.9"/>
 
 					<rect x="212.5" y="274.6" style="fill:#E06241;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" width="23.1" height="15.9"/>
 			</g>
 		</g>
-		<g id="buttons-on">
-			<g id="button-3_1_">
+		<g>
+			<g id="button-3-on">
 				<path style="fill:#D89844;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="M260.2,275.7
 					h-6c-3.7,0-6.7,3.2-6.7,7.1s3,7.1,6.7,7.1h6V275.7z"/>
 
 					<ellipse style="fill:#F2B45A;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" cx="260.2" cy="282.8" rx="6.7" ry="7.1"/>
 			</g>
-			<g id="button-2_1_">
+			<g id="button-2-on">
 				<path style="fill:#D89844;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="M285.3,275.7
 					h-6c-3.7,0-6.7,3.2-6.7,7.1s3,7.1,6.7,7.1h6V275.7z"/>
 
 					<ellipse style="fill:#F2B45A;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" cx="285.3" cy="282.8" rx="6.7" ry="7.1"/>
 			</g>
-			<g id="button-1_1_">
+			<g id="button-1-on">
 				<path style="fill:#D89844;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="M310.3,275.7
 					h-6c-3.7,0-6.7,3.2-6.7,7.1s3,7.1,6.7,7.1h6V275.7z"/>
 
 					<ellipse style="fill:#F2B45A;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" cx="310.3" cy="282.8" rx="6.7" ry="7.1"/>
 			</g>
-			<g id="button-off_1_">
+			<g id="button-0-on">
 
 					<rect x="210.5" y="274.6" style="fill:#B74B2E;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" width="7" height="15.9"/>
 
