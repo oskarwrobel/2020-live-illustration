@@ -1,0 +1,11 @@
+#oscar {
+	width: 103%;
+	left: -1.5%;
+	top: -.5%;
+}
+
+#plant {
+	height: 101%;
+	top: -.5%;
+	pointer-events: none;
+}

@@ -6,14 +6,17 @@ const duration = 1200;
 
 let animation: Animate;
 let currentValue: number;
-let direction: string;
 
-export default function initBlinds(): void {
+export default function initBlinds( illustrationData: any ): void {
 	const blinds: SVGGElement[] = Array.from( document.querySelectorAll( '#blinds > g' ) );
 
 	document.querySelector( '#blinds' ).addEventListener( 'click', () => {
-		toggleBlinds( blinds );
+		toggleBlinds( blinds, illustrationData );
 	} );
+
+	if ( illustrationData.areBlindsOpened ) {
+		openBlinds( blinds );
+	}
 }
 
 function openBlinds( blinds: Element[] ): void {
@@ -56,16 +59,16 @@ function closeBlinds( blinds: Element[] ): void {
 	} );
 }
 
-function toggleBlinds( blinds: Element[] ): void {
+function toggleBlinds( blinds: Element[], illustrationData: any ): void {
 	if ( animation ) {
 		animation.stop();
 	}
 
-	if ( !direction || direction === 'bottom' ) {
-		direction = 'top';
+	if ( !illustrationData.areBlindsOpened ) {
 		openBlinds( blinds );
+		illustrationData.areBlindsOpened = true;
 	} else {
-		direction = 'bottom';
 		closeBlinds( blinds );
+		illustrationData.areBlindsOpened = false;
 	}
 }

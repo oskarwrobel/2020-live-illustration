@@ -35,14 +35,51 @@ export default function creator( illustrations: Illustrations ): Illustration {
 		]
 	} );
 
+	// Toggling drawer.
+	const front = svg( '#front' );
+	const shadow = svg( '#shadow' );
+	const orgHeight = shadow.height();
+	const shift = 95;
+	const shiftShadow = 30;
+
+	if ( illustrations.current.data.drawerIsOpened ) {
+		front.translate( shift, 0 );
+		shadow.height( orgHeight + shiftShadow );
+
+		setTimeout( () => {
+			front.animate( 800 ).translate( -shift, 0 );
+			shadow.animate( 800 ).height( orgHeight );
+		}, 100 );
+
+		illustrations.current.data.drawerIsOpened = false;
+	}
+
+	document.querySelector( '#drawer' ).addEventListener( 'click', () => {
+		const x = front.transform().translateX;
+
+		if ( x === shift ) {
+			front.animate( 800 ).translate( -shift, 0 );
+			shadow.animate( 800 ).height( orgHeight );
+		} else if ( x === 0 ) {
+			front.animate( 800 ).translate( shift, 0 );
+			shadow.animate( 800 ).height( orgHeight + shiftShadow ).after( () => {
+				illustrations.current.data.drawerIsOpened = true;
+				setTimeout( () => {
+					illustrations.show( 'drawer' );
+				}, 100 );
+			} );
+		}
+	} );
+
+	// Change illustration after clicking oscar.
 	document.querySelector( '#oscar-small' ).addEventListener( 'click', () => {
 		illustrations.show( 'oscar' );
 	} );
 
+	// Dog's smile.
 	const leash = document.querySelector( '#leash' );
 	const originalSmileData = document.querySelector( '#smile' ).getAttribute( 'd' );
 	const newSmileData = 'M41.1,100.5 c0,0,22.9-6.5,22.9-19';
-
 	const smilePath = svg( '#smile' );
 
 	leash.addEventListener( 'mouseenter', () => {
@@ -53,14 +90,12 @@ export default function creator( illustrations: Illustrations ): Illustration {
 		smilePath.animate().attr( { d: originalSmileData } );
 	} );
 
-	blinds();
+	blinds( illustrations.current.data );
 	const toodEyesDestructor = toodEyes();
 
-	return {
-		destroy() {
-			[ hall, dog, wall, lamp, tv ].forEach( el => el.remove() );
-			parallaxDestructor();
-			toodEyesDestructor();
-		}
-	} as Illustration;
+	return function destroy(): void {
+		[ hall, dog, wall, lamp, tv ].forEach( el => el.remove() );
+		parallaxDestructor();
+		toodEyesDestructor();
+	};
 }

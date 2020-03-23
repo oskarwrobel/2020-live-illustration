@@ -24,10 +24,8 @@ export default function creator( illustrations: Illustrations ): Illustration {
 
 	oscar.addEventListener( 'click', () => illustrations.show( 'room' ) );
 
-	return {
-		destroy(): void {
-			[ oscar, plant ].forEach( el => el.remove() );
-			parallaxDestructor();
-		}
-	} as Illustration;
+	return function destroy(): void {
+		[ oscar, plant ].forEach( el => el.remove() );
+		parallaxDestructor();
+	};
 }

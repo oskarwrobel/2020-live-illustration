@@ -15,6 +15,8 @@ html, body {
 	background: #fff;
 	position: relative;
 	overflow: hidden;
+	opacity: 1;
+	transition: opacity .1s;
 
 	.scene {
 		position: absolute;
@@ -25,5 +27,9 @@ html, body {
 		.scene {
 			will-change: transform;
 		}
+	}
+
+	&.changing {
+		opacity: 0;
 	}
 }

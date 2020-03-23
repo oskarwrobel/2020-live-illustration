@@ -1,15 +1,13 @@
 import { throttle } from 'lodash-es';
 import setProportions from './setproportions';
 
-type IllustrationCreator = ( illustrations: Illustrations ) => Illustration;
-export type Illustration = {
-	destroy(): void;
-}
+type IllustrationCreator = ( illustrations: Illustrations ) => IllustrationDestructor;
+type IllustrationDestructor = () => void;
 
 export default class Illustrations {
-	private readonly _illustrations: Map<string, IllustrationCreator> = new Map();
-	private _current: Illustration;
+	private readonly _illustrations: Map<string, Illustration> = new Map();
 	readonly element: HTMLElement;
+	current: Illustration;
 
 	constructor( element: HTMLElement, optimalResolution: string ) {
 		this.element = element;
@@ -33,18 +31,46 @@ export default class Illustrations {
 			throw new Error( 'Illustration already created.' );
 		}
 
-		this._illustrations.set( name, creator );
+		this._illustrations.set( name, new Illustration( creator ) );
 	}
 
-	show( name: string ): void {
+	async show( name: string ): Promise<void> {
 		if ( !this._illustrations.has( name ) ) {
 			throw new Error( 'Illustration does not exist.' );
 		}
 
-		if ( this._current ) {
-			this._current.destroy();
+		this.element.classList.add( 'changing' );
+
+		if ( this.current ) {
+			await wait( 80 );
+			this.current.detach();
 		}
 
-		this._current = this._illustrations.get( name )( this );
+		this.current = this._illustrations.get( name );
+		this.current.render( this );
+		await wait( 80 );
+		this.element.classList.remove( 'changing' );
 	}
+}
+
+export class Illustration {
+	private readonly _creator: IllustrationCreator;
+	private _destructor: IllustrationDestructor;
+	data: any = {};
+
+	constructor( creator: IllustrationCreator ) {
+		this._creator = creator;
+	}
+
+	render( illustrations: Illustrations ): void {
+		this._destructor = this._creator( illustrations );
+	}
+
+	detach(): void {
+		this._destructor();
+	}
+}
+
+async function wait( ms = 0 ): Promise<void> {
+	return new Promise( resolve => setTimeout( resolve, ms ) );
 }
