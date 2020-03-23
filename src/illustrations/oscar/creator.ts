@@ -6,7 +6,7 @@ import parallax from '../../utils/parallax';
 import oscarSvgData from './images/oscar.svg';
 import plantSvgData from './images/plant.svg';
 
-import './oscar.css';
+import './style.css';
 
 export default function creator( illustrations: Illustrations ): IllustrationDestructor {
 	const element = illustrations.element;
