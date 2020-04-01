@@ -6,7 +6,7 @@ const shiftShadow = 30;
 const duration = 800;
 const delay = 100;
 
-export default function toggleDrawer( illustrations: Illustrations ): void {
+export default function drawer( illustrations: Illustrations ): void {
 	const front = svg( '#front' );
 	const shadow = svg( '#shadow' );
 	const orgHeight = shadow.height();
