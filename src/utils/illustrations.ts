@@ -31,7 +31,7 @@ export default class Illustrations {
 			throw new Error( 'Illustration already created.' );
 		}
 
-		this._illustrations.set( name, new Illustration( creator ) );
+		this._illustrations.set( name, new Illustration( name, creator ) );
 	}
 
 	async show( name: string ): Promise<void> {
@@ -44,9 +44,11 @@ export default class Illustrations {
 		if ( this.current ) {
 			await wait( 80 );
 			this.current.detach();
+			this.element.classList.remove( this.current.name );
 		}
 
 		this.current = this._illustrations.get( name );
+		this.element.classList.add( this.current.name );
 		this.current.render( this );
 		await wait( 80 );
 		this.element.classList.remove( 'changing' );
@@ -56,9 +58,11 @@ export default class Illustrations {
 export class Illustration {
 	private readonly _creator: IllustrationCreator;
 	private _destructor: IllustrationDestructor;
+	readonly name: string;
 	data: any = {};
 
-	constructor( creator: IllustrationCreator ) {
+	constructor( name: string, creator: IllustrationCreator ) {
+		this.name = name;
 		this._creator = creator;
 	}
 
