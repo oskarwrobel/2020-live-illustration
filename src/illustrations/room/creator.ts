@@ -3,10 +3,11 @@ import { SVG as svg } from '@svgdotjs/svg.js';
 
 import createSvgElement from '../../utils/createsvgelement';
 import parallax from '../../utils/parallax';
-import blinds from './blinds';
+import windowWithBlinds from './windowwithblinds';
 import toodEyes from './toodeyes';
-import toggleDrawer from './toggledrawer';
+import drawer from './drawer';
 import tv from './tv';
+import oscarStatue from './oscarstatue';
 
 import hallSvgString from './images/hall.svg';
 import dogSvgString from './images/dog.svg';
@@ -38,20 +39,6 @@ export default function creator( illustrations: Illustrations ): IllustrationDes
 		]
 	} );
 
-	// TV
-	// -------------------------------------------------------------------------------------------------------------- //
-	tv();
-
-	// Toggling drawer
-	// -------------------------------------------------------------------------------------------------------------- //
-	toggleDrawer( illustrations );
-
-	// Change illustration after clicking oscar
-	// -------------------------------------------------------------------------------------------------------------- //
-	document.querySelector( '#oscar-small' ).addEventListener( 'click', () => {
-		illustrations.show( 'oscar' );
-	} );
-
 	// Dog's smile
 	// -------------------------------------------------------------------------------------------------------------- //
 	const leash = document.querySelector( '#leash' );
@@ -67,9 +54,21 @@ export default function creator( illustrations: Illustrations ): IllustrationDes
 		smilePath.animate().attr( { d: originalSmileData } );
 	} );
 
-	// Blinds
+	// TV
 	// -------------------------------------------------------------------------------------------------------------- //
-	blinds( illustrations.current.data );
+	tv( illustrations.current.data );
+
+	// Drawer
+	// -------------------------------------------------------------------------------------------------------------- //
+	drawer( illustrations );
+
+	// Oscar statue
+	// -------------------------------------------------------------------------------------------------------------- //
+	const oscarStatueDestructor = oscarStatue( illustrations );
+
+	// Window
+	// -------------------------------------------------------------------------------------------------------------- //
+	const windowWithBlindsDestructor = windowWithBlinds( illustrations );
 
 	// Tood eyes
 	// -------------------------------------------------------------------------------------------------------------- //
@@ -80,6 +79,8 @@ export default function creator( illustrations: Illustrations ): IllustrationDes
 	return function destroy(): void {
 		[ hallSvg, dogSvg, wallSvg, lampSvg, tvSvg ].forEach( el => el.remove() );
 		parallaxDestructor();
+		oscarStatueDestructor();
+		windowWithBlindsDestructor();
 		toodEyesDestructor();
 	};
 }
