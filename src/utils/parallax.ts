@@ -3,6 +3,7 @@ import { throttle, clamp } from 'lodash-es';
 type Item = {
 	element: Element;
 	friction: number;
+	revert?: boolean;
 }
 
 type Config = {
@@ -12,6 +13,8 @@ type Config = {
 
 export default function parallax( config: Config ): () => void {
 	let lastValue: number;
+
+	config.scene.classList.add( 'parallax' );
 
 	const throttledMouseMoveHandler = throttle( mouseMoveHandler, 50, { leading: true } );
 
@@ -50,7 +53,13 @@ export default function parallax( config: Config ): () => void {
 				const element = item.element as HTMLElement;
 				const friction = item.friction;
 
-				element.style.transform = `translateX( ${ -value * friction }% )`;
+				let x = -value * friction;
+
+				if ( item.revert ) {
+					x = -x;
+				}
+
+				element.style.transform = `translateX( ${ x }% )`;
 			}
 		} );
 	}
@@ -65,5 +74,6 @@ export default function parallax( config: Config ): () => void {
 
 	return function destroy(): void {
 		document.removeEventListener( 'mousemove', throttledMouseMoveHandler );
+		config.scene.classList.remove( 'parallax' );
 	};
 }
