@@ -23,13 +23,11 @@ html, body {
 		transition: transform .3s ease-out;
 	}
 
-	&.animation-in-progress {
-		.scene {
-			will-change: transform;
-		}
-	}
-
 	&.changing {
 		opacity: 0;
 	}
+}
+
+.parallax {
+	will-change: transform;
 }
