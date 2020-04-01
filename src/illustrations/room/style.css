@@ -1,3 +1,9 @@
+.illustration {
+	&.room {
+		background: #8DD9FF;
+	}
+}
+
 #hall {
 	top: 0;
 	left: -3%;
@@ -20,6 +26,12 @@
 
 	#blinds {
 		cursor: pointer;
+	}
+
+	#plane-1 text,
+	#plane-2 text {
+		font-family: 'Walter Turncoat', cursive !important;
+		user-select: none;
 	}
 
 	#left-eye-opened,
@@ -46,6 +58,16 @@
 
 	& > g > g {
 		pointer-events: auto;
+	}
+
+	#screen {
+		cursor: pointer;
+	}
+
+	#channel-1,
+	#channel-2,
+	#channel-3 {
+		pointer-events: none;
 	}
 }
 
