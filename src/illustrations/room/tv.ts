@@ -7,19 +7,19 @@ export default function tv( illustrationData: any ): void {
 			screen: document.querySelector( '#channel-1' ) as HTMLElement,
 			button: document.querySelector( '#button-1-on' ) as HTMLElement,
 			animationDefinition: channel1Animation,
-			pendingAnimation: gsap.Timeline = null
+			pendingAnimation: undefined as gsap.Timeline
 		},
 		{
 			screen: document.querySelector( '#channel-2' ) as HTMLElement,
 			button: document.querySelector( '#button-2-on' ) as HTMLElement,
 			animationDefinition: channel2Animation,
-			pendingAnimation: gsap.Timeline = null
+			pendingAnimation: undefined as gsap.Timeline
 		},
 		{
 			screen: document.querySelector( '#channel-3' ) as HTMLElement,
 			button: document.querySelector( '#button-3-on' ) as HTMLElement,
 			animationDefinition: channel3Animation,
-			pendingAnimation: gsap.Timeline = null
+			pendingAnimation: undefined as gsap.Timeline
 		}
 	];
 
@@ -95,18 +95,18 @@ export default function tv( illustrationData: any ): void {
 		illustrationData.channelNumber = undefined;
 	}
 
-	function channel1Animation(): gasp.Timeline {
+	function channel1Animation(): gsap.Timeline {
 		const tl = gsap.timeline( { repeat: Infinity, repeatDelay: 0.1, delay: 1 } );
-		const transformOrigin = 'center center';
+		const def = { transformOrigin: 'center center' };
 
-		tl.from( '#soup', { duration: .5, x: -300, transformOrigin, ease: 'back.out(2)' } );
-		tl.to( '#soup', { duration: .5, delay: 1.5, scale: 0, transformOrigin, ease: 'back.in(5)' } );
-		tl.from( '#two-soups', { duration: .3, delay: .1, y: -200, transformOrigin, ease: 'back.out(4)' } );
-		tl.to( '#two-soups', { duration: .3, delay: 1.5, y: 200, transformOrigin, ease: 'back.in(4)' } );
-		tl.from( '#food', { duration: .6, delay: .1, scale: 0, rotate: 1080, transformOrigin, ease: 'none' } );
-		tl.to( '#food', { duration: .5, delay: 1.5, scale: 5, opacity: 0, transformOrigin, ease: 'none' } );
-		tl.from( '#good', { duration: .5, delay: .1, scale: 3, opacity: 0, transformOrigin, ease: 'back.out(2)' } );
-		tl.to( '#good', { duration: 1, delay: 1.5, opacity: 0, transformOrigin, ease: 'none' } );
+		tl.from( '#soup', { duration: .5, x: -300, ease: 'back.out(2)', ...def } );
+		tl.to( '#soup', { duration: .5, delay: 1.5, scale: 0, ease: 'back.in(3)', ...def } );
+		tl.from( '#two-soups', { duration: .3, delay: .1, y: -200, ease: 'back.out(4)', ...def } );
+		tl.to( '#two-soups', { duration: .4, delay: 1.5, y: 200, ease: 'back.in(4)', ...def } );
+		tl.from( '#food', { duration: .6, delay: .1, scale: 0, rotate: 1080, ease: 'none', ...def } );
+		tl.to( '#food', { duration: .5, delay: 1.5, scale: 5, opacity: 0, ease: 'none', ...def } );
+		tl.from( '#good', { duration: .5, delay: .1, scale: 3, opacity: 0, ease: 'back.out(2)', ...def } );
+		tl.to( '#good', { duration: 1, delay: 1.5, opacity: 0, ease: 'none', ...def } );
 
 		return tl;
 	}
