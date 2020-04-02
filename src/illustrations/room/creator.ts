@@ -1,5 +1,5 @@
 import Illustrations, { IllustrationDestructor } from '../../utils/illustrations';
-import { SVG as svg } from '@svgdotjs/svg.js';
+import { gsap } from 'gsap';
 
 import createSvgElement from '../../utils/createsvgelement';
 import parallax from '../../utils/parallax';
@@ -42,17 +42,10 @@ export default function creator( illustrations: Illustrations ): IllustrationDes
 	// Dog's smile
 	// -------------------------------------------------------------------------------------------------------------- //
 	const leash = document.querySelector( '#leash' );
-	const originalSmileData = document.querySelector( '#smile' ).getAttribute( 'd' );
-	const newSmileData = 'M41.1,100.5 c0,0,22.9-6.5,22.9-19';
-	const smilePath = svg( '#smile' );
+	const leshTween = gsap.to( '#smile', { attr: { d: 'M41.1,100.5 c0,0,22.9-6.5,22.9-19' } } ).pause();
 
-	leash.addEventListener( 'mouseenter', () => {
-		smilePath.animate().attr( { d: newSmileData } );
-	} );
-
-	leash.addEventListener( 'mouseleave', () => {
-		smilePath.animate().attr( { d: originalSmileData } );
-	} );
+	leash.addEventListener( 'mouseenter', () => ( leshTween.play() ) );
+	leash.addEventListener( 'mouseleave', () => ( leshTween.reverse() ) );
 
 	// TV
 	// -------------------------------------------------------------------------------------------------------------- //
