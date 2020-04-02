@@ -1,12 +1,17 @@
 {
   "compilerOptions": {
     "module": "es6",
-    "target": "ESNext",
+    "target": "es6",
     "allowJs": true,
     "noImplicitAny": true,
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "lib": [ "es6", "dom", "es2017" ]
-  }
+  },
+  "files": [
+    "node_modules/gsap/types/index.d.ts",
+    "node_modules/@svgdotjs/svg.js/svg.js.d.ts",
+    "custom.d.ts"
+  ]
 }
