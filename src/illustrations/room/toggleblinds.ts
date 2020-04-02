@@ -1,11 +1,11 @@
-import gsap from 'gsap';
+import { gsap } from 'gsap';
 
 const singleShift = 28;
 const maxShift = 18 * singleShift + 14;
 const duration = 1.2;
 
 const data: { value: number } = { value: 0 };
-let animation: gsap.Timeline;
+let animation: gsap.core.Tween;
 
 export function toggleBlinds( blinds: Element[], illustrationData: any ): void {
 	if ( animation ) {
@@ -22,7 +22,7 @@ export function toggleBlinds( blinds: Element[], illustrationData: any ): void {
 }
 
 export function openBlinds( blinds: Element[] ): void {
-	animation = gsap.to( data, {
+	animation = gsap.core.Tween.to( data, {
 		value: maxShift,
 		duration,
 		onUpdate() {
@@ -40,7 +40,7 @@ export function openBlinds( blinds: Element[] ): void {
 }
 
 export function closeBlinds( blinds: Element[] ): void {
-	animation = gsap.to( data, {
+	animation = gsap.core.Tween.to( data, {
 		value: 0,
 		duration,
 		onUpdate() {
