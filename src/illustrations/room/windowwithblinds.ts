@@ -1,14 +1,10 @@
-import { SVG as svg } from '@svgdotjs/svg.js';
-import gsap from 'gsap';
+import { SVG as svg, Element, Text, Rect } from '@svgdotjs/svg.js';
+import { gsap } from 'gsap';
 import { random } from 'lodash-es';
 import { toggleBlinds, openBlinds } from './toggleblinds';
 import Illustrations from '../../utils/illustrations';
 
-type NumberRange = [ number, number ];
-
-const sectionTop = 230;
-const sectionHeight = 170;
-const maxSections = 3;
+type Range = [ number, number ];
 
 const hashTags = [
 	'#StayHome',
@@ -18,55 +14,46 @@ const hashTags = [
 	'#StayHydrated'
 ];
 
-const usedSections: Map<svg.Element, number> = new Map();
+// Window rect. Cashed for optimization purpose.
 let windowRect: SVGRect;
-let $currentPlane: svg.Element;
-const elementToAnimation: Map<svg.Element, gsap.Tween> = new Map();
+
+// To avoid clouds overlapping the window area is split into levels.
+// Each cloud has move only on the available level. When cloud is in the middle of the
+// window width then the level is released and next cloud is allowed to move at the same level.
+const levelTopEdge = 230;
+const levelHeight = 170;
+const maxLevels = 3;
+const cloudToLevel: Map<Element, number> = new Map();
+
+// Two separate planes (svg groups) are used to pretend one plane flying two ways.
+// This variable represents the currently visible plane element.
+let $currentPlane: Element;
+
+// Stores all pending animations.
+const elementToAnimation: Map<Element, gsap.core.Tween> = new Map();
 
 export default function windowWithBlinds( illustrations: Illustrations ): () => void {
 	windowRect = getWindowRect();
 
 	const blinds: SVGGElement[] = Array.from( document.querySelectorAll( '#blinds > g' ) );
-	const $plane1 = svg( '#plane-1' ) as svg.Element;
-	const $plane2 = svg( '#plane-2' ) as svg.Element;
-	const $cloud1 = svg( '#cloud-1' ) as svg.Element;
-	const $cloud2 = svg( '#cloud-2' ) as svg.Element;
-	const $cloud3 = svg( '#cloud-3' ) as svg.Element;
-
-	setPlaneBannerText( $plane1, hashTags[ 0 ] );
-	setPlaneBannerText( $plane2, hashTags[ 1 ], true );
-
-	$plane1.move( windowRect.x + windowRect.width, 480 );
-	$plane2.size( null, 75 ).move( windowRect.x - $plane2.width(), 280 );
-	$cloud1.move( 1700, 280 );
-	$cloud2.move( 1300, 600 );
-	$cloud3.move( 1800, 400 );
+	const $rightToLeftPlane = svg( '#plane-1' ) as Element;
+	const $leftToRightPlane = svg( '#plane-2' ) as Element;
+	const $cloud1 = svg( '#cloud-1' ) as Element;
+	const $cloud2 = svg( '#cloud-2' ) as Element;
+	const $cloud3 = svg( '#cloud-3' ) as Element;
 
 	document.querySelector( '#blinds' ).addEventListener( 'click', () => {
 		if ( !illustrations.current.data.wasOpened ) {
-			fromRightToLeft( $plane1, 12, 6 ).then( () => {
-				$currentPlane = $plane1;
-				animatePlanesInLoop( [ $plane1, $plane2 ], [ 10, 15 ], [ 5, 10 ], [ 50, 90 ] );
-			} );
-
-			fromRightToLeft( $cloud1, 30 ).then( () => {
-				animateCloudInLoop( $cloud1, [ 34, 40 ], [ 0, 0 ], [ 200, 310 ] );
-			} );
-
-			fromRightToLeft( $cloud2, 30 ).then( () => {
-				animateCloudInLoop( $cloud2, [ 20, 28 ], [ 0, 0 ], [ 220, 325 ] );
-			} );
-
-			usedSections.set( $cloud3, 1 );
-			fromRightToLeft( $cloud3, 50, 10 ).then( () => {
-				usedSections.delete( $cloud3 );
-				animateCloudInLoop( $cloud3, [ 28, 34 ], [ 0, 0 ], [ 400, 530 ] );
-			} );
+			startAnimation( [ $rightToLeftPlane, $leftToRightPlane, $cloud1, $cloud2, $cloud3 ] );
 		}
 
 		toggleBlinds( blinds, illustrations.current.data );
 		illustrations.current.data.wasOpened = true;
 	} );
+
+	if ( illustrations.current.data.wasOpened ) {
+		continueAnimation( [ $rightToLeftPlane, $leftToRightPlane, $cloud1, $cloud2, $cloud3 ] );
+	}
 
 	if ( illustrations.current.data.areBlindsOpened ) {
 		openBlinds( blinds );
@@ -75,102 +62,125 @@ export default function windowWithBlinds( illustrations: Illustrations ): () => 
 	return function windowWithBlindsDestructor(): void {
 		Array.from( elementToAnimation.values() ).forEach( animation => animation.kill() );
 		elementToAnimation.clear();
+		cloudToLevel.clear();
+		$currentPlane = null;
 	};
 }
 
-function animatePlanesInLoop( planes: svg.Element[], duration: NumberRange, delay: NumberRange, size: NumberRange ): void {
-	const [ $plane1, $plane2 ] = planes;
+function startAnimation( [ $rightToLeftPlane, $leftToRightPlane, $cloud1, $cloud2, $cloud3 ]: Element[] ): void {
+	setPlaneText( $rightToLeftPlane, hashTags[ 0 ] );
+	setPlaneText( $leftToRightPlane, hashTags[ 1 ], true );
+	$rightToLeftPlane.move( windowRect.x + windowRect.width, 480 );
+	$leftToRightPlane.size( null, 75 ).move( windowRect.x - $leftToRightPlane.width(), 280 );
+	$currentPlane = $rightToLeftPlane;
 
-	let animation: any;
-	let x;
+	animateElement( $currentPlane, 12, 6, 'left' ).then( () => {
+		animatePlaneInLoop( [ $rightToLeftPlane, $leftToRightPlane ], [ 10, 15 ], [ 5, 10 ], [ 50, 90 ] );
+	} );
 
-	if ( $currentPlane === $plane2 ) {
-		$currentPlane = $plane1;
-		setPlaneBannerText( $currentPlane, getRandomHashTag() );
-		animation = fromRightToLeft;
-		x = windowRect.x + windowRect.width;
-	} else {
-		$currentPlane = $plane2;
-		setPlaneBannerText( $currentPlane, getRandomHashTag(), true );
-		animation = fromLeftToRight;
-		x = windowRect.x - $currentPlane.width();
-	}
+	$cloud1.move( 1700, 280 );
+	animateElement( $cloud1, 30, 0, 'left' ).then( () => {
+		animateCloudInLoop( $cloud1, [ 34, 40 ], [ 0, 0 ], [ 200, 310 ] );
+	} );
 
-	$currentPlane
-		.transform( { translateX: 0 } )
-		.size( null, random( ...size ) )
-		.move( x, getRandomY( $currentPlane ) );
+	$cloud2.move( 1300, 600 );
+	animateElement( $cloud2, 30, 0, 'left' ).then( () => {
+		animateCloudInLoop( $cloud2, [ 20, 28 ], [ 0, 0 ], [ 220, 325 ] );
+	} );
 
-	animation( $currentPlane, random( ...duration ), random( ...delay ) )
-		.then( () => animatePlanesInLoop( planes, duration, delay, size ) );
+	$cloud3.move( 1800, 400 );
+	cloudToLevel.set( $cloud3, 1 );
+	animateElement( $cloud3, 50, 10, 'left' ).then( () => {
+		cloudToLevel.delete( $cloud3 );
+		animateCloudInLoop( $cloud3, [ 28, 34 ], [ 0, 0 ], [ 400, 530 ] );
+	} );
 }
 
-function animateCloudInLoop( $element: svg.Element, duration: NumberRange, delay: NumberRange, size: NumberRange ): void {
+function continueAnimation( [ $rightToLeftPlane, $leftToRightPlane, $cloud1, $cloud2, $cloud3 ]: Element[] ): void {
+	animatePlaneInLoop( [ $rightToLeftPlane, $leftToRightPlane ], [ 10, 15 ], [ 5, 10 ], [ 50, 90 ] );
+	animateCloudInLoop( $cloud1, [ 34, 40 ], [ 0, 0 ], [ 200, 310 ] );
+	animateCloudInLoop( $cloud2, [ 20, 28 ], [ 0, 0 ], [ 220, 325 ] );
+	animateCloudInLoop( $cloud3, [ 28, 34 ], [ 0, 0 ], [ 400, 530 ] );
+}
+
+function animatePlaneInLoop( planes: Element[], duration: Range, delay: Range, size: Range ): void {
+	const [ $rightToLeftPlane, $leftToRightPlane ] = planes;
+
+	let direction: string;
+
+	if ( $currentPlane === $leftToRightPlane ) {
+		$currentPlane = $rightToLeftPlane;
+		direction = 'left';
+		setPlaneText( $currentPlane, getRandomHashTag() );
+
+		$currentPlane
+			.transform( { translateX: 0 } )
+			.size( null, random( ...size ) )
+			.move( windowRect.x + windowRect.width, getRandomY( $currentPlane ) );
+	} else {
+		$currentPlane = $leftToRightPlane;
+		direction = 'right';
+		setPlaneText( $currentPlane, getRandomHashTag(), true );
+
+		$currentPlane
+			.transform( { translateX: 0 } )
+			.size( null, random( ...size ) )
+			.move( windowRect.x - $currentPlane.width(), getRandomY( $currentPlane ) );
+	}
+
+	animateElement( $currentPlane, random( ...duration ), random( ...delay ), direction ).then( () => {
+		animatePlaneInLoop( planes, duration, delay, size );
+	} );
+}
+
+function animateCloudInLoop( $element: Element, duration: Range, delay: Range, size: Range ): void {
 	const availableSections = [];
 
-	for ( let i = 0; i < maxSections; i++ ) {
-		if ( !Array.from( usedSections.values() ).includes( i ) ) {
+	for ( let i = 0; i < maxLevels; i++ ) {
+		if ( !Array.from( cloudToLevel.values() ).includes( i ) ) {
 			availableSections.push( i );
 		}
 	}
 
 	const section = availableSections[ random( 0, availableSections.length - 1 ) ];
 
-	usedSections.set( $element, section );
+	cloudToLevel.set( $element, section );
 
 	$element
 		.size( random( ...size ) )
 		.move( windowRect.x + windowRect.width, getRandomY( $element, section ) );
 
-	fromRightToLeft( $element, random( ...duration ), random( ...delay ) ).then( () => {
+	animateElement( $element, random( ...duration ), random( ...delay ), 'left' ).then( () => {
 		animateCloudInLoop( $element, duration, delay, size );
 	} );
 }
 
-function fromRightToLeft( $element: svg.Element, duration: number, delay = 0 ): Promise<undefined> {
+function animateElement( $element: Element, duration: number, delay = 0, direction = 'left' ): Promise<undefined> {
 	const elementRect = $element.bbox();
+	const x = direction === 'left' ?
+		-( elementRect.x + elementRect.width - windowRect.x ) : ( windowRect.x + windowRect.width ) - elementRect.x;
 
 	return new Promise( resolve => {
-		const animation = gsap.to( $element.node, {
-			duration,
-			delay,
+		const animation = gsap.to( $element.node, { duration, delay, x,
 			ease: 'none',
-			x: -( elementRect.x + elementRect.width - windowRect.x ),
+			clearProps: 'all',
+			onComplete: resolve,
 			onUpdate() {
 				if ( animation.progress() >= 0.5 ) {
-					usedSections.delete( $element );
+					cloudToLevel.delete( $element );
 				}
-			},
-			onComplete: resolve,
-			clearProps: 'all'
+			}
 		} );
 
 		elementToAnimation.set( $element, animation );
 	} );
 }
 
-function fromLeftToRight( $element: svg.Element, duration: number, delay = 0 ): Promise<undefined> {
-	const elementRect = $element.bbox();
-
-	return new Promise( resolve => {
-		const animation = gsap.to( $element.node, {
-			duration,
-			delay,
-			ease: 'none',
-			x: ( windowRect.x + windowRect.width ) - elementRect.x,
-			onComplete: resolve,
-			clearProps: 'all'
-		} );
-
-		elementToAnimation.set( $element, animation );
-	} );
-}
-
-function setPlaneBannerText( $plane: svg.Element, text: string, stickToRight = false ): void {
+function setPlaneText( $plane: Element, text: string, stickToRight = false ): void {
 	const elements = $plane.node.firstChild.firstChild.childNodes as NodeList;
 	const $tail = svg( elements[ 0 ] );
 	const $textBg = svg( elements[ 1 ] );
-	const $text = svg( elements[ 2 ] );
+	const $text = svg( elements[ 2 ] ) as Text;
 
 	$text.plain( text );
 
@@ -180,7 +190,7 @@ function setPlaneBannerText( $plane: svg.Element, text: string, stickToRight = f
 	$textBg.width( width );
 
 	if ( stickToRight ) {
-		const bound = $plane.findOne( 'rect' ).x();
+		const bound = ( $plane.findOne( 'rect' ) as Rect ).x();
 
 		$textBg.x( bound - width );
 		$tail.x( bound - width - 30 );
@@ -197,9 +207,9 @@ function setPlaneBannerText( $plane: svg.Element, text: string, stickToRight = f
 	}
 }
 
-function getRandomY( $element: svg.Element, section?: number ): number {
-	if ( section !== undefined ) {
-		const top = sectionTop + ( section * sectionHeight );
+function getRandomY( $element: Element, level?: number ): number {
+	if ( level !== undefined ) {
+		const top = levelTopEdge + ( level * levelHeight );
 
 		return random( top, top + 80 );
 	}
@@ -216,7 +226,5 @@ function getRandomHashTag(): string {
 }
 
 function getWindowRect(): SVGRect {
-	const windowElement = document.querySelector( '#window > path' ) as SVGGElement;
-
-	return windowElement.getBBox();
+	return ( document.querySelector( '#window > path' ) as SVGGElement ).getBBox();
 }
