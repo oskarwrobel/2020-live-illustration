@@ -7,33 +7,33 @@ const duration = 800;
 const delay = 100;
 
 export default function drawer( illustrations: Illustrations ): void {
-	const front = svg( '#front' );
-	const shadow = svg( '#shadow' );
-	const orgHeight = shadow.height();
+	const $front = svg( '#front' );
+	const $shadow = svg( '#shadow' );
+	const orgHeight = $shadow.height();
 	const data = illustrations.current.data;
 
 	if ( data.drawerIsOpened ) {
-		front.translate( shift, 0 );
-		shadow.height( orgHeight + shiftShadow );
+		$front.translate( shift, 0 );
+		$shadow.height( orgHeight + shiftShadow );
 
 		setTimeout( () => {
-			front.animate( duration ).translate( -shift, 0 );
-			shadow.animate( duration ).height( orgHeight );
+			$front.animate( duration ).translate( -shift, 0 );
+			$shadow.animate( duration ).height( orgHeight );
 		}, delay );
 
 		data.drawerIsOpened = false;
 	}
 
 	document.querySelector( '#drawer' ).addEventListener( 'click', () => {
-		const x = front.transform().translateX;
+		const x = $front.transform().translateX;
 
 		if ( x === shift ) {
-			front.animate( duration ).translate( -shift, 0 );
-			shadow.animate( duration ).height( orgHeight );
+			$front.animate( duration ).translate( -shift, 0 );
+			$shadow.animate( duration ).height( orgHeight );
 		} else if ( x === 0 ) {
-			front.animate( duration ).translate( shift, 0 );
+			$front.animate( duration ).translate( shift, 0 );
 
-			shadow.animate( duration ).height( orgHeight + shiftShadow ).after( () => {
+			$shadow.animate( duration ).height( orgHeight + shiftShadow ).after( () => {
 				data.drawerIsOpened = true;
 
 				setTimeout( () => {
