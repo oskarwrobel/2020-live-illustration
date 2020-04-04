@@ -38,7 +38,7 @@ export default function windowWithBlinds( illustrations: Illustrations ): () => 
 	const blinds: SVGGElement[] = Array.from( document.querySelectorAll( '#blinds > g' ) );
 	const $rightToLeftPlane = svg( '#plane-1' ) as Element;
 	const $leftToRightPlane = svg( '#plane-2' ) as Element;
-	const $cloud1 = svg( '#cloud-1' ) as Element;
+	const $cloud1 = svg( '#cloud-1' );
 	const $cloud2 = svg( '#cloud-2' ) as Element;
 	const $cloud3 = svg( '#cloud-3' ) as Element;
 

@@ -1,22 +1,21 @@
 import Illustrations from '../../utils/illustrations';
-import { SVG as svg } from '@svgdotjs/svg.js';
+import { gsap } from 'gsap';
+import createClipPath from '../../utils/createclippath';
 
 export default function oscarStatue( illustrations: Illustrations ): () => void {
 	document.querySelector( '#oscar-small' ).addEventListener( 'click', () => {
 		illustrations.show( 'oscar' );
 	} );
 
-	// Blink.
-	const runner = svg( '#blink' )
-		.dmove( 0, 160 )
-		.animate( {
-			delay: 1000,
-			duration: 900
-		} )
-		.loop( Infinity, false, 5000 )
-		.dmove( 0, -240 );
+	createClipPath( {
+		source: '#blink-mask',
+		targets: [ '#blink-group' ]
+	} );
+
+	const tl = gsap.timeline( { repeat: -1, delay: 3, repeatDelay: 5 } )
+		.to( '#blnk', { y: -240, duration: .9, ease: 'none' } );
 
 	return function oscarDestructor(): void {
-		runner.finish();
+		tl.kill();
 	};
 }

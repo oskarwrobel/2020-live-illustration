@@ -42,18 +42,18 @@ export default function creator( illustrations: Illustrations ): IllustrationDes
 	// Dog's smile
 	// -------------------------------------------------------------------------------------------------------------- //
 	const leash = document.querySelector( '#leash' );
-	const leshTween = gsap.to( '#smile', { attr: { d: 'M41.1,100.5 c0,0,22.9-6.5,22.9-19' } } ).pause();
+	const leashTween = gsap.to( '#smile', { attr: { d: 'M41.1,100.5 c0,0,22.9-6.5,22.9-19' }, paused: true } );
 
-	leash.addEventListener( 'mouseenter', () => ( leshTween.play() ) );
-	leash.addEventListener( 'mouseleave', () => ( leshTween.reverse() ) );
-
-	// TV
-	// -------------------------------------------------------------------------------------------------------------- //
-	tv( illustrations.current.data );
+	leash.addEventListener( 'mouseenter', () => ( leashTween.play() ) );
+	leash.addEventListener( 'mouseleave', () => ( leashTween.reverse() ) );
 
 	// Drawer
 	// -------------------------------------------------------------------------------------------------------------- //
 	drawer( illustrations );
+
+	// TV
+	// -------------------------------------------------------------------------------------------------------------- //
+	const tvDestructor = tv( illustrations.current.data );
 
 	// Oscar statue
 	// -------------------------------------------------------------------------------------------------------------- //
@@ -70,8 +70,8 @@ export default function creator( illustrations: Illustrations ): IllustrationDes
 	// Destructor
 	// -------------------------------------------------------------------------------------------------------------- //
 	return function destroy(): void {
-		[ hallSvg, dogSvg, wallSvg, lampSvg, tvSvg ].forEach( el => el.remove() );
 		parallaxDestructor();
+		tvDestructor();
 		oscarStatueDestructor();
 		windowWithBlindsDestructor();
 		toodEyesDestructor();

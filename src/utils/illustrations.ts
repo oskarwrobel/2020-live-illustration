@@ -44,6 +44,7 @@ export default class Illustrations {
 		if ( this.current ) {
 			await wait( 80 );
 			this.current.detach();
+			this.element.innerHTML = '';
 			this.element.classList.remove( this.current.name );
 		}
 

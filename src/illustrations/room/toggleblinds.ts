@@ -22,7 +22,7 @@ export function toggleBlinds( blinds: Element[], illustrationData: any ): void {
 }
 
 export function openBlinds( blinds: Element[] ): void {
-	animation = gsap.core.Tween.to( data, {
+	animation = gsap.to( data, {
 		value: maxShift,
 		duration,
 		onUpdate() {
@@ -40,7 +40,7 @@ export function openBlinds( blinds: Element[] ): void {
 }
 
 export function closeBlinds( blinds: Element[] ): void {
-	animation = gsap.core.Tween.to( data, {
+	animation = gsap.to( data, {
 		value: 0,
 		duration,
 		onUpdate() {

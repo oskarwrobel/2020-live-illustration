@@ -1,18 +1,23 @@
 import Illustrations, { IllustrationDestructor } from '../../utils/illustrations';
 
 import createSvgElement from '../../utils/createsvgelement';
+import createBackButton from '../../components/backbutton/createbackbutton';
 import parallax from '../../utils/parallax';
 
 import oscarSvgData from './images/oscar.svg';
 import plantSvgData from './images/plant.svg';
 
 import './style.css';
+import escHandler from '../../utils/eschandler';
 
 export default function creator( illustrations: Illustrations ): IllustrationDestructor {
 	const element = illustrations.element;
 
 	const oscar = createSvgElement( oscarSvgData, { id: 'oscar', classes: 'scene' }, element );
 	const plant = createSvgElement( plantSvgData, { id: 'plant', classes: 'scene' }, element );
+
+	const escDestructor = escHandler( () => illustrations.show( 'room' ) );
+	createBackButton( element, () => ( illustrations.show( 'room' ) ) );
 
 	const parallaxDestructor = parallax( {
 		scene: element,
@@ -22,10 +27,8 @@ export default function creator( illustrations: Illustrations ): IllustrationDes
 		]
 	} );
 
-	oscar.addEventListener( 'click', () => illustrations.show( 'room' ) );
-
 	return function destroy(): void {
-		[ oscar, plant ].forEach( el => el.remove() );
 		parallaxDestructor();
+		escDestructor();
 	};
 }
