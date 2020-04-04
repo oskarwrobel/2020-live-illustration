@@ -6,6 +6,7 @@ const path = require( 'path' );
 const { DefinePlugin } = require( 'webpack' );
 const { CleanWebpackPlugin } = require( 'clean-webpack-plugin' );
 const HtmlWebpackPlugin = require( 'html-webpack-plugin' );
+const CopyPlugin = require( 'copy-webpack-plugin' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 
 module.exports = ( env = {}, argv = {} ) => {
@@ -82,7 +83,23 @@ module.exports = ( env = {}, argv = {} ) => {
 				{
 					test: /\.html$/,
 					use: {
-						loader: 'html-loader'
+						loader: 'html-loader',
+						options: {
+							attributes: {
+								list: [
+									{
+										tag: 'img',
+										attribute: 'src',
+										type: 'src'
+									},
+									{
+										tag: 'link',
+										attribute: 'href',
+										type: 'src'
+									}
+								]
+							}
+						}
 					}
 				}
 			]
@@ -96,6 +113,12 @@ module.exports = ( env = {}, argv = {} ) => {
 				template: path.join( projectDir, 'src', 'index.html' ),
 				filename: '2020.html'
 			} ),
+			new CopyPlugin( [
+				{
+					from: path.join( process.cwd(), 'src', 'og-image.png' ),
+					to: path.join( process.cwd(), 'dist', '2020-og-image.png' )
+				}
+			] ),
 			new MiniCssExtractPlugin( {
 				filename: '[name].[contenthash].css'
 			} ),
