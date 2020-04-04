@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { random } from 'lodash-es';
 import { toggleBlinds, openBlinds } from './toggleblinds';
 import Illustrations from '../../utils/illustrations';
+import sendEvent from '../../utils/sendevent';
 
 type Range = [ number, number ];
 
@@ -44,7 +45,12 @@ export default function windowWithBlinds( illustrations: Illustrations ): () => 
 
 	document.querySelector( '#blinds' ).addEventListener( 'click', () => {
 		if ( !illustrations.current.data.wasOpened ) {
+			sendEvent( 'blinds', 'click', 'first' );
 			startAnimation( [ $rightToLeftPlane, $leftToRightPlane, $cloud1, $cloud2, $cloud3 ] );
+		} else {
+			sendEvent( 'blinds', 'click', 'again', {
+				toOpen: !illustrations.current.data.areBlindsOpened
+			} );
 		}
 
 		toggleBlinds( blinds, illustrations.current.data );
@@ -52,10 +58,12 @@ export default function windowWithBlinds( illustrations: Illustrations ): () => 
 	} );
 
 	if ( illustrations.current.data.wasOpened ) {
+		sendEvent( 'blinds', 'continueAnimation' );
 		continueAnimation( [ $rightToLeftPlane, $leftToRightPlane, $cloud1, $cloud2, $cloud3 ] );
 	}
 
 	if ( illustrations.current.data.areBlindsOpened ) {
+		sendEvent( 'blinds', 'openOnInit' );
 		openBlinds( blinds );
 	}
 

@@ -1,5 +1,6 @@
 import { random, throttle } from 'lodash-es';
 import lookAtCursor from '../../utils/lookatcursor';
+import sendEvent from '../../utils/sendevent';
 
 let leftEyeOpened: HTMLElement;
 let leftEyeClosed: HTMLElement;
@@ -95,6 +96,7 @@ function enableCloseOnHover(): void {
 	leftEyeClosed.addEventListener( 'mouseenter', () => {
 		closeLeftEye();
 		isLeftEyeHovered = true;
+		sendEvent( 'tood', 'eyeHovered', 'left' );
 	} );
 
 	leftEyeClosed.addEventListener( 'mouseleave', () => {
@@ -107,6 +109,7 @@ function enableCloseOnHover(): void {
 	rightEyeClosed.addEventListener( 'mouseenter', () => {
 		closeRightEye();
 		isRightEyeHovered = true;
+		sendEvent( 'tood', 'eyeHovered', 'right' );
 	} );
 
 	rightEyeClosed.addEventListener( 'mouseleave', () => {

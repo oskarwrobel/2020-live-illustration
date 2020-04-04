@@ -1,6 +1,8 @@
 import { gsap } from 'gsap';
-import { random } from 'lodash';
+import { random } from 'lodash-es';
+
 import createClipPath from '../../utils/createclippath';
+import sendEvent from '../../utils/sendevent';
 
 type Channel = {
 	screen: SVGGElement;
@@ -38,12 +40,18 @@ export default function tv( illustrationData: any ): () => void {
 	];
 
 	channels.forEach( ( channel: any, i: number ) => {
-		turnOffChannel( i );
-		channels[ i ].button.addEventListener( 'mousedown', () => switchChannel( i ) );
+		channel.screen.style.display = 'none';
+		channel.button.style.visibility = null;
+		channels[ i ].button.addEventListener( 'mousedown', () => {
+			sendEvent( 'tv', 'switchChannel', 'buttonClick', i );
+			switchChannel( i );
+		} );
 	} );
 
 	document.querySelector( '#button-0-on' ).addEventListener( 'mousedown', ( evt: MouseEvent ) => {
 		const target = evt.currentTarget as SVGGElement;
+
+		sendEvent( 'tv', 'off' );
 
 		target.style.visibility = 'hidden';
 
@@ -67,13 +75,15 @@ export default function tv( illustrationData: any ): () => void {
 			}
 		}
 
+		sendEvent( 'tv', 'switchChannel', 'screenClick', nextChannel );
 		switchChannel( nextChannel );
 	} );
 
 	// Display channel on init.
-	if ( typeof illustrationData.channelNumber === 'number' ) {
+	if ( illustrationData.channelNumber !== undefined ) {
+		sendEvent( 'tv', 'switchChannel', 'initial', illustrationData.channelNumber );
 		switchChannel( illustrationData.channelNumber );
-	} else if ( illustrationData.channelNumber === undefined ) {
+	} else {
 		switchChannel( 0 );
 	}
 
@@ -194,13 +204,9 @@ function channel2Animation( channel: Channel ): void {
 		tl.to( element, { x: '-=' + leftShift, y: -20, scale: 1.15, ...def } );
 		tl.to( element, { x: '+=' + rightShift, y: -30, scale: 1.3, ...def } );
 		tl.to( element, { x: '-=' + leftShift, y: -40, scale: 1.45, ...def } );
-		tl.to( element, { x: '+=' + rightShift, y: -55, scale: 1.60, ...def, onComplete } );
+		tl.to( element, { x: '+=' + rightShift, y: -55, scale: 1.60, ...def, onComplete: () => ( pendingAnimations.delete( tl ) ) } );
 
 		pendingAnimations.add( tl );
-
-		function onComplete(): void {
-			pendingAnimations.delete( tl );
-		}
 	}
 
 	function talkingFish(): void {
@@ -231,6 +237,58 @@ function channel2Animation( channel: Channel ): void {
 	}
 }
 
-function channel3Animation(): void {
-	console.log( 'Channel 3' );
+function channel3Animation( channel: Channel ): void {
+	const elements: NodeListOf<SVGPathElement> = document.querySelectorAll( '#channel-3 path' );
+	const modes = [ randomSkew, randomMisalign ];
+
+	let tl1: gsap.core.Timeline;
+	let tl2: gsap.core.Timeline;
+
+	modes[ random( 0, 1 ) ]();
+
+	function randomSkew(): void {
+		const delay = random( 2, 4 );
+
+		tl1 = gsap.timeline( { delay } );
+		tl2 = gsap.timeline( { delay, onComplete } );
+
+		channel.pendingAnimations.add( tl1 );
+		channel.pendingAnimations.add( tl2 );
+
+		for ( let i = 0; i < random( 2, 4 ); i++ ) {
+			const value = random( -60, 60 );
+			const duration = random( .1, .3 );
+
+			tl1.to( elements[ 0 ], { skewX: value, duration, ease: 'back.out(2)' } );
+			tl2.to( elements[ 1 ], { skewX: -value, duration, ease: 'back.out(2)', transformOrigin: 'left bottom' } );
+		}
+
+		tl1.to( elements[ 0 ], { skewX: 0, duration: .1, ease: 'back.out(2)' } );
+		tl2.to( elements[ 1 ], { skewX: 0, duration: .1, ease: 'back.out(2)', transformOrigin: 'left bottom' } );
+	}
+
+	function randomMisalign(): void {
+		const delay = random( 2, 4 );
+
+		tl1 = gsap.timeline( { delay } );
+		tl2 = gsap.timeline( { delay, onComplete } );
+
+		channel.pendingAnimations.add( tl1 );
+		channel.pendingAnimations.add( tl2 );
+
+		const value = random( -15, 15 );
+		const duration = random( .3, .6 );
+
+		tl1.to( elements[ 0 ], { x: value, duration, ease: 'back.out(2)' } );
+		tl2.to( elements[ 1 ], { x: -value, duration, ease: 'back.out(2)' } );
+
+		tl1.to( elements[ 0 ], { x: 0, duration: .1, ease: 'back.out(2)' } );
+		tl2.to( elements[ 1 ], { x: 0, duration: .1, ease: 'back.out(2)' } );
+	}
+
+	function onComplete(): void {
+		modes[ random( 0, 1 ) ]();
+		channel.pendingAnimations.delete( tl1 );
+		channel.pendingAnimations.delete( tl2 );
+	}
 }

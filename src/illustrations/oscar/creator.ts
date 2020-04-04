@@ -9,6 +9,7 @@ import plantSvgData from './images/plant.svg';
 
 import './style.css';
 import escHandler from '../../utils/eschandler';
+import sendEvent from '../../utils/sendevent';
 
 export default function creator( illustrations: Illustrations ): IllustrationDestructor {
 	const element = illustrations.element;
@@ -16,8 +17,17 @@ export default function creator( illustrations: Illustrations ): IllustrationDes
 	const oscar = createSvgElement( oscarSvgData, { id: 'oscar', classes: 'scene' }, element );
 	const plant = createSvgElement( plantSvgData, { id: 'plant', classes: 'scene' }, element );
 
-	const escDestructor = escHandler( () => illustrations.show( 'room' ) );
-	createBackButton( element, () => ( illustrations.show( 'room' ) ) );
+	sendEvent( 'oscar', 'enter' );
+
+	const escDestructor = escHandler( () => {
+		illustrations.show( 'room' );
+		sendEvent( 'oscar', 'leave', 'Esc' );
+	} );
+
+	createBackButton( element, () => {
+		illustrations.show( 'room' );
+		sendEvent( 'oscar', 'leave', 'button' );
+	} );
 
 	const parallaxDestructor = parallax( {
 		scene: element,

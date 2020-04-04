@@ -8,6 +8,7 @@ import toodEyes from './toodeyes';
 import drawer from './drawer';
 import tv from './tv';
 import oscarStatue from './oscarstatue';
+import sendEvent from '../../utils/sendevent';
 
 import hallSvgString from './images/hall.svg';
 import dogSvgString from './images/dog.svg';
@@ -44,7 +45,10 @@ export default function creator( illustrations: Illustrations ): IllustrationDes
 	const leash = document.querySelector( '#leash' );
 	const leashTween = gsap.to( '#smile', { attr: { d: 'M41.1,100.5 c0,0,22.9-6.5,22.9-19' }, paused: true } );
 
-	leash.addEventListener( 'mouseenter', () => ( leashTween.play() ) );
+	leash.addEventListener( 'mouseenter', () => {
+		leashTween.play();
+		sendEvent( 'room', 'dogSmile' );
+	} );
 	leash.addEventListener( 'mouseleave', () => ( leashTween.reverse() ) );
 
 	// Drawer
