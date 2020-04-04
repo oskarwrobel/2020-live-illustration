@@ -4,10 +4,13 @@
 
 const path = require( 'path' );
 const { DefinePlugin } = require( 'webpack' );
+const { CleanWebpackPlugin } = require( 'clean-webpack-plugin' );
 const HtmlWebpackPlugin = require( 'html-webpack-plugin' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 
-module.exports = ( env = {} ) => {
+module.exports = ( env = {}, argv = {} ) => {
+	const isProduction = argv.mode === 'production';
+
 	const projectDir = path.dirname( __filename );
 	const entry = [ path.join( projectDir, 'src', 'app.ts' ) ];
 
@@ -29,6 +32,8 @@ module.exports = ( env = {} ) => {
 		resolve: {
 			extensions: [ '.ts' ]
 		},
+
+		devtool: !isProduction ? 'inline-source-map' : false,
 
 		module: {
 			rules: [
@@ -59,7 +64,8 @@ module.exports = ( env = {} ) => {
 							options: {
 								map: false,
 								plugins: () => [
-									require( 'postcss-nested' )
+									require( 'postcss-nested' )(),
+									isProduction ? require( 'cssnano' )() : noop
 								]
 							}
 						}
@@ -71,7 +77,7 @@ module.exports = ( env = {} ) => {
 				},
 				{
 					test: /.(svg)$/,
-					use: 'svg-inline-loader'
+					use: 'svg-inline-loader?classPrefix=_[contenthash:3]-'
 				},
 				{
 					test: /\.html$/,
@@ -83,6 +89,9 @@ module.exports = ( env = {} ) => {
 		},
 
 		plugins: [
+			!isProduction ? new CleanWebpackPlugin( {
+				verbose: false
+			} ) : noop,
 			new HtmlWebpackPlugin( {
 				template: path.join( projectDir, 'src', 'index.html' ),
 				filename: '2020.html'
@@ -96,3 +105,5 @@ module.exports = ( env = {} ) => {
 		]
 	};
 };
+
+function noop() {}

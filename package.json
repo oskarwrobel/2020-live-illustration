@@ -5,8 +5,8 @@
   "scripts": {
     "lint": "tsc --noEmit && eslint --quiet '**/*.ts'",
     "clean": "rm -rf ./dist",
-    "build": "npm run clean && webpack --mode development",
-    "build:production": "npm run clean && webpack --mode production --optimize-minimize",
+    "build": "webpack --mode development",
+    "build:production": "webpack --mode production --optimize-minimize",
     "serve": "http-server ./dist/"
   },
   "author": "Oskar Wrobel <kontakt@oskarwrobel.pl> (https://www.oskarwrobel.pl/)",
@@ -19,7 +19,9 @@
     "@oskarwrobel/eslint-config": "git@github.com:oskarwrobel/eslint-config.git#1.0.0",
     "@types/eslint": "^6.1.8",
     "@types/lodash-es": "^4.17.3",
+    "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^3.4.2",
+    "cssnano": "^4.1.10",
     "eslint": "^6.8.0",
     "file-loader": "^6.0.0",
     "html-loader": "^1.0.0",
