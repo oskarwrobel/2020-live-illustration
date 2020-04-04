@@ -73,7 +73,7 @@ module.exports = ( env = {}, argv = {} ) => {
 					]
 				},
 				{
-					test: /.(png|jpg|jpeg|gif)$/,
+					test: /.(png|jpg|jpeg|gif|ttf)$/,
 					use: 'file-loader'
 				},
 				{
@@ -115,7 +115,7 @@ module.exports = ( env = {}, argv = {} ) => {
 			} ),
 			new CopyPlugin( [
 				{
-					from: path.join( process.cwd(), 'src', 'og-image.png' ),
+					from: path.join( process.cwd(), 'src', 'assets', 'og-image.png' ),
 					to: path.join( process.cwd(), 'dist', '2020-og-image.png' )
 				}
 			] ),
