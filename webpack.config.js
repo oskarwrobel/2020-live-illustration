@@ -115,8 +115,8 @@ module.exports = ( env = {}, argv = {} ) => {
 			} ),
 			new CopyPlugin( [
 				{
-					from: path.join( process.cwd(), 'src', 'assets', 'og-image.png' ),
-					to: path.join( process.cwd(), 'dist', '2020-og-image.png' )
+					from: path.join( projectDir, 'src', 'assets', '2020-og-image.png' ),
+					to: path.join( process.cwd(), 'dist' )
 				}
 			] ),
 			new MiniCssExtractPlugin( {
