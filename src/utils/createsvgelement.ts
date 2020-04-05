@@ -5,15 +5,18 @@ type Config = {
 	id?: string;
 }
 
-export default function createSvgElement( rawData: string, { classes, id }: Config, appendTo?: Element ): SVGElement {
+/**
+ * Creates SVG element from string data.
+ */
+export default function createSvgElement( rawData: string, config: Config, appendTo?: Element ): SVGElement {
 	const element = parser.parseFromString( rawData, 'image/svg+xml' ).childNodes[ 0 ] as SVGElement;
 
-	if ( id ) {
-		element.id = id;
+	if ( config.id ) {
+		element.id = config.id;
 	}
 
-	if ( classes ) {
-		element.classList.add( classes );
+	if ( config.classes ) {
+		element.classList.add( config.classes );
 	}
 
 	if ( appendTo ) {

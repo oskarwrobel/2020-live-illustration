@@ -2,9 +2,9 @@ import { SVG as svg, Element, Text, Rect } from '@svgdotjs/svg.js';
 import { gsap } from 'gsap';
 import { random } from 'lodash-es';
 import { toggleBlinds, openBlinds } from './toggleblinds';
-import Illustrations from '../../utils/illustrations';
-import sendEvent from '../../utils/sendevent';
-import createClipPath from '../../utils/createclippath';
+import Illustrations from '../../../utils/illustrations';
+import sendEvent from '../../../utils/sendevent';
+import createClipPath from '../../../utils/createclippath';
 
 type Range = [ number, number ];
 

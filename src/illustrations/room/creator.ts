@@ -3,12 +3,13 @@ import { gsap } from 'gsap';
 
 import createSvgElement from '../../utils/createsvgelement';
 import parallax from '../../utils/parallax';
-import windowWithBlinds from './windowwithblinds';
-import toodEyes from './toodeyes';
-import drawer from './drawer';
-import tv from './tv';
-import oscarStatue from './oscarstatue';
 import sendEvent from '../../utils/sendevent';
+
+import windowWithBlinds from './utils/windowwithblinds';
+import toodEyes from './utils/toodeyes';
+import drawer from './utils/drawer';
+import tv from './utils/tv';
+import oscarStatue from './utils/oscarstatue';
 
 import hallSvgString from './images/hall.svg';
 import dogSvgString from './images/dog.svg';

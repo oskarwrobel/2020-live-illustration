@@ -1,8 +1,8 @@
 import { gsap } from 'gsap';
 import { random } from 'lodash-es';
 
-import createClipPath from '../../utils/createclippath';
-import sendEvent from '../../utils/sendevent';
+import createClipPath from '../../../utils/createclippath';
+import sendEvent from '../../../utils/sendevent';
 
 type Channel = {
 	screen: SVGGElement;
@@ -46,15 +46,17 @@ export default function tv( illustrationData: any ): () => void {
 		}
 	];
 
+	// Reset initial states.
 	channels.forEach( ( channel: any, i: number ) => {
 		channel.screen.style.display = 'none';
 		channel.button.style.visibility = null;
 		channels[ i ].button.addEventListener( 'mousedown', () => {
 			sendEvent( 'tv', 'switchChannel', 'buttonClick', i );
-			switchChannel( i );
+			switchChannel( i, channels, illustrationData );
 		} );
 	} );
 
+	// Turn off tv after clicking red button.
 	document.querySelector( '#button-0-on' ).addEventListener( 'mousedown', ( evt: MouseEvent ) => {
 		const target = evt.currentTarget as SVGGElement;
 
@@ -63,12 +65,13 @@ export default function tv( illustrationData: any ): () => void {
 		target.style.visibility = 'hidden';
 
 		if ( illustrationData.channelNumber !== undefined ) {
-			turnOffChannel( illustrationData.channelNumber );
+			turnOffChannel( illustrationData.channelNumber, channels, illustrationData );
 		}
 
 		document.addEventListener( 'mouseup', () => ( target.style.visibility = null ) );
 	} );
 
+	// Switch channel after clicking on the screen.
 	document.querySelector( '#screen' ).addEventListener( 'click', () => {
 		let nextChannel: number;
 
@@ -83,54 +86,55 @@ export default function tv( illustrationData: any ): () => void {
 		}
 
 		sendEvent( 'tv', 'switchChannel', 'screenClick', nextChannel );
-		switchChannel( nextChannel );
+		switchChannel( nextChannel, channels, illustrationData );
 	} );
 
 	// Display channel on init.
 	if ( illustrationData.channelNumber !== undefined ) {
 		sendEvent( 'tv', 'switchChannel', 'initial', illustrationData.channelNumber );
-		switchChannel( illustrationData.channelNumber );
+		switchChannel( illustrationData.channelNumber, channels, illustrationData );
 	} else {
-		switchChannel( 0 );
+		switchChannel( 0, channels, illustrationData );
 	}
 
+	// Destroy scene and release all assets.
 	return function tvDestructor(): void {
 		for ( const channel of channels ) {
 			channel.pendingAnimations.forEach( ( animation: gsap.core.Timeline ) => animation.kill() );
 		}
 	};
+}
 
-	function switchChannel( channelNumber: number ): void {
-		if ( illustrationData.channelNumber !== undefined ) {
-			turnOffChannel( illustrationData.channelNumber );
-		}
-
-		turnOnChannel( channelNumber );
+function switchChannel( channelNumber: number, channels: Channel[], illustrationData: any ): void {
+	if ( illustrationData.channelNumber !== undefined ) {
+		turnOffChannel( illustrationData.channelNumber, channels, illustrationData );
 	}
 
-	function turnOnChannel( channelNumber: number ): void {
-		const channel = channels[ channelNumber ];
+	turnOnChannel( channelNumber, channels, illustrationData );
+}
 
-		channel.screen.style.display = null;
-		channel.button.style.visibility = 'hidden';
+function turnOnChannel( channelNumber: number, channels: Channel[], illustrationData: any ): void {
+	const channel = channels[ channelNumber ];
 
-		if ( channel.pendingAnimations.size ) {
-			channel.pendingAnimations.forEach( animation => ( animation.resume() ) );
-		} else {
-			channel.start( channel );
-		}
+	channel.screen.style.display = null;
+	channel.button.style.visibility = 'hidden';
 
-		illustrationData.channelNumber = channelNumber;
+	if ( channel.pendingAnimations.size ) {
+		channel.pendingAnimations.forEach( animation => ( animation.resume() ) );
+	} else {
+		channel.start( channel );
 	}
 
-	function turnOffChannel( channelNumber: number ): void {
-		const channel = channels[ channelNumber ];
+	illustrationData.channelNumber = channelNumber;
+}
 
-		channel.screen.style.display = 'none';
-		channel.button.style.visibility = null;
-		illustrationData.channelNumber = undefined;
-		channel.pendingAnimations.forEach( animation => ( animation.pause() ) );
-	}
+function turnOffChannel( channelNumber: number, channels: Channel[], illustrationData: any ): void {
+	const channel = channels[ channelNumber ];
+
+	channel.screen.style.display = 'none';
+	channel.button.style.visibility = null;
+	illustrationData.channelNumber = undefined;
+	channel.pendingAnimations.forEach( animation => ( animation.pause() ) );
 }
 
 function channel1Animation( channel: Channel ): void {
@@ -252,7 +256,7 @@ function channel2Animation( channel: Channel ): void {
 
 function channel3Animation( channel: Channel ): void {
 	const elements: NodeListOf<SVGPathElement> = document.querySelectorAll( '#channel-3 path' );
-	const modes = [ randomSkew, randomMisalign ];
+	const modes = [ randomSkew, randomMisalignment ];
 
 	let tl1: gsap.core.Timeline;
 	let tl2: gsap.core.Timeline;
@@ -280,7 +284,7 @@ function channel3Animation( channel: Channel ): void {
 		tl2.to( elements[ 1 ], { skewX: 0, duration: .1, ease: 'back.out(2)', transformOrigin: 'left bottom' } );
 	}
 
-	function randomMisalign(): void {
+	function randomMisalignment(): void {
 		const delay = random( 2, 4 );
 
 		tl1 = gsap.timeline( { delay } );

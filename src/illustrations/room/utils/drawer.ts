@@ -1,4 +1,4 @@
-import Illustrations from '../../utils/illustrations';
+import Illustrations from '../../../utils/illustrations';
 import { gsap } from 'gsap';
 
 const shift = 95;

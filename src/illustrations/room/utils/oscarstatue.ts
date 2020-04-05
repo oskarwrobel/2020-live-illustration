@@ -1,6 +1,6 @@
-import Illustrations from '../../utils/illustrations';
 import { gsap } from 'gsap';
-import createClipPath from '../../utils/createclippath';
+import Illustrations from '../../../utils/illustrations';
+import createClipPath from '../../../utils/createclippath';
 
 export default function oscarStatue( illustrations: Illustrations ): () => void {
 	document.querySelector( '#oscar-small' ).addEventListener( 'click', () => {

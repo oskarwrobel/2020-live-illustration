@@ -1,12 +1,12 @@
 import { random, throttle } from 'lodash-es';
-import lookAtCursor from '../../utils/lookatcursor';
-import sendEvent from '../../utils/sendevent';
+import moveToCursor from '../../../utils/movetocursor';
+import sendEvent from '../../../utils/sendevent';
 
 let leftEyeOpened: HTMLElement;
 let leftEyeClosed: HTMLElement;
 let rightEyeOpened: HTMLElement;
 let rightEyeClosed: HTMLElement;
-let timerId: number;
+let blinkingTimerId: ReturnType<typeof setTimeout>;
 
 let isLeftEyeHovered = false;
 let isRightEyeHovered = false;
@@ -37,8 +37,8 @@ export default function toodEyes(): () => void {
 	window.addEventListener( 'resize', throttledResizeMoveHandler );
 
 	function mouseMoveHandler( evt: MouseEvent ): void {
-		lookAtCursor( evt.clientX, evt.clientY, Object.assign( { element: leftPupil, wrapperRect: leftWrapperRect }, eyeBounds ) );
-		lookAtCursor( evt.clientX, evt.clientY, Object.assign( { element: rightPupil, wrapperRect: rightWrapperRect }, eyeBounds ) );
+		moveToCursor( evt.clientX, evt.clientY, Object.assign( { element: leftPupil, wrapperRect: leftWrapperRect }, eyeBounds ) );
+		moveToCursor( evt.clientX, evt.clientY, Object.assign( { element: rightPupil, wrapperRect: rightWrapperRect }, eyeBounds ) );
 	}
 
 	function resizeHandler(): void {
@@ -88,14 +88,14 @@ function blink(): void {
 }
 
 function startBlinking(): void {
-	timerId = setTimeout( () => {
+	blinkingTimerId = setTimeout( () => {
 		blink();
 		startBlinking();
 	}, random( 3000, 10000 ) );
 }
 
 function stopBlinking(): void {
-	clearInterval( timerId );
+	clearInterval( blinkingTimerId );
 }
 
 function resetTimer(): void {
@@ -104,14 +104,14 @@ function resetTimer(): void {
 }
 
 function enableCloseOnHover(): void {
-	let leftEyeEventTimeId: any;
-	let rightEyeEventTimeId: any;
+	let leftEyeHoverTimeId: ReturnType<typeof setTimeout>;
+	let rightEyeHoverTimeId: ReturnType<typeof setTimeout>;
 
 	leftEyeClosed.addEventListener( 'mouseenter', () => {
 		closeLeftEye();
 		isLeftEyeHovered = true;
 
-		leftEyeEventTimeId = setTimeout( () => {
+		leftEyeHoverTimeId = setTimeout( () => {
 			sendEvent( 'tood', 'eyeHovered', 'left' );
 		}, 300 );
 	} );
@@ -122,14 +122,14 @@ function enableCloseOnHover(): void {
 		isLeftEyeHovered = false;
 		resetTimer();
 
-		clearInterval( leftEyeEventTimeId );
+		clearInterval( leftEyeHoverTimeId );
 	} );
 
 	rightEyeClosed.addEventListener( 'mouseenter', () => {
 		closeRightEye();
 		isRightEyeHovered = true;
 
-		rightEyeEventTimeId = setTimeout( () => {
+		rightEyeHoverTimeId = setTimeout( () => {
 			sendEvent( 'tood', 'eyeHovered', 'right' );
 		}, 300 );
 	} );
@@ -140,6 +140,6 @@ function enableCloseOnHover(): void {
 		isRightEyeHovered = false;
 		resetTimer();
 
-		clearInterval( rightEyeEventTimeId );
+		clearInterval( rightEyeHoverTimeId );
 	} );
 }

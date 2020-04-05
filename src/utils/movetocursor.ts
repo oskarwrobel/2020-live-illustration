@@ -9,7 +9,7 @@ type Config = {
 	maxShiftRight: number;
 }
 
-export default function lookAtCursor( clientX: number, clientY: number, config: Config ): void {
+export default function moveToCursor( clientX: number, clientY: number, config: Config ): void {
 	const { element, wrapperRect, maxShiftTop, maxShiftBottom, maxShiftLeft, maxShiftRight } = config;
 
 	const widthHalf = wrapperRect.width / 2;
