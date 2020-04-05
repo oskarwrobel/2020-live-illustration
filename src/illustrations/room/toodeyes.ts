@@ -27,13 +27,23 @@ export default function toodEyes(): () => void {
 	const leftPupil = leftEyeOpened.querySelector( 'circle' );
 	const rightPupil = rightEyeOpened.querySelector( 'circle' );
 
+	let leftWrapperRect = ( leftPupil.parentNode as SVGGElement ).getBoundingClientRect();
+	let rightWrapperRect = ( rightPupil.parentNode as SVGGElement ).getBoundingClientRect();
+
 	const throttledMouseMoveHandler = throttle( mouseMoveHandler, 20, { leading: true } );
+	const throttledResizeMoveHandler = throttle( resizeHandler, 100, { leading: true } );
 
 	document.addEventListener( 'mousemove', throttledMouseMoveHandler );
+	window.addEventListener( 'resize', throttledResizeMoveHandler );
 
 	function mouseMoveHandler( evt: MouseEvent ): void {
-		lookAtCursor( evt.clientX, evt.clientY, Object.assign( { element: leftPupil }, eyeBounds ) );
-		lookAtCursor( evt.clientX, evt.clientY, Object.assign( { element: rightPupil }, eyeBounds ) );
+		lookAtCursor( evt.clientX, evt.clientY, Object.assign( { element: leftPupil, wrapperRect: leftWrapperRect }, eyeBounds ) );
+		lookAtCursor( evt.clientX, evt.clientY, Object.assign( { element: rightPupil, wrapperRect: rightWrapperRect }, eyeBounds ) );
+	}
+
+	function resizeHandler(): void {
+		leftWrapperRect = ( leftPupil.parentNode as SVGGElement ).getBoundingClientRect();
+		rightWrapperRect = ( rightPupil.parentNode as SVGGElement ).getBoundingClientRect();
 	}
 
 	enableCloseOnHover();
@@ -41,6 +51,7 @@ export default function toodEyes(): () => void {
 
 	return function destroy(): void {
 		document.removeEventListener( 'mousemove', throttledMouseMoveHandler );
+		window.removeEventListener( 'resize', throttledResizeMoveHandler );
 		stopBlinking();
 	};
 }

@@ -32,11 +32,11 @@ export default function creator( illustrations: Illustrations ): IllustrationDes
 	const parallaxDestructor = parallax( {
 		scene: illustrations.element,
 		items: [
-			{ element: hallSvg, friction: 0.05 },
-			{ element: dogSvg, friction: 0.065 },
-			{ element: wallSvg, friction: 0.03 },
-			{ element: lampSvg, friction: 0.2 },
-			{ element: tvSvg, friction: 0.05 }
+			{ element: hallSvg, depth: 0.1 },
+			{ element: dogSvg, depth: 0.17 },
+			{ element: wallSvg, depth: 0.3 },
+			{ element: lampSvg, depth: 0.37 },
+			{ element: tvSvg, depth: 0.5 }
 		]
 	} );
 

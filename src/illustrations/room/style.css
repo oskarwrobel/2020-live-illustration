@@ -19,6 +19,7 @@
 #wall {
 	right: -6%;
 	height: 100%;
+	overflow: hidden;
 
 	#oscar-small {
 		cursor: pointer;
@@ -55,6 +56,7 @@
 	bottom: 0;
 	width: 85%;
 	pointer-events: none;
+	overflow: hidden;
 
 	& > g > g {
 		pointer-events: auto;

@@ -4,6 +4,7 @@ import { random } from 'lodash-es';
 import { toggleBlinds, openBlinds } from './toggleblinds';
 import Illustrations from '../../utils/illustrations';
 import sendEvent from '../../utils/sendevent';
+import createClipPath from '../../utils/createclippath';
 
 type Range = [ number, number ];
 
@@ -36,6 +37,11 @@ const elementToAnimation: Map<Element, gsap.core.Tween> = new Map();
 export default function windowWithBlinds( illustrations: Illustrations ): () => void {
 	windowRect = getWindowRect();
 
+	createClipPath( {
+		source: '#wall > rect',
+		targets: [ '#wall > g' ]
+	} );
+
 	const blinds: SVGGElement[] = Array.from( document.querySelectorAll( '#blinds > g' ) );
 	const $rightToLeftPlane = svg( '#plane-1' ) as Element;
 	const $leftToRightPlane = svg( '#plane-2' ) as Element;
@@ -48,9 +54,16 @@ export default function windowWithBlinds( illustrations: Illustrations ): () => 
 			sendEvent( 'blinds', 'click', 'first' );
 			startAnimation( [ $rightToLeftPlane, $leftToRightPlane, $cloud1, $cloud2, $cloud3 ] );
 		} else {
-			sendEvent( 'blinds', 'click', 'again', {
-				toOpen: !illustrations.current.data.areBlindsOpened
-			} );
+			if ( illustrations.current.data.areBlindsOpened ) {
+				setTimeout( () => {
+					pauseAnimation( false );
+				}, 1000 );
+
+				sendEvent( 'blinds', 'click', 'again', { toOpen: false } );
+			} else {
+				pauseAnimation( true );
+				sendEvent( 'blinds', 'click', 'again', { toOpen: true } );
+			}
 		}
 
 		toggleBlinds( blinds, illustrations.current.data );
@@ -105,13 +118,27 @@ function startAnimation( [ $rightToLeftPlane, $leftToRightPlane, $cloud1, $cloud
 }
 
 function continueAnimation( [ $rightToLeftPlane, $leftToRightPlane, $cloud1, $cloud2, $cloud3 ]: Element[] ): void {
-	animatePlaneInLoop( [ $rightToLeftPlane, $leftToRightPlane ], [ 10, 15 ], [ 5, 10 ], [ 50, 90 ] );
-	animateCloudInLoop( $cloud1, [ 34, 40 ], [ 0, 0 ], [ 200, 310 ] );
-	animateCloudInLoop( $cloud2, [ 20, 28 ], [ 0, 0 ], [ 220, 325 ] );
-	animateCloudInLoop( $cloud3, [ 28, 34 ], [ 0, 0 ], [ 400, 530 ] );
+	const planes = [ $rightToLeftPlane, $leftToRightPlane ];
+
+	$currentPlane = planes[ random( 0, 1 ) ];
+
+	animatePlaneInLoop( planes, [ 10, 15 ], [ 5, 10 ], [ 50, 90 ], true );
+	animateCloudInLoop( $cloud1, [ 34, 40 ], [ 0, 0 ], [ 200, 310 ], true );
+	animateCloudInLoop( $cloud2, [ 20, 28 ], [ 0, 0 ], [ 220, 325 ], true );
+	animateCloudInLoop( $cloud3, [ 28, 34 ], [ 0, 0 ], [ 400, 530 ], true );
 }
 
-function animatePlaneInLoop( planes: Element[], duration: Range, delay: Range, size: Range ): void {
+function pauseAnimation( start: boolean ): void {
+	for ( const animation of elementToAnimation.values() ) {
+		if ( start ) {
+			animation.play();
+		} else {
+			animation.pause();
+		}
+	}
+}
+
+function animatePlaneInLoop( planes: Element[], duration: Range, delay: Range, size: Range, randomStartPos = false ): void {
 	const [ $rightToLeftPlane, $leftToRightPlane ] = planes;
 
 	let direction: string;
@@ -136,12 +163,12 @@ function animatePlaneInLoop( planes: Element[], duration: Range, delay: Range, s
 			.move( windowRect.x - $currentPlane.width(), getRandomY( $currentPlane ) );
 	}
 
-	animateElement( $currentPlane, random( ...duration ), random( ...delay ), direction ).then( () => {
+	animateElement( $currentPlane, random( ...duration ), random( ...delay ), direction, randomStartPos ).then( () => {
 		animatePlaneInLoop( planes, duration, delay, size );
 	} );
 }
 
-function animateCloudInLoop( $element: Element, duration: Range, delay: Range, size: Range ): void {
+function animateCloudInLoop( $element: Element, duration: Range, delay: Range, size: Range, randomStartPos = false ): void {
 	const availableSections = [];
 
 	for ( let i = 0; i < maxLevels; i++ ) {
@@ -158,12 +185,12 @@ function animateCloudInLoop( $element: Element, duration: Range, delay: Range, s
 		.size( random( ...size ) )
 		.move( windowRect.x + windowRect.width, getRandomY( $element, section ) );
 
-	animateElement( $element, random( ...duration ), random( ...delay ), 'left' ).then( () => {
+	animateElement( $element, random( ...duration ), random( ...delay ), 'left', randomStartPos ).then( () => {
 		animateCloudInLoop( $element, duration, delay, size );
 	} );
 }
 
-function animateElement( $element: Element, duration: number, delay = 0, direction = 'left' ): Promise<undefined> {
+function animateElement( $element: Element, duration: number, delay = 0, direction = 'left', randomPos = false ): Promise<undefined> {
 	const elementRect = $element.bbox();
 	const x = direction === 'left' ?
 		-( elementRect.x + elementRect.width - windowRect.x ) : ( windowRect.x + windowRect.width ) - elementRect.x;
@@ -172,13 +199,20 @@ function animateElement( $element: Element, duration: number, delay = 0, directi
 		const animation = gsap.to( $element.node, { duration, delay, x,
 			ease: 'none',
 			clearProps: 'all',
-			onComplete: resolve,
 			onUpdate() {
-				if ( animation.progress() >= 0.5 ) {
+				if ( !randomPos && animation.progress() >= 0.5 ) {
 					cloudToLevel.delete( $element );
 				}
+			},
+			onComplete() {
+				elementToAnimation.delete( $element );
+				resolve();
 			}
 		} );
+
+		if ( randomPos ) {
+			animation.time( random( duration / 8, duration / 1.2 ) );
+		}
 
 		elementToAnimation.set( $element, animation );
 	} );

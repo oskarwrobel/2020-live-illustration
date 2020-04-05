@@ -32,8 +32,8 @@ export default function creator( illustrations: Illustrations ): IllustrationDes
 	const parallaxDestructor = parallax( {
 		scene: element,
 		items: [
-			{ element: oscar, friction: 0.01 },
-			{ element: plant, friction: 0.05 }
+			{ element: oscar, depth: 0.1 },
+			{ element: plant, depth: 0.5 }
 		]
 	} );
 

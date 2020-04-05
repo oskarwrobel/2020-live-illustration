@@ -2,7 +2,7 @@ import { clamp } from 'lodash-es';
 
 type Config = {
 	element: Element;
-	wrapperElement?: Element;
+	wrapperRect: ClientRect;
 	maxShiftTop: number;
 	maxShiftBottom: number;
 	maxShiftLeft: number;
@@ -10,11 +10,8 @@ type Config = {
 }
 
 export default function lookAtCursor( clientX: number, clientY: number, config: Config ): void {
-	let { element, wrapperElement, maxShiftTop, maxShiftBottom, maxShiftLeft, maxShiftRight } = config;
+	const { element, wrapperRect, maxShiftTop, maxShiftBottom, maxShiftLeft, maxShiftRight } = config;
 
-	wrapperElement = wrapperElement || element.parentNode as HTMLElement;
-
-	const wrapperRect = wrapperElement.getBoundingClientRect();
 	const widthHalf = wrapperRect.width / 2;
 	const heightHalf = wrapperRect.height / 2;
 

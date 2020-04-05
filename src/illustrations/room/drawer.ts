@@ -19,6 +19,7 @@ export default function drawer( illustrations: Illustrations ): void {
 		front.setAttribute( 'transform', `translate( ${ shift }, 0 )` );
 		shadow.setAttribute( 'points', shadowTo );
 
+		isTweening = true;
 		gsap.to( front, { x: '-=' + shift, duration, delay } );
 		gsap.to( shadow, { attr: { points: shadowFrom }, duration, delay, onComplete: () => ( isTweening = false ) } );
 
@@ -30,6 +31,7 @@ export default function drawer( illustrations: Illustrations ): void {
 			return;
 		}
 
+		isTweening = true;
 		gsap.to( front, { x: shift, duration } );
 		gsap.to( shadow, { attr: { points: shadowTo }, duration, onComplete } );
 	} );
