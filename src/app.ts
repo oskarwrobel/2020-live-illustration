@@ -1,16 +1,16 @@
-import Illustrations from './utils/illustrations';
+import Scenes from './utils/scenes';
 
-import roomCreator from './illustrations/room/creator';
-import oscarCreator from './illustrations/oscar/creator';
-import drawerCreator from './illustrations/drawer/creator';
+import roomCreator from './scenes/room/creator';
+import oscarCreator from './scenes/oscar/creator';
+import drawerCreator from './scenes/drawer/creator';
 
 import './app.css';
 
-const wrapperElement = document.querySelector( '.illustration' ) as HTMLDivElement;
-const illustrations = new Illustrations( wrapperElement, '1280x720' );
+const wrapperElement = document.querySelector( '#scene' ) as HTMLDivElement;
+const scenes = new Scenes( wrapperElement, '1280x720' );
 
-illustrations.add( 'room', roomCreator );
-illustrations.add( 'oscar', oscarCreator );
-illustrations.add( 'drawer', drawerCreator );
+scenes.add( 'room', roomCreator );
+scenes.add( 'oscar', oscarCreator );
+scenes.add( 'drawer', drawerCreator );
 
-illustrations.show( 'room' );
+scenes.show( 'room' );

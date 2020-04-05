@@ -1,8 +1,8 @@
-import { SVG as svg, Element, Text, Rect } from '@svgdotjs/svg.js';
 import { gsap } from 'gsap';
+import { SVG as svg, Element, Text, Rect } from '@svgdotjs/svg.js';
 import { random } from 'lodash-es';
 import { toggleBlinds, openBlinds } from './toggleblinds';
-import Illustrations from '../../../utils/illustrations';
+import Scenes from '../../../utils/scenes';
 import sendEvent from '../../../utils/sendevent';
 import createClipPath from '../../../utils/createclippath';
 
@@ -34,7 +34,7 @@ let $currentPlane: Element;
 // Stores all pending animations.
 const elementToAnimation: Map<Element, gsap.core.Tween> = new Map();
 
-export default function windowWithBlinds( illustrations: Illustrations ): () => void {
+export default function windowWithBlinds( scenes: Scenes ): () => void {
 	windowRect = getWindowRect();
 
 	createClipPath( {
@@ -50,11 +50,11 @@ export default function windowWithBlinds( illustrations: Illustrations ): () => 
 	const $cloud3 = svg( '#cloud-3' ) as Element;
 
 	document.querySelector( '#blinds' ).addEventListener( 'click', () => {
-		if ( !illustrations.current.data.wasOpened ) {
+		if ( !scenes.current.data.wasOpened ) {
 			sendEvent( 'blinds', 'click', 'first' );
 			startAnimation( [ $rightToLeftPlane, $leftToRightPlane, $cloud1, $cloud2, $cloud3 ] );
 		} else {
-			if ( illustrations.current.data.areBlindsOpened ) {
+			if ( scenes.current.data.areBlindsOpened ) {
 				setTimeout( () => {
 					pauseAnimation( false );
 				}, 1000 );
@@ -66,16 +66,16 @@ export default function windowWithBlinds( illustrations: Illustrations ): () => 
 			}
 		}
 
-		toggleBlinds( blinds, illustrations.current.data );
-		illustrations.current.data.wasOpened = true;
+		toggleBlinds( blinds, scenes.current.data );
+		scenes.current.data.wasOpened = true;
 	} );
 
-	if ( illustrations.current.data.wasOpened ) {
+	if ( scenes.current.data.wasOpened ) {
 		sendEvent( 'blinds', 'continueAnimation' );
 		continueAnimation( [ $rightToLeftPlane, $leftToRightPlane, $cloud1, $cloud2, $cloud3 ] );
 	}
 
-	if ( illustrations.current.data.areBlindsOpened ) {
+	if ( scenes.current.data.areBlindsOpened ) {
 		sendEvent( 'blinds', 'openOnInit' );
 		openBlinds( blinds );
 	}

@@ -1,15 +1,15 @@
-import Illustrations, { IllustrationDestructor } from '../../utils/illustrations';
 import { gsap } from 'gsap';
+import Scenes, { SceneDestructor } from '../../utils/scenes';
 
 import createSvgElement from '../../utils/createsvgelement';
 import parallax from '../../utils/parallax';
 import sendEvent from '../../utils/sendevent';
 
-import windowWithBlinds from './utils/windowwithblinds';
-import toodEyes from './utils/toodeyes';
-import drawer from './utils/drawer';
-import tv from './utils/tv';
-import oscarStatue from './utils/oscarstatue';
+import windowWithBlinds from './helpers/windowwithblinds';
+import toodEyes from './helpers/toodeyes';
+import drawer from './helpers/drawer';
+import tv from './helpers/tv';
+import oscarStatue from './helpers/oscarstatue';
 
 import hallSvgString from './images/hall.svg';
 import dogSvgString from './images/dog.svg';
@@ -19,19 +19,19 @@ import tvSvgString from './images/tv.svg';
 
 import './style.css';
 
-export default function creator( illustrations: Illustrations ): IllustrationDestructor {
-	const element = illustrations.element;
+export default function creator( scenes: Scenes ): SceneDestructor {
+	const element = scenes.element;
 
-	const hallSvg = createSvgElement( hallSvgString, { id: 'hall', classes: 'scene' }, element );
-	const dogSvg = createSvgElement( dogSvgString, { id: 'dog', classes: 'scene' }, element );
-	const wallSvg = createSvgElement( wallSvgString, { id: 'wall', classes: 'scene' }, element );
-	const lampSvg = createSvgElement( lampSvgString, { id: 'lamp', classes: 'scene' }, element );
-	const tvSvg = createSvgElement( tvSvgString, { id: 'tv', classes: 'scene' }, element );
+	const hallSvg = createSvgElement( hallSvgString, { id: 'hall', classes: 'plan' }, element );
+	const dogSvg = createSvgElement( dogSvgString, { id: 'dog', classes: 'plan' }, element );
+	const wallSvg = createSvgElement( wallSvgString, { id: 'wall', classes: 'plan' }, element );
+	const lampSvg = createSvgElement( lampSvgString, { id: 'lamp', classes: 'plan' }, element );
+	const tvSvg = createSvgElement( tvSvgString, { id: 'tv', classes: 'plan' }, element );
 
 	// Initialize parallax
 	// -------------------------------------------------------------------------------------------------------------- //
 	const parallaxDestructor = parallax( {
-		scene: illustrations.element,
+		scene: scenes.element,
 		items: [
 			{ element: hallSvg, depth: 0.1 },
 			{ element: dogSvg, depth: 0.17 },
@@ -61,19 +61,19 @@ export default function creator( illustrations: Illustrations ): IllustrationDes
 
 	// Drawer
 	// -------------------------------------------------------------------------------------------------------------- //
-	drawer( illustrations );
+	drawer( scenes );
 
 	// TV
 	// -------------------------------------------------------------------------------------------------------------- //
-	const tvDestructor = tv( illustrations.current.data );
+	const tvDestructor = tv( scenes.current.data );
 
 	// Oscar statue
 	// -------------------------------------------------------------------------------------------------------------- //
-	const oscarStatueDestructor = oscarStatue( illustrations );
+	const oscarStatueDestructor = oscarStatue( scenes );
 
 	// Window
 	// -------------------------------------------------------------------------------------------------------------- //
-	const windowWithBlindsDestructor = windowWithBlinds( illustrations );
+	const windowWithBlindsDestructor = windowWithBlinds( scenes );
 
 	// Tood eyes
 	// -------------------------------------------------------------------------------------------------------------- //

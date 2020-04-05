@@ -1,6 +1,5 @@
 import { gsap } from 'gsap';
 import { random } from 'lodash-es';
-
 import createClipPath from '../../../utils/createclippath';
 import sendEvent from '../../../utils/sendevent';
 

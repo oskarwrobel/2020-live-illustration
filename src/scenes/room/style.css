@@ -1,4 +1,6 @@
-.illustration.room {
+.scene-room {
+	background: #8DD9FF;
+
 	#hall {
 		top: 0;
 		left: -3%;

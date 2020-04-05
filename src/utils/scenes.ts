@@ -1,13 +1,16 @@
 import { throttle } from 'lodash-es';
 import setProportions from './setproportions';
 
-export type IllustrationCreator = ( illustrations: Illustrations ) => IllustrationDestructor;
-export type IllustrationDestructor = () => void;
+export type SceneCreator = ( scenes: Scenes ) => SceneDestructor;
+export type SceneDestructor = () => void;
 
-export default class Illustrations {
-	private readonly _illustrations: Map<string, Illustration> = new Map();
+/**
+ * Creates, destroys and switches between scenes.
+ */
+export default class Scenes {
+	private readonly _scenes: Map<string, Scene> = new Map();
 	readonly element: HTMLElement;
-	current: Illustration;
+	current: Scene;
 
 	constructor( element: HTMLElement, optimalResolution: string ) {
 		this.element = element;
@@ -26,17 +29,17 @@ export default class Illustrations {
 		setProportions( element, optimalWidth, optimalHeight );
 	}
 
-	add( name: string, creator: IllustrationCreator ): void {
-		if ( this._illustrations.has( name ) ) {
-			throw new Error( 'Illustration already created.' );
+	add( name: string, creator: SceneCreator ): void {
+		if ( this._scenes.has( name ) ) {
+			throw new Error( 'Scene already created.' );
 		}
 
-		this._illustrations.set( name, new Illustration( name, creator ) );
+		this._scenes.set( name, new Scene( name, creator ) );
 	}
 
 	async show( name: string ): Promise<void> {
-		if ( !this._illustrations.has( name ) ) {
-			throw new Error( 'Illustration does not exist.' );
+		if ( !this._scenes.has( name ) ) {
+			throw new Error( 'Scene does not exist.' );
 		}
 
 		this.element.classList.add( 'changing' );
@@ -48,27 +51,30 @@ export default class Illustrations {
 			this.element.classList.remove( this.current.name );
 		}
 
-		this.current = this._illustrations.get( name );
-		this.element.classList.add( this.current.name );
+		this.current = this._scenes.get( name );
+		this.element.classList.add( 'scene-' + this.current.name );
 		this.current.render( this );
 		await wait( 80 );
 		this.element.classList.remove( 'changing' );
 	}
 }
 
-export class Illustration {
-	private readonly _creator: IllustrationCreator;
-	private _destructor: IllustrationDestructor;
+/**
+ * Single scene representation.
+ */
+export class Scene {
+	private readonly _creator: SceneCreator;
+	private _destructor: SceneDestructor;
 	readonly name: string;
 	data: any = {};
 
-	constructor( name: string, creator: IllustrationCreator ) {
+	constructor( name: string, creator: SceneCreator ) {
 		this.name = name;
 		this._creator = creator;
 	}
 
-	render( illustrations: Illustrations ): void {
-		this._destructor = this._creator( illustrations );
+	render( scenes: Scenes ): void {
+		this._destructor = this._creator( scenes );
 	}
 
 	detach(): void {
