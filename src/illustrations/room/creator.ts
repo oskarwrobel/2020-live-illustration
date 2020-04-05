@@ -44,12 +44,19 @@ export default function creator( illustrations: Illustrations ): IllustrationDes
 	// -------------------------------------------------------------------------------------------------------------- //
 	const leash = document.querySelector( '#leash' );
 	const leashTween = gsap.to( '#smile', { attr: { d: 'M41.1,100.5 c0,0,22.9-6.5,22.9-19' }, paused: true } );
+	let eventTimeoutId: any;
 
 	leash.addEventListener( 'mouseenter', () => {
 		leashTween.play();
-		sendEvent( 'room', 'dogSmile' );
+		eventTimeoutId = setTimeout( () => {
+			sendEvent( 'room', 'dogSmile' );
+		}, 500 );
 	} );
-	leash.addEventListener( 'mouseleave', () => ( leashTween.reverse() ) );
+
+	leash.addEventListener( 'mouseleave', () => {
+		leashTween.reverse();
+		clearInterval( eventTimeoutId );
+	} );
 
 	// Drawer
 	// -------------------------------------------------------------------------------------------------------------- //

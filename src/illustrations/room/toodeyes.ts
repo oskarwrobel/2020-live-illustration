@@ -104,10 +104,16 @@ function resetTimer(): void {
 }
 
 function enableCloseOnHover(): void {
+	let leftEyeEventTimeId: any;
+	let rightEyeEventTimeId: any;
+
 	leftEyeClosed.addEventListener( 'mouseenter', () => {
 		closeLeftEye();
 		isLeftEyeHovered = true;
-		sendEvent( 'tood', 'eyeHovered', 'left' );
+
+		leftEyeEventTimeId = setTimeout( () => {
+			sendEvent( 'tood', 'eyeHovered', 'left' );
+		}, 300 );
 	} );
 
 	leftEyeClosed.addEventListener( 'mouseleave', () => {
@@ -115,12 +121,17 @@ function enableCloseOnHover(): void {
 		openRightEye();
 		isLeftEyeHovered = false;
 		resetTimer();
+
+		clearInterval( leftEyeEventTimeId );
 	} );
 
 	rightEyeClosed.addEventListener( 'mouseenter', () => {
 		closeRightEye();
 		isRightEyeHovered = true;
-		sendEvent( 'tood', 'eyeHovered', 'right' );
+
+		rightEyeEventTimeId = setTimeout( () => {
+			sendEvent( 'tood', 'eyeHovered', 'right' );
+		}, 300 );
 	} );
 
 	rightEyeClosed.addEventListener( 'mouseleave', () => {
@@ -128,5 +139,7 @@ function enableCloseOnHover(): void {
 		openLeftEye();
 		isRightEyeHovered = false;
 		resetTimer();
+
+		clearInterval( rightEyeEventTimeId );
 	} );
 }

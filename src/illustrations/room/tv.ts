@@ -19,6 +19,11 @@ export default function tv( illustrationData: any ): () => void {
 		targets: [ '#channel-1', '#channel-2' ]
 	} );
 
+	createClipPath( {
+		source: '#bubbles-mask',
+		targets: [ '#bubbles' ]
+	} );
+
 	// Channels definition.
 	const channels: Channel[] = [
 		{
@@ -222,11 +227,11 @@ function channel2Animation( channel: Channel ): void {
 
 		pendingAnimations.add( tl );
 
-		tl.to( [ '#jaw' ], { transformOrigin: '100% 100%', rotate: -random( 5, 20 ), duration: .25 } );
-		tl.to( [ '#jaw' ], { transformOrigin: '100% 100%', rotate: -random( 0, 7 ), duration: .25 } );
-		tl.to( [ '#jaw' ], { transformOrigin: '100% 100%', rotate: -random( 13, 20 ), duration: .25 } );
-		tl.to( [ '#jaw' ], { transformOrigin: '100% 100%', rotate: -random( 3, 10 ), duration: .25 } );
-		tl.to( [ '#jaw' ], { transformOrigin: '100% 100%', rotate: 0, duration: .25, onComplete } );
+		tl.to( '#jaw', { transformOrigin: '100% 100%', rotate: -random( 5, 20 ), duration: .25 } );
+		tl.to( '#jaw', { transformOrigin: '100% 100%', rotate: -random( 0, 7 ), duration: .25 } );
+		tl.to( '#jaw', { transformOrigin: '100% 100%', rotate: -random( 13, 20 ), duration: .25 } );
+		tl.to( '#jaw', { transformOrigin: '100% 100%', rotate: -random( 3, 10 ), duration: .25 } );
+		tl.to( '#jaw', { transformOrigin: '100% 100%', rotate: 0, duration: .25, onComplete } );
 
 		function onComplete(): void {
 			pendingAnimations.delete( tl );
