@@ -71,6 +71,14 @@
 	#channel-3 {
 		pointer-events: none;
 	}
+
+	#channel-1,
+	#channel-2,
+	#channel-3, {
+		& > rect:first-child {
+			fill: #222;
+		}
+	}
 }
 
 #drawer {

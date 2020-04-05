@@ -11,6 +11,8 @@ type Channel = {
 	start( channel: Channel ): void;
 };
 
+let isFirstTime = true;
+
 export default function tv( illustrationData: any ): () => void {
 	createClipPath( {
 		source: '#mask-shape',
@@ -151,6 +153,12 @@ function channel1Animation( channel: Channel ): void {
 	tl.from( [ '#BUN' ], { duration: .55, delay: .5, x: -300, ease: 'back.out(2)', ...def } );
 	tl.from( [ '#CAN-BE-FUN' ], { duration: .55, delay: .2, x: 300, ease: 'back.out(2)', ...def } );
 	tl.to( '#hot-dog', { duration: 1, delay: 2, rotate: 1580, scale: 0, ease: 'normal', ...def } );
+
+	if ( isFirstTime ) {
+		isFirstTime = false;
+	} else {
+		tl.time( random( 1, tl.duration() ) );
+	}
 
 	channel.pendingAnimations.add( tl );
 }
