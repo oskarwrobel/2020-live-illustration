@@ -10,16 +10,18 @@ import createBackButton from '../../components/backbutton/createbackbutton';
 export default function postcardSceneCreator( scenes: Scenes ): SceneDestructor {
 	const element = scenes.element;
 
+	sendEvent( 'postcard-scene', 'enter' );
+
 	createSvgElement( postcardSvgString, { id: 'hall', classes: 'plan' }, element );
 
 	const escDestructor = escHandler( () => {
 		scenes.show( 'room' );
-		sendEvent( 'drawer-scene', 'leave', 'Esc' );
+		sendEvent( 'postcard-scene', 'leave', 'Esc' );
 	} );
 
 	createBackButton( element, () => {
 		scenes.show( 'room' );
-		sendEvent( 'drawer-scene', 'leave', 'Button' );
+		sendEvent( 'postcard-scene', 'leave', 'Button' );
 	} );
 
 	gsap.set( '#cover', { scaleY: 1.1 } );

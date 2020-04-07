@@ -15,7 +15,7 @@ export default function postcard( scenes: Scenes ): () => void {
 	const tl = gsap.timeline( { repeat: -1, delay: 2, repeatDelay: 4 } )
 		.to( '#postcard-blink', { y: 160, duration: .8, ease: 'none' } );
 
-	return function oscarDestructor(): void {
+	return function postcardDestructor(): void {
 		tl.kill();
 	};
 }
