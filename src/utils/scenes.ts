@@ -29,12 +29,14 @@ export default class Scenes {
 		setProportions( element, optimalWidth, optimalHeight );
 	}
 
-	add( name: string, creator: SceneCreator ): void {
+	add( name: string, creator: SceneCreator ): Scenes {
 		if ( this._scenes.has( name ) ) {
 			throw new Error( 'Scene already created.' );
 		}
 
 		this._scenes.set( name, new Scene( name, creator ) );
+
+		return this;
 	}
 
 	async show( name: string ): Promise<void> {
@@ -48,7 +50,7 @@ export default class Scenes {
 			await wait( 80 );
 			this.current.detach();
 			this.element.innerHTML = '';
-			this.element.classList.remove( this.current.name );
+			this.element.classList.remove( 'scene-' + this.current.name );
 		}
 
 		this.current = this._scenes.get( name );

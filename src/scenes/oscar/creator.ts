@@ -11,7 +11,7 @@ import plantSvgData from './images/plant.svg';
 
 import './style.css';
 
-export default function creator( scenes: Scenes ): SceneDestructor {
+export default function oscarSceneCreator( scenes: Scenes ): SceneDestructor {
 	const element = scenes.element;
 
 	const oscar = createSvgElement( oscarSvgData, { id: 'oscar', classes: 'plan' }, element );

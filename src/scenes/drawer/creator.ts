@@ -9,7 +9,7 @@ import drawerSvgData from './images/drawer.svg';
 
 import './style.css';
 
-export default function creator( scenes: Scenes ): SceneDestructor {
+export default function drawerSceneCreator( scenes: Scenes ): SceneDestructor {
 	const element = scenes.element;
 	const escDestructor = escHandler( () => {
 		scenes.show( 'room' );

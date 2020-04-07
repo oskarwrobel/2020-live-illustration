@@ -8,12 +8,12 @@ export default function oscarStatue( scenes: Scenes ): () => void {
 	} );
 
 	createClipPath( {
-		source: '#blink-mask',
-		targets: [ '#blink-group' ]
+		source: '#oscar-blink-mask',
+		targets: [ '#oscar-blink-group' ]
 	} );
 
-	const tl = gsap.timeline( { repeat: -1, delay: 3, repeatDelay: 5 } )
-		.to( '#blnk', { y: -240, duration: .9, ease: 'none' } );
+	const tl = gsap.timeline( { repeat: -1, delay: 3, repeatDelay: 6 } )
+		.to( '#oscar-blink', { y: -240, duration: .8, ease: 'none' } );
 
 	return function oscarDestructor(): void {
 		tl.kill();

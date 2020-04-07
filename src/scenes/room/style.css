@@ -17,10 +17,8 @@
 		right: -6%;
 		height: 100%;
 
-		#oscar-small {
-			cursor: pointer;
-		}
-
+		#oscar-small,
+		#postcard-small,
 		#blinds {
 			cursor: pointer;
 		}

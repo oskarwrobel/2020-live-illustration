@@ -10,6 +10,7 @@ import toodEyes from './helpers/toodeyes';
 import drawer from './helpers/drawer';
 import tv from './helpers/tv';
 import oscarStatue from './helpers/oscarstatue';
+import postcard from './helpers/postcard';
 
 import hallSvgString from './images/hall.svg';
 import dogSvgString from './images/dog.svg';
@@ -19,7 +20,7 @@ import tvSvgString from './images/tv.svg';
 
 import './style.css';
 
-export default function creator( scenes: Scenes ): SceneDestructor {
+export default function roomSceneCreator( scenes: Scenes ): SceneDestructor {
 	const element = scenes.element;
 
 	const hallSvg = createSvgElement( hallSvgString, { id: 'hall', classes: 'plan' }, element );
@@ -58,6 +59,10 @@ export default function creator( scenes: Scenes ): SceneDestructor {
 		leashTween.reverse();
 		clearInterval( eventTimeoutId );
 	} );
+
+	// Postcard
+	// -------------------------------------------------------------------------------------------------------------- //
+	postcard( scenes );
 
 	// Drawer
 	// -------------------------------------------------------------------------------------------------------------- //
