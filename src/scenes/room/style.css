@@ -16,7 +16,6 @@
 	#wall {
 		right: -6%;
 		height: 100%;
-		overflow: hidden;
 
 		#oscar-small {
 			cursor: pointer;

@@ -17,16 +17,16 @@ export default function creator( scenes: Scenes ): SceneDestructor {
 	const oscar = createSvgElement( oscarSvgData, { id: 'oscar', classes: 'plan' }, element );
 	const plant = createSvgElement( plantSvgData, { id: 'plant', classes: 'plan' }, element );
 
-	sendEvent( 'oscar', 'enter' );
+	sendEvent( 'oscar-scene', 'enter' );
 
 	const escDestructor = escHandler( () => {
 		scenes.show( 'room' );
-		sendEvent( 'oscar', 'leave', 'Esc' );
+		sendEvent( 'oscar-scene', 'leave', 'Esc' );
 	} );
 
 	createBackButton( element, () => {
 		scenes.show( 'room' );
-		sendEvent( 'oscar', 'leave', 'button' );
+		sendEvent( 'oscar-scene', 'leave', 'Button' );
 	} );
 
 	const parallaxDestructor = parallax( {

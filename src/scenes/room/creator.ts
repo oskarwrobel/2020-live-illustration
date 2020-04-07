@@ -50,7 +50,7 @@ export default function creator( scenes: Scenes ): SceneDestructor {
 	leash.addEventListener( 'mouseenter', () => {
 		leashTween.play();
 		eventTimeoutId = setTimeout( () => {
-			sendEvent( 'room', 'dogSmile' );
+			sendEvent( 'room-scene', 'Dog smile' );
 		}, 500 );
 	} );
 

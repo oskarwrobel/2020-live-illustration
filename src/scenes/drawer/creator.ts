@@ -13,16 +13,17 @@ export default function creator( scenes: Scenes ): SceneDestructor {
 	const element = scenes.element;
 	const escDestructor = escHandler( () => {
 		scenes.show( 'room' );
-		sendEvent( 'drawer', 'leave', 'Esc' );
+		sendEvent( 'drawer-scene', 'leave', 'Esc' );
 	} );
-
-	sendEvent( 'drawer', 'enter' );
 
 	createSvgElement( drawerSvgData, { id: 'drawer-inside', classes: 'plan' }, element );
+
 	createBackButton( element, () => {
 		scenes.show( 'room' );
-		sendEvent( 'drawer', 'leave', 'button' );
+		sendEvent( 'drawer-scene', 'leave', 'Button' );
 	} );
+
+	sendEvent( 'drawer-scene', 'enter' );
 
 	return function destroy(): void {
 		escDestructor();

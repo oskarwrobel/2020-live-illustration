@@ -13,7 +13,8 @@ type Config = {
  * with it I found this solution and don't want to dig more now :)
  */
 export default function createClipPath( config: Config ): void {
-	const clipPathElement = createXmlElement( 'clipPath', { id: config.source.replace( '#', '' ) } );
+	const id = toHashLike( config.source );
+	const clipPathElement = createXmlElement( 'clipPath', { id } );
 	const source = document.querySelector( config.source );
 
 	source.removeAttribute( 'id' );
@@ -22,7 +23,18 @@ export default function createClipPath( config: Config ): void {
 
 	for ( const target of config.targets ) {
 		updateXmlElement( document.querySelector( target ), {
-			'clip-path': `url(${ config.source })`
+			'clip-path': `url(${ '#' + id })`
 		} );
 	}
+}
+
+function toHashLike( value: string ): string {
+	let hash = 0;
+
+	for ( let i = 0; i < value.length; i++ ) {
+		hash = ( ( hash << 5 ) - hash ) + value.charCodeAt( i );
+		hash |= 0; // Convert to 32bit integer
+	}
+
+	return 'e' + hash;
 }
