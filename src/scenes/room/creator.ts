@@ -6,7 +6,7 @@ import parallax from '../../utils/parallax';
 import sendEvent from '../../utils/sendevent';
 
 import windowWithBlinds from './helpers/windowwithblinds';
-import toodEyes from './helpers/toodeyes';
+import toddEyes from './helpers/toddeyes';
 import drawer from './helpers/drawer';
 import tv from './helpers/tv';
 import oscarStatue from './helpers/oscarstatue';
@@ -80,9 +80,9 @@ export default function roomSceneCreator( scenes: Scenes ): SceneDestructor {
 	// -------------------------------------------------------------------------------------------------------------- //
 	const windowWithBlindsDestructor = windowWithBlinds( scenes );
 
-	// Tood eyes
+	// Todd eyes
 	// -------------------------------------------------------------------------------------------------------------- //
-	const toodEyesDestructor = toodEyes();
+	const toddEyesDestructor = toddEyes();
 
 	// Destructor
 	// -------------------------------------------------------------------------------------------------------------- //
@@ -91,6 +91,6 @@ export default function roomSceneCreator( scenes: Scenes ): SceneDestructor {
 		tvDestructor();
 		oscarStatueDestructor();
 		windowWithBlindsDestructor();
-		toodEyesDestructor();
+		toddEyesDestructor();
 	};
 }

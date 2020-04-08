@@ -18,7 +18,7 @@ const eyeBounds = {
 	maxShiftRight: .27
 };
 
-export default function toodEyes(): () => void {
+export default function toddEyes(): () => void {
 	leftEyeOpened = document.querySelector( '#left-eye-opened' );
 	leftEyeClosed = document.querySelector( '#left-eye-closed' );
 	rightEyeOpened = document.querySelector( '#right-eye-opened' );
@@ -112,7 +112,7 @@ function enableCloseOnHover(): void {
 		isLeftEyeHovered = true;
 
 		leftEyeHoverTimeId = setTimeout( () => {
-			sendEvent( 'tood', 'eyeHovered', 'left' );
+			sendEvent( 'todd', 'eyeHovered', 'left' );
 		}, 300 );
 	} );
 
@@ -130,7 +130,7 @@ function enableCloseOnHover(): void {
 		isRightEyeHovered = true;
 
 		rightEyeHoverTimeId = setTimeout( () => {
-			sendEvent( 'tood', 'eyeHovered', 'right' );
+			sendEvent( 'todd', 'eyeHovered', 'right' );
 		}, 300 );
 	} );
 
