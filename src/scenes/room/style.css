@@ -67,10 +67,15 @@
 		}
 
 		#channel-1,
-		#channel-2,
-		#channel-3 {
+		#channel-2 {
 			& > rect:first-child {
 				fill: #222;
+			}
+		}
+
+		#channel-3 {
+			& > rect:first-child {
+				fill: #fff;
 			}
 		}
 
