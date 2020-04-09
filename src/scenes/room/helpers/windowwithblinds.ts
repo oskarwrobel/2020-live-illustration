@@ -54,7 +54,7 @@ let windowRect: SVGRect;
 // Each cloud has move only on the available level. When cloud is in the middle of the
 // window width then the level is released and next cloud is allowed to move at the same level.
 const levelTopEdge = 230;
-const levelHeight = 170;
+const levelHeight = 150;
 const maxLevels = 3;
 const cloudToLevel: Map<SVGGElement, number> = new Map();
 
@@ -114,7 +114,7 @@ function startAnimation( [ rightToLeftPlane, leftToRightPlane, cloud1, cloud2, c
 	const planes = [ rightToLeftPlane, leftToRightPlane ];
 
 	currentPlane = planes[ random( 0, 1 ) ];
-	animatePlaneInLoop( planes, { duration: [ 10, 15 ], delay: [ 3, 6 ], scale: [ 0.8, 1.2 ], progress: [ 0.1, 0.7 ] } );
+	animatePlaneInLoop( planes, { duration: [ 10, 15 ], delay: [ 3, 6 ], scale: [ 1, 1 ], progress: [ 0, 0.7 ] } );
 
 	// Reserve cloud levels before animations are started to be sure each cloud will move on a separate level.
 	// Otherwise one animation may reserve cloud level and immediately release it because random progress
@@ -123,9 +123,9 @@ function startAnimation( [ rightToLeftPlane, leftToRightPlane, cloud1, cloud2, c
 	getAvailableCloudLevel( cloud2 );
 	getAvailableCloudLevel( cloud3 );
 
-	animateCloudInLoop( cloud1, { duration: [ 34, 40 ], progress: [ 0.1, 0.3 ], scale: [ 0.8, 1.2 ] } );
-	animateCloudInLoop( cloud2, { duration: [ 20, 28 ], progress: [ 0.5, 0.7 ], scale: [ 0.8, 1.2 ] } );
-	animateCloudInLoop( cloud3, { duration: [ 28, 34 ], progress: [ 0.3, 0.5 ], scale: [ 0.8, 1.2 ] } );
+	animateCloudInLoop( cloud1, { duration: [ 34, 40 ], progress: [ 0.1, 0.3 ], scale: [ 1, 1 ] } );
+	animateCloudInLoop( cloud2, { duration: [ 20, 28 ], progress: [ 0.5, 0.7 ], scale: [ 1, 1 ] } );
+	animateCloudInLoop( cloud3, { duration: [ 28, 34 ], progress: [ 0.3, 0.5 ], scale: [ 1, 1 ] } );
 }
 
 function stopAnimation(): void {
@@ -147,6 +147,7 @@ function animatePlaneInLoop( planes: SVGGElement[], config: AnimationInLoopConfi
 
 	const [ rightToLeftPlane, leftToRightPlane ] = planes;
 	const randomHashTag = hashTags[ random( 0, hashTags.length - 1 ) ];
+	const scale = rangeToValue( config.scale );
 
 	let direction: Side;
 
@@ -162,11 +163,11 @@ function animatePlaneInLoop( planes: SVGGElement[], config: AnimationInLoopConfi
 
 	animateElement( currentPlane, {
 		from: getInitialValues( currentPlane, {
+			scale,
 			initialSide: direction * -1 as Side,
-			y: getRandomY( currentPlane ),
-			scale: 1
+			y: getRandomY( currentPlane )
 		} ),
-		to: getTargetValues( currentPlane, { direction } ),
+		to: getTargetValues( currentPlane, { scale, direction } ),
 		duration: rangeToValue( config.duration ),
 		delay: rangeToValue( config.delay ),
 		progress: rangeToValue( config.progress )
@@ -184,16 +185,17 @@ function animateCloudInLoop( element: SVGGElement, config: AnimationInLoopConfig
 		return;
 	}
 
+	const scale = rangeToValue( config.scale );
 	const level = getAvailableCloudLevel( element );
 	let levelIsReleased = false;
 
 	animateElement( element, {
 		from: getInitialValues( element, {
+			scale,
 			initialSide: 1,
-			y: getRandomY( element, level ),
-			scale: 1
+			y: getRandomY( element, level )
 		} ),
-		to: getTargetValues( element, { direction: -1 } ),
+		to: getTargetValues( element, { scale, direction: -1 } ),
 		duration: rangeToValue( config.duration ),
 		delay: rangeToValue( config.delay ),
 		progress: rangeToValue( config.progress ),
@@ -304,7 +306,6 @@ function getInitialValues( element: SVGGElement, config: InitialValuesConfig ): 
 	const svgWidth = parseInt( element.viewportElement.getAttribute( 'viewBox' ).split( ' ' )[ 2 ] );
 	const svgHeight = parseInt( element.viewportElement.getAttribute( 'viewBox' ).split( ' ' )[ 3 ] );
 	const elementRect = element.getBBox();
-
 	let relativeToSvgX: number;
 
 	if ( config.initialSide > 0 ) {
@@ -322,7 +323,7 @@ function getInitialValues( element: SVGGElement, config: InitialValuesConfig ): 
 	};
 }
 
-function getTargetValues( element: SVGGElement, config: { direction: Side } ): { x: number } {
+function getTargetValues( element: SVGGElement, config: { direction: Side; scale: number } ): { x: number } {
 	const svgWidth = parseInt( element.viewportElement.getAttribute( 'viewBox' ).split( ' ' )[ 2 ] );
 	const elementRect = element.getBBox();
 	const relativeToSvgX = ( ( ( windowRect.width + elementRect.width ) * 100 ) / svgWidth ) * config.direction;
@@ -372,9 +373,8 @@ function getRandomY( element: SVGGElement, level?: number ): number {
 		return random( top, top + 80 );
 	}
 
-	const elementRect = element.getBBox();
 	const minY = windowRect.y + levelTopEdge;
-	const maxY = windowRect.y + windowRect.height - elementRect.height;
+	const maxY = windowRect.y + ( maxLevels * levelHeight ) + 80;
 
 	return random( minY, maxY );
 }
