@@ -4,14 +4,16 @@ import { openBlinds, closeBlinds } from './toggleblinds';
 import Scenes from '../../../utils/scenes';
 import sendEvent from '../../../utils/sendevent';
 
-type Range = [ number, number ];
+// -1 is a left side of the window and +1 is a right side of the window.
 type Side = -1 | 1;
+
+type Range = [ number, number ];
 
 type AnimationConfig = {
 	from: { x: number; y: number; scale: number };
+	to: { x: number };
 	duration: number;
 	delay?: number;
-	direction?: Side;
 	progress?: number;
 	onProgress?: ( value: number ) => void;
 }
@@ -21,7 +23,6 @@ type AnimationInLoopConfig = {
 	scale: Range;
 	delay?: Range;
 	progress?: Range;
-	level?: number;
 }
 
 type InitialValuesConfig = {
@@ -103,6 +104,7 @@ export default function windowWithBlinds( scenes: Scenes ): () => void {
 		elementToAnimation.clear();
 		cloudToLevel.clear();
 		currentPlane = null;
+		isLoopAnimationInProgress = false;
 	};
 }
 
@@ -112,22 +114,25 @@ function startAnimation( [ rightToLeftPlane, leftToRightPlane, cloud1, cloud2, c
 	const planes = [ rightToLeftPlane, leftToRightPlane ];
 
 	currentPlane = planes[ random( 0, 1 ) ];
-	animatePlaneInLoop( planes, { duration: [ 10, 15 ], delay: [ 0, 0 ], scale: [ 0.8, 1.2 ], progress: [ 0.1, 0.7 ] } );
+	animatePlaneInLoop( planes, { duration: [ 10, 15 ], delay: [ 3, 6 ], scale: [ 0.8, 1.2 ], progress: [ 0.1, 0.7 ] } );
 
-	const scale = [ 0.8, 1.2 ] as [ number, number ];
-	const cloud1Level = getAvailableCloudLevel( cloud1 );
-	const cloud2Level = getAvailableCloudLevel( cloud2 );
-	const cloud3Level = getAvailableCloudLevel( cloud3 );
+	// Reserve cloud levels before animations are started to be sure each cloud will move on a separate level.
+	// Otherwise one animation may reserve cloud level and immediately release it because random progress
+	// may start after a half.
+	getAvailableCloudLevel( cloud1 );
+	getAvailableCloudLevel( cloud2 );
+	getAvailableCloudLevel( cloud3 );
 
-	animateCloudInLoop( cloud1, { duration: [ 34, 40 ], progress: [ 0.1, 0.3 ], level: cloud1Level, scale } );
-	animateCloudInLoop( cloud2, { duration: [ 20, 28 ], progress: [ 0.5, 0.7 ], level: cloud2Level, scale } );
-	animateCloudInLoop( cloud3, { duration: [ 28, 34 ], progress: [ 0.3, 0.5 ], level: cloud3Level, scale } );
+	animateCloudInLoop( cloud1, { duration: [ 34, 40 ], progress: [ 0.1, 0.3 ], scale: [ 0.8, 1.2 ] } );
+	animateCloudInLoop( cloud2, { duration: [ 20, 28 ], progress: [ 0.5, 0.7 ], scale: [ 0.8, 1.2 ] } );
+	animateCloudInLoop( cloud3, { duration: [ 28, 34 ], progress: [ 0.3, 0.5 ], scale: [ 0.8, 1.2 ] } );
 }
 
 function stopAnimation(): void {
 	isLoopAnimationInProgress = false;
 
 	for ( const animation of elementToAnimation.values() ) {
+		animation.progress( 1 );
 		animation.kill();
 	}
 
@@ -141,30 +146,31 @@ function animatePlaneInLoop( planes: SVGGElement[], config: AnimationInLoopConfi
 	}
 
 	const [ rightToLeftPlane, leftToRightPlane ] = planes;
+	const randomHashTag = hashTags[ random( 0, hashTags.length - 1 ) ];
 
 	let direction: Side;
-	let initialSide: Side;
 
 	if ( currentPlane === leftToRightPlane ) {
 		currentPlane = rightToLeftPlane;
 		direction = -1;
-		initialSide = 1;
-		setBannerText( currentPlane, getRandomHashTag() );
 	} else {
 		currentPlane = leftToRightPlane;
 		direction = 1;
-		initialSide = -1;
-		setBannerText( currentPlane, getRandomHashTag(), true );
 	}
 
+	setBannerText( currentPlane, randomHashTag, currentPlane === leftToRightPlane );
+
 	animateElement( currentPlane, {
-		from: getInitialValues( currentPlane, { initialSide, y: getRandomY( currentPlane ), scale: 1 } ),
-		duration: random( ...config.duration ),
-		delay: config.delay ? random( ...config.delay ) : 0,
-		progress: config.progress ? random( ...config.progress ) : 0,
-		direction
+		from: getInitialValues( currentPlane, {
+			initialSide: direction * -1 as Side,
+			y: getRandomY( currentPlane ),
+			scale: 1
+		} ),
+		to: getTargetValues( currentPlane, { direction } ),
+		duration: rangeToValue( config.duration ),
+		delay: rangeToValue( config.delay ),
+		progress: rangeToValue( config.progress )
 	} ).then( () => {
-		setBannerText( currentPlane, '' );
 		animatePlaneInLoop( planes, {
 			duration: config.duration,
 			delay: config.delay,
@@ -178,21 +184,23 @@ function animateCloudInLoop( element: SVGGElement, config: AnimationInLoopConfig
 		return;
 	}
 
-	const level = config.level === undefined ? getAvailableCloudLevel( element ) : config.level;
+	const level = getAvailableCloudLevel( element );
 	let levelIsReleased = false;
 
-	cloudToLevel.set( element, level );
-
 	animateElement( element, {
-		from: getInitialValues( element, { initialSide: 1, y: getRandomY( element, level ), scale: 1 } ),
-		duration: random( ...config.duration ),
-		delay: config.delay ? random( ...config.delay ) : 0,
-		progress: config.progress ? random( ...config.progress ) : 0,
-		direction: -1,
+		from: getInitialValues( element, {
+			initialSide: 1,
+			y: getRandomY( element, level ),
+			scale: 1
+		} ),
+		to: getTargetValues( element, { direction: -1 } ),
+		duration: rangeToValue( config.duration ),
+		delay: rangeToValue( config.delay ),
+		progress: rangeToValue( config.progress ),
 		onProgress( value: number ) {
 			if ( !levelIsReleased && value > 0.5 && value < 1 ) {
+				releaseCloudLevel( element );
 				levelIsReleased = true;
-				cloudToLevel.delete( element );
 			}
 		}
 	} ).then( () => {
@@ -205,17 +213,11 @@ function animateCloudInLoop( element: SVGGElement, config: AnimationInLoopConfig
 }
 
 function animateElement( element: SVGGElement, config: AnimationConfig ): gsap.core.Timeline {
-	const from = config.from;
-
 	gsap.set( element, {
-		xPercent: from.x,
-		yPercent: from.y,
-		scale: from.scale
+		xPercent: config.from.x,
+		yPercent: config.from.y,
+		scale: config.from.scale
 	} );
-
-	const svgWidth = parseInt( element.viewportElement.getAttribute( 'viewBox' ).split( ' ' )[ 2 ] );
-	const elementRect = element.getBBox();
-	const relativeToSvgX = ( ( ( windowRect.width + elementRect.width ) * 100 ) / svgWidth ) * config.direction;
 
 	let onUpdate: () => void;
 
@@ -238,7 +240,7 @@ function animateElement( element: SVGGElement, config: AnimationConfig ): gsap.c
 			elementToAnimation.delete( element );
 		}
 	} ).to( element, {
-		xPercent: '+=' + ( svgWidth / elementRect.width ) * relativeToSvgX,
+		xPercent: '+=' + config.to.x,
 		duration: config.duration,
 		delay: config.delay,
 		ease: 'none'
@@ -253,26 +255,32 @@ function setBannerText( plane: SVGGElement, text: string, stickToRight = false )
 
 	textNode.textContent = text;
 
-	// Do not use textNode.width() because returns incorrect result in this case.
-	const textWidth = textNode.getBBox().width + 20;
+	const PADDING = 20;
+	const textWidth = textNode.getBBox().width + PADDING;
 
 	backgroundElement.setAttribute( 'width', String( textWidth ) );
 
+	// 'stickToRight' means the plane direction is 'left to right'
+	// and banner should be stretched to the left, right side should stay fixed.
 	if ( stickToRight ) {
 		const leftBound = ( plane.firstChild.childNodes[ 2 ] as SVGRectElement ).getBBox().x;
 
 		backgroundElement.setAttribute( 'x', String( leftBound - textWidth ) );
+
+		// +1 to cover left stroke of background rectangle.
 		movePointsToX( tailElement.points, leftBound - textWidth + 1 );
 
-		const bgRect = backgroundElement.getBBox();
+		const backgroundRect = backgroundElement.getBBox();
 
+		// Align text in the middle of the background rectangle.
 		textNode.removeAttribute( 'transform' );
-		textNode.setAttribute( 'x', String( bgRect.x + 5 ) );
-		textNode.setAttribute( 'y', String( bgRect.y + 42 ) );
+		textNode.setAttribute( 'x', String( backgroundRect.x + 5 ) );
+		textNode.setAttribute( 'y', String( backgroundRect.y + 42 ) );
 	} else {
-		const bgRect = backgroundElement.getBBox();
+		const backgroundRect = backgroundElement.getBBox();
 
-		movePointsToX( tailElement.points, bgRect.x + bgRect.width - 1 );
+		// -1 to cover right stroke of background rectangle.
+		movePointsToX( tailElement.points, backgroundRect.x + backgroundRect.width - 1 );
 	}
 }
 
@@ -299,10 +307,10 @@ function getInitialValues( element: SVGGElement, config: InitialValuesConfig ): 
 
 	let relativeToSvgX: number;
 
-	if ( config.initialSide ) {
+	if ( config.initialSide > 0 ) {
 		relativeToSvgX = ( ( windowRect.x + windowRect.width - elementRect.x ) * 100 ) / svgWidth;
 	} else {
-		relativeToSvgX = ( ( windowRect.x - elementRect.width ) - ( elementRect.x * 100 ) ) / svgWidth;
+		relativeToSvgX = ( ( windowRect.x - elementRect.width - elementRect.x ) * 100 ) / svgWidth;
 	}
 
 	const relativeToSvgY = ( ( config.y - elementRect.y ) * 100 ) / svgHeight;
@@ -314,7 +322,29 @@ function getInitialValues( element: SVGGElement, config: InitialValuesConfig ): 
 	};
 }
 
+function getTargetValues( element: SVGGElement, config: { direction: Side } ): { x: number } {
+	const svgWidth = parseInt( element.viewportElement.getAttribute( 'viewBox' ).split( ' ' )[ 2 ] );
+	const elementRect = element.getBBox();
+	const relativeToSvgX = ( ( ( windowRect.width + elementRect.width ) * 100 ) / svgWidth ) * config.direction;
+
+	return {
+		x: ( svgWidth / elementRect.width ) * relativeToSvgX
+	};
+}
+
+function rangeToValue( range: Range ): number {
+	if ( !range ) {
+		return 0;
+	}
+
+	return random( ...range );
+}
+
 function getAvailableCloudLevel( element: SVGGElement ): number {
+	if ( cloudToLevel.has( element ) ) {
+		return cloudToLevel.get( element );
+	}
+
 	const availableLevels = [];
 	const usedLevels = Array.from( cloudToLevel.values() );
 
@@ -331,6 +361,10 @@ function getAvailableCloudLevel( element: SVGGElement ): number {
 	return level;
 }
 
+function releaseCloudLevel( element: SVGGElement ): void {
+	cloudToLevel.delete( element );
+}
+
 function getRandomY( element: SVGGElement, level?: number ): number {
 	if ( level !== undefined ) {
 		const top = levelTopEdge + ( level * levelHeight );
@@ -343,8 +377,4 @@ function getRandomY( element: SVGGElement, level?: number ): number {
 	const maxY = windowRect.y + windowRect.height - elementRect.height;
 
 	return random( minY, maxY );
-}
-
-function getRandomHashTag(): string {
-	return hashTags[ random( 0, hashTags.length - 1 ) ];
 }
