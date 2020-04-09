@@ -29,14 +29,17 @@ export function openBlinds( blinds: Element[] ): void {
 	} );
 }
 
-export function closeBlinds( blinds: Element[] ): void {
+export function closeBlinds( blinds: Element[] ): Promise<undefined> {
 	if ( animation ) {
 		animation.kill();
 	}
 
-	animation = gsap.to( data, {
+	return gsap.to( data, {
 		value: 0,
 		duration,
+		onStart() {
+			animation = this as gsap.core.Tween;
+		},
 		onUpdate() {
 			const mostTopBlind = Math.floor( maxShift / singleShift );
 

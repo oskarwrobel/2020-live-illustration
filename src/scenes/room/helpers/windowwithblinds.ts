@@ -7,11 +7,20 @@ import sendEvent from '../../../utils/sendevent';
 import createClipPath from '../../../utils/createclippath';
 
 type AnimationConfig = {
-	delay: number;
-	duration: number;
-	direction?: 'left' | 'right';
-	randomProgress?: boolean;
 	from: { x: number; y: number; scale: number };
+	duration: number;
+	delay?: number;
+	direction?: 'left' | 'right';
+	progress?: number;
+	onProgress?: ( value: number ) => void;
+}
+
+type AnimationInLoopConfig = {
+	duration: Range;
+	scale: Range;
+	delay?: Range;
+	progress?: Range;
+	level?: number;
 }
 
 type Range = [ number, number ];
@@ -23,6 +32,8 @@ const hashTags = [
 	'#CallMom',
 	'#StayHydrated'
 ];
+
+let isLoopAnimationInProgress = false;
 
 // Window rect. Cashed for optimization purpose.
 let windowRect: SVGRect;
@@ -43,7 +54,7 @@ let currentPlane: SVGGElement;
 const elementToAnimation: Map<SVGGElement, gsap.core.Tween> = new Map();
 
 export default function windowWithBlinds( scenes: Scenes ): () => void {
-	windowRect = getWindowRect();
+	windowRect = ( document.querySelector( '#window > path' ) as SVGGElement ).getBBox();
 
 	createClipPath( {
 		source: '#wall > rect',
@@ -61,12 +72,17 @@ export default function windowWithBlinds( scenes: Scenes ): () => void {
 		if ( !scenes.current.data.areBlindsOpen ) {
 			scenes.current.data.areBlindsOpen = true;
 			openBlinds( blinds );
-			startAnimation( [ rightToLeftPlane, leftToRightPlane, cloud1, cloud2, cloud3 ] );
+
+			// Whe there are already pending animations it means the blinds weren't fully closed before opening.
+			// It may happen when someone toggles blinds in a short amount of time.
+			if ( !isLoopAnimationInProgress ) {
+				startAnimation( [ rightToLeftPlane, leftToRightPlane, cloud1, cloud2, cloud3 ] );
+			}
+
 			sendEvent( 'blinds', 'open', 'click' );
 		} else {
 			scenes.current.data.areBlindsOpen = false;
-			closeBlinds( blinds );
-			setTimeout( stopAnimation, 1000 );
+			closeBlinds( blinds ).then( stopAnimation );
 			sendEvent( 'blinds', 'close', 'click' );
 		}
 	} );
@@ -85,25 +101,39 @@ export default function windowWithBlinds( scenes: Scenes ): () => void {
 }
 
 function startAnimation( [ rightToLeftPlane, leftToRightPlane, cloud1, cloud2, cloud3 ]: SVGGElement[] ): void {
+	isLoopAnimationInProgress = true;
+
 	const planes = [ rightToLeftPlane, leftToRightPlane ];
 
 	currentPlane = planes[ random( 0, 1 ) ];
+	animatePlaneInLoop( planes, { duration: [ 10, 15 ], delay: [ 5, 10 ], scale: [ 0.8, 1.2 ], progress: [ 0.1, 0.7 ] } );
 
-	animatePlaneInLoop( planes, [ 10, 15 ], [ 5, 10 ], [ 0.8, 1.2 ], true );
-	animateCloudInLoop( cloud1, [ 34, 40 ], [ 0, 0 ], [ 0.8, 1.2 ], true );
-	animateCloudInLoop( cloud2, [ 20, 28 ], [ 0, 0 ], [ 0.8, 1.2 ], true );
-	animateCloudInLoop( cloud3, [ 28, 34 ], [ 0, 0 ], [ 0.8, 1.2 ], true );
+	const scale = [ 0.8, 1.2 ] as [ number, number ];
+	const cloud1Level = getAvailableCloudLevel( cloud1 );
+	const cloud2Level = getAvailableCloudLevel( cloud2 );
+	const cloud3Level = getAvailableCloudLevel( cloud3 );
+
+	animateCloudInLoop( cloud1, { duration: [ 34, 40 ], progress: [ 0.5, 0.7 ], level: cloud1Level, scale } );
+	animateCloudInLoop( cloud2, { duration: [ 20, 28 ], progress: [ 0.1, 0.3 ], level: cloud2Level, scale } );
+	animateCloudInLoop( cloud3, { duration: [ 28, 34 ], progress: [ 0.3, 0.5 ], level: cloud3Level, scale } );
 }
 
 function stopAnimation(): void {
+	isLoopAnimationInProgress = false;
+
 	for ( const animation of elementToAnimation.values() ) {
 		animation.kill();
 	}
 
 	elementToAnimation.clear();
+	cloudToLevel.clear();
 }
 
-function animatePlaneInLoop( planes: SVGGElement[], duration: Range, delay: Range, scale: Range, randomProgress = false ): void {
+function animatePlaneInLoop( planes: SVGGElement[], config: AnimationInLoopConfig ): void {
+	if ( !isLoopAnimationInProgress ) {
+		return;
+	}
+
 	const [ rightToLeftPlane, leftToRightPlane ] = planes;
 
 	let direction: 'left' | 'right';
@@ -122,37 +152,63 @@ function animatePlaneInLoop( planes: SVGGElement[], duration: Range, delay: Rang
 	}
 
 	animateElement( currentPlane, {
-		from: getInitialValues( currentPlane, initialX, getRandomY( currentPlane ), random( ...scale ) ),
-		duration: random( ...duration ),
-		delay: random( ...delay ),
-		direction,
-		randomProgress
+		from: getInitialValues( currentPlane, initialX, getRandomY( currentPlane ), 1 ),
+		duration: random( ...config.duration ),
+		delay: config.delay ? random( ...config.delay ) : 0,
+		progress: config.progress ? random( ...config.progress ) : 0,
+		direction
 	} ).then( () => {
 		setBannerText( currentPlane, '' );
-		animatePlaneInLoop( planes, duration, delay, scale );
+		animatePlaneInLoop( planes, {
+			duration: config.duration,
+			delay: config.delay,
+			scale: config.scale
+		} );
 	} );
 }
 
-function animateCloudInLoop( element: SVGGElement, duration: Range, delay: Range, scale: Range, randomProgress = false ): void {
-	const level = getAvailableCloudLevel();
+function animateCloudInLoop( element: SVGGElement, config: AnimationInLoopConfig ): void {
+	if ( !isLoopAnimationInProgress ) {
+		return;
+	}
+
+	const level = config.level === undefined ? getAvailableCloudLevel( element ) : config.level;
+	let levelIsReleased = false;
 
 	cloudToLevel.set( element, level );
 
 	animateElement( element, {
-		from: getInitialValues( element, 'right', getRandomY( element, level ), random( ...scale ) ),
-		duration: random( ...duration ),
-		delay: random( ...delay ),
+		from: getInitialValues( element, 'right', getRandomY( element, level ), 1 ),
+		duration: random( ...config.duration ),
+		delay: config.delay ? random( ...config.delay ) : 0,
+		progress: config.progress ? random( ...config.progress ) : 0,
 		direction: 'left',
-		randomProgress
+		onProgress( value: number ) {
+			if ( !levelIsReleased && value > 0.5 && value < 1 ) {
+				levelIsReleased = true;
+				cloudToLevel.delete( element );
+			}
+		}
 	} ).then( () => {
-		animateCloudInLoop( element, duration, delay, scale );
+		animateCloudInLoop( element, {
+			duration: config.duration,
+			delay: config.delay,
+			scale: config.scale
+		} );
 	} );
 }
 
 function animateElement( element: SVGGElement, config: AnimationConfig ): Promise<undefined> {
+	const from = config.from;
+
+	gsap.set( element, {
+		xPercent: from.x,
+		yPercent: from.y,
+		scale: from.scale
+	} );
+
 	const svgWidth = parseInt( element.viewportElement.getAttribute( 'viewBox' ).split( ' ' )[ 2 ] );
 	const elementRect = element.getBBox();
-	const from = config.from;
 	let relativeToSvgX: number;
 
 	if ( config.direction === 'left' ) {
@@ -161,41 +217,31 @@ function animateElement( element: SVGGElement, config: AnimationConfig ): Promis
 		relativeToSvgX = ( ( ( windowRect.x + windowRect.width ) - elementRect.width ) * 100 ) / svgWidth;
 	}
 
-	return new Promise( resolve => {
-		const animation = gsap.fromTo( element,
-			{
-				xPercent: from.x
-			},
-			{
-				xPercent: '+=' + ( svgWidth / elementRect.width ) * relativeToSvgX,
-				startAt: {
-					yPercent: from.y,
-					scale: from.scale
-				},
-				duration: config.delay,
-				delay: config.duration,
-				ease: 'none',
-				clearProps: 'all',
-				onUpdate() {
-					// if ( animation ) {
-					// 	console.log( 'abc' );
-					// }
-					// if ( !config.randomProgress && animation.progress() >= 0.5 ) {
-					// 	cloudToLevel.delete( element );
-					// }
-				},
-				onComplete() {
-					elementToAnimation.delete( element );
-					resolve();
-				}
+	let onUpdate: () => void;
+
+	if ( config.onProgress ) {
+		onUpdate = function onProgress(): void {
+			config.onProgress( this.progress() );
+		};
+	}
+
+	return gsap.timeline( {
+		onStart() {
+			if ( config.progress ) {
+				this.progress( config.progress );
 			}
-		);
 
-		if ( config.randomProgress ) {
-			animation.progress( random( 0.1, 0.9 ) );
+			elementToAnimation.set( element, this );
+		},
+		onUpdate,
+		onComplete() {
+			elementToAnimation.delete( element );
 		}
-
-		elementToAnimation.set( element, animation );
+	} ).to( element, {
+		xPercent: '+=' + ( svgWidth / elementRect.width ) * relativeToSvgX,
+		duration: config.duration,
+		delay: config.delay,
+		ease: 'none'
 	} );
 }
 
@@ -252,16 +298,21 @@ function getInitialValues( element: SVGGElement, x: 'left' | 'right', y: number,
 	};
 }
 
-function getAvailableCloudLevel(): number {
+function getAvailableCloudLevel( element: SVGGElement ): number {
 	const availableLevels = [];
+	const usedLevels = Array.from( cloudToLevel.values() );
 
 	for ( let i = 0; i < maxLevels; i++ ) {
-		if ( !Array.from( cloudToLevel.values() ).includes( i ) ) {
+		if ( !usedLevels.includes( i ) ) {
 			availableLevels.push( i );
 		}
 	}
 
-	return availableLevels[ random( 0, availableLevels.length - 1 ) ];
+	const level = availableLevels[ random( 1, availableLevels.length ) - 1 ];
+
+	cloudToLevel.set( element, level );
+
+	return level;
 }
 
 function getRandomY( element: SVGGElement, level?: number ): number {
@@ -272,7 +323,7 @@ function getRandomY( element: SVGGElement, level?: number ): number {
 	}
 
 	const elementRect = element.getBBox();
-	const minY = windowRect.y + 150;
+	const minY = windowRect.y + levelTopEdge;
 	const maxY = windowRect.y + windowRect.height - elementRect.height;
 
 	return random( minY, maxY );
@@ -280,8 +331,4 @@ function getRandomY( element: SVGGElement, level?: number ): number {
 
 function getRandomHashTag(): string {
 	return hashTags[ random( 0, hashTags.length - 1 ) ];
-}
-
-function getWindowRect(): SVGRect {
-	return ( document.querySelector( '#window > path' ) as SVGGElement ).getBBox();
 }
