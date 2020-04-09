@@ -188,8 +188,8 @@
 	<g id="plane-2">
 		<g id="plane-2-banner">
 			<g>
-				<polyline class="st5" points="864.3,405.2 831.7,405.2 852.4,377.6 831.7,349.9 864.3,349.9 				"/>
-				<polyline class="st5" points="864.3,405.2 993.1,405.2 993.1,349.9 864.3,349.9 				"/>
+				<rect class="st5" x="864.3" y="349.9" width="128.8" height="55.3"/>
+				<polyline class="st5" points="865.3,405.1 832.7,405.1 853.4,377.5 832.7,349.8 865.3,349.8"/>
 				<text transform="matrix(1 0 0 1 873.7111 392.5785)" class="st6 st7">SHIT</text>
 			</g>
 			<polyline class="st3" points="993.1,405.2 1088.8,375.9 993.1,349.9 			"/>
@@ -232,8 +232,8 @@
 	<g id="plane-1">
 		<g id="plane-1-banner">
 			<g>
-				<polyline class="st5" points="1256.7,245.9 1289.3,245.9 1268.6,273.6 1289.3,301.2 1256.7,301.2 				"/>
-				<polyline class="st5" points="1256.7,245.9 1127.9,245.9 1127.9,301.2 1256.7,301.2 				"/>
+				<rect class="st5" x="1127.9" y="245.9" width="128.8" height="55.3"/>
+				<polyline class="st5" points="1255.6,245.8 1288.2,245.8 1267.5,273.5 1288.2,301.1 1255.6,301.1"/>
 				<text transform="matrix(1 0 0 1 1145.5022 288.5785)" class="st6 st7">SHIT</text>
 			</g>
 			<polyline class="st3" points="1127.9,245.9 1032.2,271.9 1127.9,301.2 			"/>

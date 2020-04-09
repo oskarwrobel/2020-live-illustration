@@ -29,7 +29,7 @@ export function openBlinds( blinds: Element[] ): void {
 	} );
 }
 
-export function closeBlinds( blinds: Element[] ): Promise<undefined> {
+export function closeBlinds( blinds: Element[] ): gsap.core.Tween {
 	if ( animation ) {
 		animation.kill();
 	}
