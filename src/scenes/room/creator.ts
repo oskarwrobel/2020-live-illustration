@@ -15,7 +15,7 @@ import postcard from './helpers/postcard';
 import hallSvgString from './images/hall.svg';
 import dogSvgString from './images/dog.svg';
 import wallSvgString from './images/wall.svg';
-import wallBackgroundSvgString from './images/wallbackground.svg';
+import skySvgString from './images/sky.svg';
 import lampSvgString from './images/lamp.svg';
 import tvSvgString from './images/tv.svg';
 
@@ -26,7 +26,7 @@ export default function roomSceneCreator( scenes: Scenes ): SceneDestructor {
 
 	const hallSvg = createSvgElement( hallSvgString, { id: 'hall', classes: 'plan' }, element );
 	const dogSvg = createSvgElement( dogSvgString, { id: 'dog', classes: 'plan' }, element );
-	createSvgElement( wallBackgroundSvgString, { id: 'wall-background', classes: 'plan' }, element );
+	createSvgElement( skySvgString, { id: 'sky', classes: 'plan' }, element );
 	const wallSvg = createSvgElement( wallSvgString, { id: 'wall', classes: 'plan' }, element );
 	const lampSvg = createSvgElement( lampSvgString, { id: 'lamp', classes: 'plan' }, element );
 	const tvSvg = createSvgElement( tvSvgString, { id: 'tv', classes: 'plan' }, element );
