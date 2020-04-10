@@ -88,7 +88,13 @@ export default class Scenes {
 	}
 
 	private _updateUrl( path: string ): void {
-		history.pushState( { path }, '', window.location.pathname + '#' + path );
+		let pathName = window.location.pathname;
+
+		if ( !pathName.endsWith( '/' ) ) {
+			pathName += '/';
+		}
+
+		history.pushState( { path }, '', pathName + '#' + path );
 	}
 }
 
