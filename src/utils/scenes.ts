@@ -32,6 +32,10 @@ export default class Scenes {
 		} );
 
 		setProportions( element, optimalWidth, optimalHeight );
+
+		window.addEventListener( 'popstate', ( evt: PopStateEvent ) => {
+			this._show( evt.state.path );
+		} );
 	}
 
 	add( name: string, config: SceneConfig ): Scenes {
@@ -51,7 +55,16 @@ export default class Scenes {
 		return this;
 	}
 
+	has( nameOrPath: string ): boolean {
+		return this._nameToScene.has( nameOrPath ) || this._pathToScene.has( nameOrPath );
+	}
+
 	async show( nameOrPath: string ): Promise<void> {
+		await this._show( nameOrPath );
+		this._updateUrl( this.current.path );
+	}
+
+	private async _show( nameOrPath: string ): Promise<void> {
 		const scene = this._nameToScene.get( nameOrPath ) || this._pathToScene.get( nameOrPath );
 
 		if ( !scene ) {
@@ -71,16 +84,11 @@ export default class Scenes {
 		this.element.classList.add( 'scene-' + this.current.name );
 		this.current.render( this );
 		await wait( 80 );
-		this.updatePath( this.current.path );
 		this.element.classList.remove( 'changing' );
 	}
 
-	has( nameOrPath: string ): boolean {
-		return this._nameToScene.has( nameOrPath ) || this._pathToScene.has( nameOrPath );
-	}
-
-	updatePath( path: string ): void {
-		history.pushState( '', '', window.location.pathname + '#' + path );
+	private _updateUrl( path: string ): void {
+		history.pushState( { path }, '', window.location.pathname + '#' + path );
 	}
 }
 
