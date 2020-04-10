@@ -16,12 +16,18 @@ scenes
 	.add( 'drawer', { creator: drawerSceneCreator, path: '/drawer' } )
 	.add( 'postcard', { creator: postcardSceneCreator, path: '/postcard' } );
 
-if ( window.location.hash ) {
-	const path = window.location.hash.replace( '#', '' );
+showInitPage();
 
-	if ( scenes.has( path ) ) {
-		scenes.show( path );
-	} else {
-		scenes.show( '/' );
+function showInitPage(): void {
+	if ( window.location.hash ) {
+		const path = window.location.hash.replace( '#', '' );
+
+		if ( scenes.has( path ) ) {
+			scenes.show( path );
+
+			return;
+		}
 	}
+
+	scenes.show( '/' );
 }
