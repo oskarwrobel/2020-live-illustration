@@ -13,6 +13,17 @@
 		height: 37%;
 	}
 
+	#wall-background {
+		right: -6%;
+		height: 100%;
+
+		#plane-1 text,
+		#plane-2 text {
+			font-family: 'Walter Turncoat', cursive !important;
+			user-select: none;
+		}
+	}
+
 	#wall {
 		right: -6%;
 		height: 100%;
@@ -21,12 +32,6 @@
 		#postcard-small,
 		#blinds {
 			cursor: pointer;
-		}
-
-		#plane-1 text,
-		#plane-2 text {
-			font-family: 'Walter Turncoat', cursive !important;
-			user-select: none;
 		}
 
 		#left-eye-opened,

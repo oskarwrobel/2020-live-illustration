@@ -66,7 +66,7 @@ let currentPlane: SVGGElement;
 const elementToAnimation: Map<SVGGElement, gsap.core.Tween> = new Map();
 
 export default function windowWithBlinds( scenes: Scenes ): () => void {
-	windowRect = ( document.querySelector( '#window > path' ) as SVGGElement ).getBBox();
+	windowRect = ( document.querySelector( '#window-frame' ) as SVGRectElement ).getBBox();
 
 	const blinds: SVGGElement[] = Array.from( document.querySelectorAll( '#blinds > g' ) );
 	const rightToLeftPlane = document.querySelector( '#plane-1' ) as SVGGElement;
