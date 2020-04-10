@@ -71,9 +71,8 @@ export default class Scenes {
 			throw new Error( 'Scene does not exist.' );
 		}
 
-		this.element.classList.add( 'changing' );
-
 		if ( this.current ) {
+			this.element.classList.add( 'changing' );
 			await wait( 80 );
 			this.current.detach();
 			this.element.innerHTML = '';
