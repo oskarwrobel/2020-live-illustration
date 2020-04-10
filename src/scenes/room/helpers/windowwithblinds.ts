@@ -75,12 +75,18 @@ export default function windowWithBlinds( scenes: Scenes ): () => void {
 	const cloud2 = document.querySelector( '#cloud-2' ) as SVGGElement;
 	const cloud3 = document.querySelector( '#cloud-3' ) as SVGGElement;
 
+	if ( scenes.current.data.areBlindsOpen ) {
+		openBlinds( blinds );
+		startAnimation( [ rightToLeftPlane, leftToRightPlane, cloud1, cloud2, cloud3 ] );
+		sendEvent( 'blinds', 'open', 'init' );
+	}
+
 	document.querySelector( '#blinds' ).addEventListener( 'click', () => {
 		if ( !scenes.current.data.areBlindsOpen ) {
 			scenes.current.data.areBlindsOpen = true;
 			openBlinds( blinds );
 
-			// Whe there are already pending animations it means the blinds weren't fully closed before opening.
+			// When there are already pending animations it means blinds weren't fully closed before opening.
 			// It may happen when someone toggles blinds in a short amount of time.
 			if ( !isLoopAnimationInProgress ) {
 				startAnimation( [ rightToLeftPlane, leftToRightPlane, cloud1, cloud2, cloud3 ] );
@@ -93,11 +99,6 @@ export default function windowWithBlinds( scenes: Scenes ): () => void {
 			sendEvent( 'blinds', 'close', 'click' );
 		}
 	} );
-
-	if ( scenes.current.data.areBlindsOpen ) {
-		openBlinds( blinds );
-		sendEvent( 'blinds', 'open', 'init' );
-	}
 
 	return function windowWithBlindsDestructor(): void {
 		stopAnimation();
