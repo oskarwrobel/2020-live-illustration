@@ -1,7 +1,7 @@
 {
   "name": "2020-live-illustration",
   "version": "0.0.1",
-  "description": "",
+  "description": "Interactive illustration.",
   "scripts": {
     "lint": "tsc --noEmit && eslint --quiet '**/*.ts'",
     "clean": "rm -rf ./dist",
