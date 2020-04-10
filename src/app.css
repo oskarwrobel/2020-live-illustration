@@ -30,10 +30,5 @@ html, body {
 
 	.plan {
 		position: absolute;
-		transition: transform .3s ease-out;
 	}
-}
-
-.parallax {
-	will-change: transform;
 }

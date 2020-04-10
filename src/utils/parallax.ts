@@ -1,3 +1,4 @@
+import { gsap } from 'gsap';
 import { throttle, clamp } from 'lodash-es';
 
 type Item = {
@@ -52,19 +53,18 @@ export default function parallax( config: Config ): () => void {
 		}
 
 		lastValue = value;
-		requestAnimationFrame( () => {
-			for ( const item of config.items ) {
-				const element = item.element as HTMLElement;
 
-				let x = -value * item.depth;
+		for ( const item of config.items ) {
+			const element = item.element as HTMLElement;
 
-				if ( item.revert ) {
-					x = -x;
-				}
+			let x = -value * item.depth;
 
-				element.style.transform = `translateX( ${ x }px )`;
+			if ( item.revert ) {
+				x = -x;
 			}
-		} );
+
+			gsap.to( element, { x } );
+		}
 	}
 
 	function resizeHandler(): void {
