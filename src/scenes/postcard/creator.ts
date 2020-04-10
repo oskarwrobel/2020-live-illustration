@@ -27,7 +27,7 @@ export default function postcardSceneCreator( scenes: Scenes ): SceneDestructor 
 	gsap.set( '#cover', { scaleY: 1.1 } );
 	gsap.set( [ '#left-hand', '#right-hand' ], { y: -10, rotate: -10, scale: .8 } );
 
-	const tl = gsap.timeline( { yoyo: true, delay: 2, repeatDelay: 2, repeat: -1 } )
+	const tl = gsap.timeline( { yoyo: true, repeatDelay: 2, repeat: -1 } )
 		.to( '#cover', { scaleY: 1, delay: 2, duration: .3, ease: 'none', transformOrigin: 'right top' } )
 		.to(
 			[ '#left-hand', '#right-hand' ],
