@@ -288,9 +288,11 @@ function setBannerText( plane: SVGGElement, text: string, stickToRight = false )
 }
 
 function movePointsToX( points: SVGPointList, x: number ): void {
-	let mostLeftPoint = points[ 0 ];
+	let mostLeftPoint = points.getItem( 0 );
 
-	for ( const point of Array.from( points ) ) {
+	for ( let i = 0; i < points.numberOfItems; i++ ) {
+		const point = points.getItem( i );
+
 		if ( mostLeftPoint > point ) {
 			mostLeftPoint = point;
 		}
@@ -298,8 +300,8 @@ function movePointsToX( points: SVGPointList, x: number ): void {
 
 	const shift = x - mostLeftPoint.x;
 
-	for ( const point of Array.from( points ) ) {
-		point.x += shift;
+	for ( let i = 0; i < points.numberOfItems; i++ ) {
+		points.getItem( i ).x += shift;
 	}
 }
 
