@@ -11,8 +11,17 @@ const wrapperElement = document.querySelector( '#scene' ) as HTMLDivElement;
 const scenes = new Scenes( wrapperElement, '1280x720' );
 
 scenes
-	.add( 'room', roomSceneCreator )
-	.add( 'oscar', oscarSceneCreator )
-	.add( 'drawer', drawerSceneCreator )
-	.add( 'postcard', postcardSceneCreator )
-	.show( 'room' );
+	.add( 'room', { creator: roomSceneCreator, path: '/' } )
+	.add( 'oscar', { creator: oscarSceneCreator, path: '/oscar' } )
+	.add( 'drawer', { creator: drawerSceneCreator, path: '/drawer' } )
+	.add( 'postcard', { creator: postcardSceneCreator, path: '/postcard' } );
+
+if ( window.location.hash ) {
+	const path = window.location.hash.replace( '#', '' );
+
+	if ( scenes.has( path ) ) {
+		scenes.show( path );
+	} else {
+		scenes.show( '/' );
+	}
+}

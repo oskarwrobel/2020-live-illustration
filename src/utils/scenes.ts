@@ -3,12 +3,17 @@ import setProportions from './setproportions';
 
 export type SceneCreator = ( scenes: Scenes ) => SceneDestructor;
 export type SceneDestructor = () => void;
+export type SceneConfig = {
+	creator: SceneCreator;
+	path: string;
+};
 
 /**
  * Creates, destroys and switches between scenes.
  */
 export default class Scenes {
-	private readonly _scenes: Map<string, Scene> = new Map();
+	private readonly _nameToScene: Map<string, Scene> = new Map();
+	private readonly _pathToScene: Map<string, Scene> = new Map();
 	readonly element: HTMLElement;
 	current: Scene;
 
@@ -29,18 +34,27 @@ export default class Scenes {
 		setProportions( element, optimalWidth, optimalHeight );
 	}
 
-	add( name: string, creator: SceneCreator ): Scenes {
-		if ( this._scenes.has( name ) ) {
-			throw new Error( 'Scene already created.' );
+	add( name: string, config: SceneConfig ): Scenes {
+		if ( this._nameToScene.has( name ) ) {
+			throw new Error( 'Scene with the same name already created.' );
 		}
 
-		this._scenes.set( name, new Scene( name, creator ) );
+		if ( this._pathToScene.has( config.path ) ) {
+			throw new Error( 'Scene with the same path already created.' );
+		}
+
+		const scene = new Scene( name, config );
+
+		this._nameToScene.set( name, scene );
+		this._pathToScene.set( config.path, scene );
 
 		return this;
 	}
 
-	async show( name: string ): Promise<void> {
-		if ( !this._scenes.has( name ) ) {
+	async show( nameOrPath: string ): Promise<void> {
+		const scene = this._nameToScene.get( nameOrPath ) || this._pathToScene.get( nameOrPath );
+
+		if ( !scene ) {
 			throw new Error( 'Scene does not exist.' );
 		}
 
@@ -53,11 +67,20 @@ export default class Scenes {
 			this.element.classList.remove( 'scene-' + this.current.name );
 		}
 
-		this.current = this._scenes.get( name );
+		this.current = scene;
 		this.element.classList.add( 'scene-' + this.current.name );
 		this.current.render( this );
 		await wait( 80 );
+		this.updatePath( this.current.path );
 		this.element.classList.remove( 'changing' );
+	}
+
+	has( nameOrPath: string ): boolean {
+		return this._nameToScene.has( nameOrPath ) || this._pathToScene.has( nameOrPath );
+	}
+
+	updatePath( path: string ): void {
+		history.pushState( '', '', window.location.pathname + '#' + path );
 	}
 }
 
@@ -65,14 +88,16 @@ export default class Scenes {
  * Single scene representation.
  */
 export class Scene {
+	readonly name: string;
+	readonly path: string;
+	data: any = {};
 	private readonly _creator: SceneCreator;
 	private _destructor: SceneDestructor;
-	readonly name: string;
-	data: any = {};
 
-	constructor( name: string, creator: SceneCreator ) {
+	constructor( name: string, config: SceneConfig ) {
 		this.name = name;
-		this._creator = creator;
+		this.path = config.path;
+		this._creator = config.creator;
 	}
 
 	render( scenes: Scenes ): void {
