@@ -12,9 +12,13 @@ type Config = {
 	items: Item[];
 };
 
+// Value from 0 - 100 defines how big shift the deepest plan should make.
+const sensitivity = 6;
+
 export default function parallax( config: Config ): () => void {
-	let lastValue: number;
 	let sceneRect = config.scene.getBoundingClientRect();
+	let moveRange = sceneRect.width * sensitivity / 100;
+	let lastValue: number;
 
 	config.scene.classList.add( 'parallax' );
 
@@ -27,9 +31,18 @@ export default function parallax( config: Config ): () => void {
 	function mouseMoveHandler( evt: MouseEvent ): void {
 		requestAnimationFrame( () => {
 			const center = sceneRect.width / 2;
-			const value = ( ( ( evt.clientX - sceneRect.left ) * 100 ) / center ) - 100;
+			const distanceFromCenter = ( ( ( evt.clientX - sceneRect.left ) * 100 ) / center ) - 100;
+			const direction = distanceFromCenter < 0 ? -1 : 1;
+			const value = clamp( Math.abs( distanceFromCenter ), 0, 100 ) * moveRange / 100;
 
-			move( clamp( value, -100, 100 ) );
+			move( value * direction );
+		} );
+	}
+
+	function resizeHandler(): void {
+		window.addEventListener( 'resize', () => {
+			sceneRect = config.scene.getBoundingClientRect();
+			moveRange = sceneRect.width * moveRange / 100;
 		} );
 	}
 
@@ -65,12 +78,6 @@ export default function parallax( config: Config ): () => void {
 
 			gsap.to( element, { x } );
 		}
-	}
-
-	function resizeHandler(): void {
-		window.addEventListener( 'resize', () => {
-			sceneRect = config.scene.getBoundingClientRect();
-		} );
 	}
 
 	// function askForPermission(): void {
