@@ -90,6 +90,11 @@
 		#button-3-on {
 			cursor: pointer;
 		}
+
+		#tv-off-shape {
+			fill: #fff;
+			opacity: 0;
+		}
 	}
 
 	#drawer {

@@ -11,11 +11,12 @@ type Channel = {
 };
 
 let isFirstTime = true;
+let isOn = true;
 
 export default function tv( illustrationData: any ): () => void {
-	createClipPath( {
+	const screenMask = createClipPath( {
 		source: '#mask-shape',
-		targets: [ '#channel-1', '#channel-2' ]
+		targets: [ '#channel-1', '#channel-2', '#channel-3', '#tv-off-shape' ]
 	} );
 
 	createClipPath( {
@@ -59,15 +60,12 @@ export default function tv( illustrationData: any ): () => void {
 	document.querySelector( '#button-0-on' ).addEventListener( 'mousedown', ( evt: MouseEvent ) => {
 		const target = evt.currentTarget as SVGGElement;
 
-		sendEvent( 'tv', 'off' );
-
 		target.style.visibility = 'hidden';
-
-		if ( illustrationData.channelNumber !== undefined ) {
-			turnOffChannel( illustrationData.channelNumber, channels, illustrationData );
-		}
-
 		document.addEventListener( 'mouseup', () => ( target.style.visibility = null ) );
+
+		if ( isOn ) {
+			turnOffTv( illustrationData.channelNumber, channels, illustrationData, screenMask );
+		}
 	} );
 
 	// Switch channel after clicking on the screen.
@@ -104,6 +102,25 @@ export default function tv( illustrationData: any ): () => void {
 	};
 }
 
+function turnOffTv( channelNumber: number, channels: Channel[], illustrationData: any, clipElement: SVGClipPathElement ): void {
+	sendEvent( 'tv', 'off' );
+	isOn = false;
+
+	gsap.timeline()
+		.to( clipElement.firstChild, { scaleY: 0, duration: 1, transformOrigin: 'center center' } )
+		.to( '#tv-off-shape', { opacity: 1, delay: -.7, duration: .7 } )
+		.then( () => {
+			gsap.set( clipElement.firstChild, { scaleY: 1 } );
+			gsap.set( '#tv-off-shape', { opacity: 0 } );
+			turnOffChannel( illustrationData.channelNumber, channels, illustrationData );
+		} );
+}
+
+function turnOnTv(): void {
+	sendEvent( 'tv', 'on' );
+	isOn = true;
+}
+
 function switchChannel( channelNumber: number, channels: Channel[], illustrationData: any ): void {
 	if ( illustrationData.channelNumber !== undefined ) {
 		turnOffChannel( illustrationData.channelNumber, channels, illustrationData );
@@ -114,6 +131,10 @@ function switchChannel( channelNumber: number, channels: Channel[], illustration
 
 function turnOnChannel( channelNumber: number, channels: Channel[], illustrationData: any ): void {
 	const channel = channels[ channelNumber ];
+
+	if ( !isOn ) {
+		turnOnTv();
+	}
 
 	channel.screen.style.display = null;
 	channel.button.style.visibility = 'hidden';
@@ -263,7 +284,7 @@ function channel3Animation( channel: Channel ): void {
 	modes[ random( 0, 1 ) ]();
 
 	function randomSkew(): void {
-		const delay = random( 2, 4 );
+		const delay = random( 0, 2 );
 
 		tl1 = gsap.timeline( { delay } );
 		tl2 = gsap.timeline( { delay, onComplete } );
