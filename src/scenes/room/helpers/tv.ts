@@ -110,8 +110,8 @@ function turnOffTv( channelNumber: number, channels: Channel[], illustrationData
 		.to( clipElement.firstChild, { scaleY: 0, duration: 1, transformOrigin: 'center center' } )
 		.to( '#tv-off-shape', { opacity: 1, delay: -.7, duration: .7 } )
 		.then( () => {
-			gsap.set( clipElement.firstChild, { scaleY: 1 } );
-			gsap.set( '#tv-off-shape', { opacity: 0 } );
+			gsap.set( clipElement.firstChild, { scaleY: 1, ease: 'none' } );
+			gsap.set( '#tv-off-shape', { opacity: 0, ease: 'none' } );
 			turnOffChannel( illustrationData.channelNumber, channels, illustrationData );
 		} );
 }
