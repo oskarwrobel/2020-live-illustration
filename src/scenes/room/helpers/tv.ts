@@ -12,9 +12,11 @@ type Channel = {
 
 let isFirstTime = true;
 let isOn = true;
+let turnOffAnimation: gsap.core.Timeline;
+let screenMask: SVGClipPathElement;
 
 export default function tv( illustrationData: any ): () => void {
-	const screenMask = createClipPath( {
+	screenMask = createClipPath( {
 		source: '#mask-shape',
 		targets: [ '#channel-1', '#channel-2', '#channel-3', '#tv-off-shape' ]
 	} );
@@ -64,7 +66,7 @@ export default function tv( illustrationData: any ): () => void {
 		document.addEventListener( 'mouseup', () => ( target.style.visibility = null ) );
 
 		if ( isOn ) {
-			turnOffTv( illustrationData.channelNumber, channels, illustrationData, screenMask );
+			turnOffTv( illustrationData.channelNumber, channels, illustrationData );
 		}
 	} );
 
@@ -99,26 +101,41 @@ export default function tv( illustrationData: any ): () => void {
 		for ( const channel of channels ) {
 			channel.pendingAnimations.forEach( ( animation: gsap.core.Timeline ) => animation.kill() );
 		}
+
+		screenMask = null;
 	};
 }
 
-function turnOffTv( channelNumber: number, channels: Channel[], illustrationData: any, clipElement: SVGClipPathElement ): void {
+function turnOffTv( channelNumber: number, channels: Channel[], illustrationData: any ): void {
 	sendEvent( 'tv', 'off' );
 	isOn = false;
 
-	gsap.timeline()
-		.to( clipElement.firstChild, { scaleY: 0, duration: 1, transformOrigin: 'center center' } )
-		.to( '#tv-off-shape', { opacity: 1, delay: -.7, duration: .7 } )
-		.then( () => {
-			gsap.set( clipElement.firstChild, { scaleY: 1, ease: 'none' } );
-			gsap.set( '#tv-off-shape', { opacity: 0, ease: 'none' } );
+	// Channel button should be released immediately as TV is turned off.
+	channels[ illustrationData.channelNumber ].button.style.visibility = null;
+
+	gsap.timeline( {
+		onStart() {
+			turnOffAnimation = this as gsap.core.Timeline;
+		},
+		onComplete() {
+			turnOffAnimation = null;
+			gsap.set( [ '#tv-off-shape', screenMask.firstChild ], { scaleY: 1, opacity: 0 } );
 			turnOffChannel( illustrationData.channelNumber, channels, illustrationData );
-		} );
+		}
+	} )
+		.to( screenMask.firstChild, { scaleY: 0, duration: 1, transformOrigin: 'center center' } )
+		.to( '#tv-off-shape', { opacity: 1, delay: -.7, duration: .7 } );
 }
 
 function turnOnTv(): void {
 	sendEvent( 'tv', 'on' );
 	isOn = true;
+
+	if ( turnOffAnimation ) {
+		turnOffAnimation.kill();
+		turnOffAnimation = null;
+		gsap.set( [ '#tv-off-shape', screenMask.firstChild ], { scaleY: 1, opacity: 0 } );
+	}
 }
 
 function switchChannel( channelNumber: number, channels: Channel[], illustrationData: any ): void {
@@ -151,8 +168,8 @@ function turnOnChannel( channelNumber: number, channels: Channel[], illustration
 function turnOffChannel( channelNumber: number, channels: Channel[], illustrationData: any ): void {
 	const channel = channels[ channelNumber ];
 
-	channel.screen.style.display = 'none';
 	channel.button.style.visibility = null;
+	channel.screen.style.display = 'none';
 	illustrationData.channelNumber = undefined;
 	channel.pendingAnimations.forEach( animation => ( animation.pause() ) );
 }
