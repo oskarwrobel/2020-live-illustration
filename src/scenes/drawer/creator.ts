@@ -1,7 +1,9 @@
 import Scenes, { SceneDestructor } from '../../utils/scenes';
+import { gsap } from 'gsap';
 
 import createSvgElement from '../../utils/createsvgelement';
 import escHandler from '../../utils/eschandler';
+import hoverHandler from '../../utils/hoverhandler';
 import sendEvent from '../../utils/sendevent';
 import createBackButton from '../../components/backbutton/createbackbutton';
 
@@ -11,7 +13,7 @@ import './style.css';
 
 export default function drawerSceneCreator( scenes: Scenes ): SceneDestructor {
 	const element = scenes.element;
-	const escDestructor = escHandler( () => {
+	const escHandlerDestructor = escHandler( () => {
 		scenes.show( 'room' );
 		sendEvent( 'drawer-scene', 'leave', 'Esc' );
 	} );
@@ -25,7 +27,23 @@ export default function drawerSceneCreator( scenes: Scenes ): SceneDestructor {
 
 	sendEvent( 'drawer-scene', 'enter' );
 
+	let floppyAnimation: gsap.core.Timeline | gsap.core.Tween = gsap.timeline( { delay: 3 } )
+		.to( '#silver', { x: -30, y: -16 } )
+		.to( '#silver', { x: 0, y: 0, duration: .1 } );
+
+	hoverHandler( document.querySelector( '#floppy' ), {
+		enter: () => {
+			floppyAnimation.kill();
+			floppyAnimation = gsap.to( '#silver', { x: -30, y: -16 } );
+		},
+		leave: () => {
+			floppyAnimation.kill();
+			floppyAnimation = gsap.to( '#silver', { x: 0, y: 0, duration: .1 } );
+		}
+	} );
+
 	return function destroy(): void {
-		escDestructor();
+		escHandlerDestructor();
+		floppyAnimation.kill();
 	};
 }
