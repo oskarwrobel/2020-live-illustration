@@ -27,6 +27,8 @@ export default function drawerSceneCreator( scenes: Scenes ): SceneDestructor {
 
 	sendEvent( 'drawer-scene', 'enter' );
 
+	let eventTimeoutId: ReturnType<typeof setTimeout>;
+
 	let floppyAnimation: gsap.core.Timeline | gsap.core.Tween = gsap.timeline( { delay: 3 } )
 		.to( '#silver', { x: -30, y: -16 } )
 		.to( '#silver', { x: 0, y: 0, duration: .1 } );
@@ -35,10 +37,14 @@ export default function drawerSceneCreator( scenes: Scenes ): SceneDestructor {
 		enter: () => {
 			floppyAnimation.kill();
 			floppyAnimation = gsap.to( '#silver', { x: -30, y: -16 } );
+			eventTimeoutId = setTimeout( () => {
+				sendEvent( 'drawer-scene', 'Floppy disc hovered' );
+			}, 500 );
 		},
 		leave: () => {
 			floppyAnimation.kill();
 			floppyAnimation = gsap.to( '#silver', { x: 0, y: 0, duration: .1 } );
+			clearInterval( eventTimeoutId );
 		}
 	} );
 

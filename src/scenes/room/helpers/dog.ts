@@ -4,7 +4,7 @@ import hoverHandler from '../../../utils/hoverhandler';
 
 export default function dog(): () => void {
 	const smileAnimation = gsap.to( '#smile', { attr: { d: 'M41.1,100.5 c0,0,22.9-6.5,22.9-19' }, paused: true } );
-	let eventTimeoutId: any;
+	let eventTimeoutId: ReturnType<typeof setTimeout>;
 
 	hoverHandler( document.querySelector( '#leash' ), {
 		enter: () => {
