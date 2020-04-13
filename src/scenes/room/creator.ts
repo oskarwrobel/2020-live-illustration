@@ -1,11 +1,10 @@
-import { gsap } from 'gsap';
 import Scenes, { SceneDestructor } from '../../utils/scenes';
 
 import createSvgElement from '../../utils/createsvgelement';
 import parallax from '../../utils/parallax';
-import sendEvent from '../../utils/sendevent';
 
 import windowWithBlinds from './helpers/windowwithblinds';
+import dog from './helpers/dog';
 import toddEyes from './helpers/toddeyes';
 import drawer from './helpers/drawer';
 import tv from './helpers/tv';
@@ -46,21 +45,7 @@ export default function roomSceneCreator( scenes: Scenes ): SceneDestructor {
 
 	// Dog's smile
 	// -------------------------------------------------------------------------------------------------------------- //
-	const leash = document.querySelector( '#leash' );
-	const leashTween = gsap.to( '#smile', { attr: { d: 'M41.1,100.5 c0,0,22.9-6.5,22.9-19' }, paused: true } );
-	let eventTimeoutId: any;
-
-	leash.addEventListener( 'mouseenter', () => {
-		leashTween.play();
-		eventTimeoutId = setTimeout( () => {
-			sendEvent( 'room-scene', 'Dog smile' );
-		}, 500 );
-	} );
-
-	leash.addEventListener( 'mouseleave', () => {
-		leashTween.reverse();
-		clearInterval( eventTimeoutId );
-	} );
+	const dogDestructor = dog();
 
 	// Postcard
 	// -------------------------------------------------------------------------------------------------------------- //
@@ -90,6 +75,7 @@ export default function roomSceneCreator( scenes: Scenes ): SceneDestructor {
 	// -------------------------------------------------------------------------------------------------------------- //
 	return function destroy(): void {
 		parallaxDestructor();
+		dogDestructor();
 		tvDestructor();
 		oscarStatueDestructor();
 		windowWithBlindsDestructor();
