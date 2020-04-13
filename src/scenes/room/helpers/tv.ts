@@ -93,7 +93,7 @@ export default function tv( illustrationData: any ): () => void {
 		sendEvent( 'tv', 'switchChannel', 'initial', illustrationData.channelNumber );
 		switchChannel( illustrationData.channelNumber, channels, illustrationData );
 	} else {
-		switchChannel( 0, channels, illustrationData );
+		switchChannel( 1, channels, illustrationData );
 	}
 
 	// Destroy scene and release all assets.
