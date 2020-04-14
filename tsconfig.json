@@ -11,7 +11,6 @@
   },
   "files": [
     "node_modules/gsap/types/index.d.ts",
-    "node_modules/@svgdotjs/svg.js/svg.js.d.ts",
     "custom.d.ts"
   ]
 }

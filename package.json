@@ -11,6 +11,7 @@
   },
   "author": "Oskar Wrobel <kontakt@oskarwrobel.pl> (https://www.oskarwrobel.pl/)",
   "dependencies": {
+    "@types/source-map": "^0.5.2",
     "gsap": "^3.2.6",
     "lodash-es": "^4.17.15"
   },
@@ -46,6 +47,7 @@
   },
   "eslintIgnore": [
     "dist/**",
+    "node_modules/**",
     "src/analytics.js"
   ],
   "husky": {
