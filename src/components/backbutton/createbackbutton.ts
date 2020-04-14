@@ -1,4 +1,4 @@
-import createSvgElement from '../../utils/createsvgelement';
+import createSvgElement from '../../core/createsvgelement';
 import backSvgData from './backbutton.svg';
 import './backbutton.css';
 

@@ -1,4 +1,4 @@
-import Scenes from './utils/scenes';
+import Scenes from './core/scenes';
 
 import roomSceneCreator from './scenes/room/creator';
 import oscarSceneCreator from './scenes/oscar/creator';

@@ -1,6 +1,6 @@
 import { random, throttle } from 'lodash-es';
-import moveToCursor from '../../../utils/movetocursor';
-import sendEvent from '../../../utils/sendevent';
+import moveToCursor from '../../../core/movetocursor';
+import sendEvent from '../../../core/sendevent';
 
 let leftEyeOpened: HTMLElement;
 let leftEyeClosed: HTMLElement;

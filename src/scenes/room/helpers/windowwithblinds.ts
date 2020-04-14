@@ -1,8 +1,8 @@
 import { gsap } from 'gsap';
 import { random } from 'lodash-es';
 import { openBlinds, closeBlinds } from './toggleblinds';
-import Scenes from '../../../utils/scenes';
-import sendEvent from '../../../utils/sendevent';
+import Scenes from '../../../core/scenes';
+import sendEvent from '../../../core/sendevent';
 
 type Side = -1 | 1;
 

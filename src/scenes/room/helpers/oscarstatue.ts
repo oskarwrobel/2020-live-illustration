@@ -1,6 +1,6 @@
 import { gsap } from 'gsap';
-import Scenes from '../../../utils/scenes';
-import createClipPath from '../../../utils/createclippath';
+import Scenes from '../../../core/scenes';
+import createClipPath from '../../../core/createclippath';
 
 export default function oscarStatue( scenes: Scenes ): () => void {
 	document.querySelector( '#oscar-small' ).addEventListener( 'click', () => {

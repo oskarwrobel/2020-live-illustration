@@ -1,10 +1,10 @@
 import { gsap } from 'gsap';
-import Scenes, { SceneDestructor } from '../../utils/scenes';
-import createSvgElement from '../../utils/createsvgelement';
+import Scenes, { SceneDestructor } from '../../core/scenes';
+import createSvgElement from '../../core/createsvgelement';
 
 import postcardSvgString from './images/postcard.svg';
-import escHandler from '../../utils/eschandler';
-import sendEvent from '../../utils/sendevent';
+import escHandler from '../../core/eschandler';
+import sendEvent from '../../core/sendevent';
 import createBackButton from '../../components/backbutton/createbackbutton';
 
 export default function postcardSceneCreator( scenes: Scenes ): SceneDestructor {
