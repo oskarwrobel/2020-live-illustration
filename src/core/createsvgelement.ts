@@ -1,22 +1,20 @@
+import { updateXmlElement } from './createxmlelement';
+
 const parser = new DOMParser();
 
-type Config = {
-	classes?: string;
+type Attributes = {
+	class?: string;
 	id?: string;
 }
 
 /**
  * Creates SVG element from string data.
  */
-export default function createSvgElement( rawData: string, config: Config, appendTo?: Element ): SVGElement {
+export default function createSvgElement( rawData: string, attributes?: Attributes, appendTo?: Element ): SVGElement {
 	const element = parser.parseFromString( rawData, 'image/svg+xml' ).childNodes[ 0 ] as SVGElement;
 
-	if ( config.id ) {
-		element.id = config.id;
-	}
-
-	if ( config.classes ) {
-		element.classList.add( config.classes );
+	if ( attributes ) {
+		updateXmlElement( element, attributes );
 	}
 
 	if ( appendTo ) {

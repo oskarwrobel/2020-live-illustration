@@ -18,7 +18,7 @@ export default function drawerSceneCreator( scenes: Scenes ): SceneDestructor {
 		sendEvent( 'drawer-scene', 'leave', 'Esc' );
 	} );
 
-	createSvgElement( drawerSvgData, { id: 'drawer-inside', classes: 'plan' }, element );
+	createSvgElement( drawerSvgData, { id: 'drawer-inside', class: 'plan' }, element );
 
 	createBackButton( element, () => {
 		scenes.show( 'room' );

@@ -1,13 +1,13 @@
 import { gsap } from 'gsap';
 import Scenes from '../../../core/scenes';
-import createClipPath from '../../../core/createclippath';
+import createClipPathElement from '../../../core/createclippathelement';
 
 export default function postcard( scenes: Scenes ): () => void {
 	document.querySelector( '#postcard-small' ).addEventListener( 'click', () => {
 		scenes.show( 'postcard' );
 	} );
 
-	createClipPath( {
+	createClipPathElement( {
 		source: '#postcard-blink-mask',
 		targets: [ '#postcard-blink-group' ]
 	} );

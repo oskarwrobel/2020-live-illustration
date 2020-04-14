@@ -8,7 +8,7 @@ import postcardSceneCreator from './scenes/postcard/creator';
 import './app.css';
 
 const wrapperElement = document.querySelector( '#scene' ) as HTMLDivElement;
-const scenes = new Scenes( wrapperElement, '1280x720' );
+const scenes = new Scenes( wrapperElement, '16:9' );
 
 scenes
 	.add( 'room', { creator: roomSceneCreator, path: '/' } )

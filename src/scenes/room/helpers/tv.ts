@@ -1,6 +1,6 @@
 import { gsap } from 'gsap';
 import { random } from 'lodash-es';
-import createClipPath from '../../../core/createclippath';
+import createClipPathElement from '../../../core/createclippathelement';
 import sendEvent from '../../../core/sendevent';
 
 type Channel = {
@@ -16,12 +16,12 @@ let turnOffAnimation: gsap.core.Timeline;
 let screenMask: SVGClipPathElement;
 
 export default function tv( illustrationData: any ): () => void {
-	screenMask = createClipPath( {
+	screenMask = createClipPathElement( {
 		source: '#mask-shape',
 		targets: [ '#channel-1', '#channel-2', '#channel-3', '#tv-off-shape' ]
 	} );
 
-	createClipPath( {
+	createClipPathElement( {
 		source: '#bubbles-mask',
 		targets: [ '#bubbles' ]
 	} );

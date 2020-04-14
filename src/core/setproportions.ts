@@ -2,8 +2,9 @@ import toUnit from './tounit';
 
 const toPx = toUnit( 'px' );
 
-export default function setProportions( element: HTMLElement, optimalWidth: number, optimalHeight: number ): void {
-	const ratio = optimalWidth / optimalHeight;
+export default function setProportions( element: HTMLElement, proportions: string ): void {
+	const [ optimalWidth, optimalHeight ] = proportions.split( ':' );
+	const ratio = parseInt( optimalWidth ) / parseInt( optimalHeight );
 	const maxWidth = window.innerWidth;
 	const maxHeight = window.innerHeight;
 

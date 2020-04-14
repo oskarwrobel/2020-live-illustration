@@ -17,21 +17,19 @@ export default class Scenes {
 	readonly element: HTMLElement;
 	current: Scene;
 
-	constructor( element: HTMLElement, optimalResolution: string ) {
+	constructor( element: HTMLElement, proportions: string ) {
 		this.element = element;
-
-		const [ optimalWidth, optimalHeight ] = optimalResolution.split( 'x' ).map( value => parseInt( value ) );
 
 		// Keeps proper proportions.
 		window.addEventListener( 'resize', throttle( () => {
-			setProportions( element, optimalWidth, optimalHeight );
+			setProportions( element, proportions );
 		}, 100, { leading: true } ) );
 
 		window.addEventListener( 'orientationchange', () => {
-			setProportions( element, optimalWidth, optimalHeight );
+			setProportions( element, proportions );
 		} );
 
-		setProportions( element, optimalWidth, optimalHeight );
+		setProportions( element, proportions );
 
 		window.addEventListener( 'popstate', ( evt: PopStateEvent ) => {
 			this._show( evt.state.path );

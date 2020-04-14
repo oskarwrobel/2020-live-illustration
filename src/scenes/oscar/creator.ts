@@ -14,8 +14,8 @@ import './style.css';
 export default function oscarSceneCreator( scenes: Scenes ): SceneDestructor {
 	const element = scenes.element;
 
-	const oscar = createSvgElement( oscarSvgData, { id: 'oscar', classes: 'plan' }, element );
-	const plant = createSvgElement( plantSvgData, { id: 'plant', classes: 'plan' }, element );
+	const oscar = createSvgElement( oscarSvgData, { id: 'oscar', class: 'plan' }, element );
+	const plant = createSvgElement( plantSvgData, { id: 'plant', class: 'plan' }, element );
 
 	sendEvent( 'oscar-scene', 'enter' );
 

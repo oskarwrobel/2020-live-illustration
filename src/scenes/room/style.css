@@ -95,9 +95,9 @@
 			fill: #fff;
 			opacity: 0;
 		}
-	}
 
-	#drawer {
-		cursor: pointer;
+		#drawer {
+			cursor: pointer;
+		}
 	}
 }

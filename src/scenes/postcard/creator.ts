@@ -12,7 +12,7 @@ export default function postcardSceneCreator( scenes: Scenes ): SceneDestructor 
 
 	sendEvent( 'postcard-scene', 'enter' );
 
-	createSvgElement( postcardSvgString, { id: 'hall', classes: 'plan' }, element );
+	createSvgElement( postcardSvgString, { id: 'hall', class: 'plan' }, element );
 
 	const escDestructor = escHandler( () => {
 		scenes.show( 'room' );

@@ -9,6 +9,10 @@ type Config = {
 	maxShiftRight: number;
 }
 
+/**
+ * Given element will try to move to the cursor position.
+ * Helpful e.g. when you want to make an effect with eyes following the cursor.
+ */
 export default function moveToCursor( clientX: number, clientY: number, config: Config ): void {
 	const { element, wrapperRect, maxShiftTop, maxShiftBottom, maxShiftLeft, maxShiftRight } = config;
 

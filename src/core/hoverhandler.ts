@@ -1,6 +1,6 @@
 type Config = {
-	enter(): void;
-	leave(): void;
+	enter( evt: MouseEvent ): void;
+	leave( evt: MouseEvent ): void;
 }
 
 export default function hoverHandler( element: HTMLElement, config: Config ): () => void {
@@ -12,11 +12,11 @@ export default function hoverHandler( element: HTMLElement, config: Config ): ()
 		element.removeEventListener( 'mouseleave', handleLeave );
 	};
 
-	function handleEnter(): void {
-		config.enter();
+	function handleEnter( evt: MouseEvent ): void {
+		config.enter( evt );
 	}
 
-	function handleLeave(): void {
-		config.leave();
+	function handleLeave( evt: MouseEvent ): void {
+		config.leave( evt );
 	}
 }

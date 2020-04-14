@@ -1,13 +1,13 @@
 import { gsap } from 'gsap';
 import Scenes from '../../../core/scenes';
-import createClipPath from '../../../core/createclippath';
+import createClipPathElement from '../../../core/createclippathelement';
 
 export default function oscarStatue( scenes: Scenes ): () => void {
 	document.querySelector( '#oscar-small' ).addEventListener( 'click', () => {
 		scenes.show( 'oscar' );
 	} );
 
-	createClipPath( {
+	createClipPathElement( {
 		source: '#oscar-blink-mask',
 		targets: [ '#oscar-blink-group' ]
 	} );
