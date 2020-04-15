@@ -1,5 +1,4 @@
-import { random, throttle } from 'lodash-es';
-import moveToCursor from '../../../core/movetocursor';
+import { random, throttle, clamp } from 'lodash-es';
 import sendEvent from '../../../core/sendevent';
 
 let leftEyeOpened: HTMLElement;
@@ -56,33 +55,17 @@ export default function toddEyes(): () => void {
 	};
 }
 
-function closeLeftEye(): void {
-	leftEyeOpened.style.display = 'none';
-}
-
-function openLeftEye(): void {
-	leftEyeOpened.style.display = null;
-}
-
-function closeRightEye(): void {
-	rightEyeOpened.style.display = 'none';
-}
-
-function openRightEye(): void {
-	rightEyeOpened.style.display = null;
-}
-
 function blink(): void {
-	closeLeftEye();
-	closeRightEye();
+	leftEyeOpened.style.display = 'none';
+	rightEyeOpened.style.display = 'none';
 
 	setTimeout( () => {
 		if ( !isLeftEyeHovered ) {
-			openLeftEye();
+			leftEyeOpened.style.display = null;
 		}
 
 		if ( !isRightEyeHovered ) {
-			openRightEye();
+			rightEyeOpened.style.display = null;
 		}
 	}, 250 );
 }
@@ -108,7 +91,7 @@ function enableCloseOnHover(): void {
 	let rightEyeHoverTimeId: ReturnType<typeof setTimeout>;
 
 	leftEyeClosed.addEventListener( 'mouseenter', () => {
-		closeLeftEye();
+		leftEyeOpened.style.display = 'none';
 		isLeftEyeHovered = true;
 
 		leftEyeHoverTimeId = setTimeout( () => {
@@ -117,8 +100,8 @@ function enableCloseOnHover(): void {
 	} );
 
 	leftEyeClosed.addEventListener( 'mouseleave', () => {
-		openLeftEye();
-		openRightEye();
+		leftEyeOpened.style.display = null;
+		rightEyeOpened.style.display = null;
 		isLeftEyeHovered = false;
 		resetTimer();
 
@@ -126,7 +109,7 @@ function enableCloseOnHover(): void {
 	} );
 
 	rightEyeClosed.addEventListener( 'mouseenter', () => {
-		closeRightEye();
+		rightEyeOpened.style.display = 'none';
 		isRightEyeHovered = true;
 
 		rightEyeHoverTimeId = setTimeout( () => {
@@ -135,11 +118,36 @@ function enableCloseOnHover(): void {
 	} );
 
 	rightEyeClosed.addEventListener( 'mouseleave', () => {
-		openRightEye();
-		openLeftEye();
+		leftEyeOpened.style.display = null;
+		rightEyeOpened.style.display = null;
 		isRightEyeHovered = false;
 		resetTimer();
 
 		clearInterval( rightEyeHoverTimeId );
 	} );
+}
+
+type MoveToCursorConfig = {
+	element: Element;
+	wrapperRect: ClientRect;
+	maxShiftTop: number;
+	maxShiftBottom: number;
+	maxShiftLeft: number;
+	maxShiftRight: number;
+}
+
+function moveToCursor( clientX: number, clientY: number, config: MoveToCursorConfig ): void {
+	const { element, wrapperRect, maxShiftTop, maxShiftBottom, maxShiftLeft, maxShiftRight } = config;
+
+	const widthHalf = wrapperRect.width / 2;
+	const heightHalf = wrapperRect.height / 2;
+
+	let x = ( ( ( clientX - ( wrapperRect.left + widthHalf ) ) * Math.abs( maxShiftLeft ) ) / widthHalf );
+	let y = ( ( ( clientY - ( wrapperRect.top + heightHalf ) ) * Math.abs( maxShiftTop ) ) / heightHalf );
+
+	x = clamp( x, maxShiftLeft, maxShiftRight );
+	y = clamp( y, maxShiftTop, maxShiftBottom );
+
+	const targetElement = element as HTMLElement;
+	targetElement.style.transform = `translate(${ x }%,${ y }%)`;
 }
