@@ -1,0 +1,13 @@
+sudo: required
+dist: trusty
+language: node_js
+node_js:
+  - "12"
+install:
+  - npm install
+script:
+  - npm run lint
+  - npm test -- --coverage
+after_success:
+  - npm install -g codecov
+  - codecov < coverage/lcov.info
