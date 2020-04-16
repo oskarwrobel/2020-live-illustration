@@ -9,5 +9,8 @@ module.exports = {
 	},
 	testMatch: [
 		'**/test/**/*.ts'
-	]
+	],
+	moduleNameMapper: {
+		'^lodash-es$': 'lodash'
+	}
 };
