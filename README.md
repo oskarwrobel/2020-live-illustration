@@ -1,5 +1,5 @@
 2020 - Story of my life
-=======================
+========================
 
 [![Dependency Status](https://img.shields.io/david/oskarwrobel/2020-live-illustration.svg)](https://david-dm.org/oskarwrobel/2020-live-illustration)
 [![devDependency Status](https://img.shields.io/david/dev/oskarwrobel/2020-live-illustration.svg)](https://david-dm.org/oskarwrobel/2020-live-illustration?type=dev)
