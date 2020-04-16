@@ -15,25 +15,24 @@ export default class Scenes {
 	private readonly _nameToScene: Map<string, Scene> = new Map();
 	private readonly _pathToScene: Map<string, Scene> = new Map();
 	readonly element: HTMLElement;
+	readonly proportions: string;
 	current: Scene;
+
+	private _resizeHandler = (): void => setProportions( this.element, this.proportions );
+	private _throttledResizeHandler = throttle( this._resizeHandler, 100, { leading: true } );
+	private _popstateHandler = ( evt: PopStateEvent ): Promise<void> => this._show( evt.state.path );
 
 	constructor( element: HTMLElement, proportions: string ) {
 		this.element = element;
+		this.proportions = proportions;
 
 		// Keeps proper proportions.
-		window.addEventListener( 'resize', throttle( () => {
-			setProportions( element, proportions );
-		}, 100, { leading: true } ) );
-
-		window.addEventListener( 'orientationchange', () => {
-			setProportions( element, proportions );
-		} );
-
+		window.addEventListener( 'resize', this._throttledResizeHandler );
+		window.addEventListener( 'orientationchange', this._resizeHandler );
 		setProportions( element, proportions );
 
-		window.addEventListener( 'popstate', ( evt: PopStateEvent ) => {
-			this._show( evt.state.path );
-		} );
+		// Change illustration on browser back button.
+		window.addEventListener( 'popstate', this._popstateHandler );
 	}
 
 	add( name: string, config: SceneConfig ): Scenes {
@@ -72,9 +71,7 @@ export default class Scenes {
 		if ( this.current ) {
 			this.element.classList.add( 'changing' );
 			await wait( 80 );
-			this.current.detach();
-			this.element.innerHTML = '';
-			this.element.classList.remove( 'scene-' + this.current.name );
+			this._detachCurrentScene();
 		}
 
 		this.current = scene;
@@ -84,8 +81,28 @@ export default class Scenes {
 		this.element.classList.remove( 'changing' );
 	}
 
+	private _detachCurrentScene(): void {
+		this.current.detach();
+		this.element.innerHTML = '';
+		this.element.classList.remove( 'scene-' + this.current.name );
+		this.current = null;
+	}
+
 	private _updateUrl( path: string ): void {
 		history.pushState( { path }, '', window.location.pathname + '#' + path );
+	}
+
+	destroy(): void {
+		window.removeEventListener( 'resize', this._throttledResizeHandler );
+		window.removeEventListener( 'orientationchange', this._resizeHandler );
+		window.removeEventListener( 'popstate', this._popstateHandler );
+
+		this.element.style.width = null;
+		this.element.style.height = null;
+
+		if ( this.current ) {
+			this._detachCurrentScene();
+		}
 	}
 }
 
@@ -114,6 +131,6 @@ export class Scene {
 	}
 }
 
-async function wait( ms = 0 ): Promise<void> {
+async function wait( ms: number ): Promise<void> {
 	return new Promise( resolve => setTimeout( resolve, ms ) );
 }
