@@ -45,20 +45,6 @@ export default function parallax( config: Config ): () => void {
 		moveRange = sceneRect.width * sensitivity / 100;
 	}
 
-	// window.addEventListener( 'deviceorientation', throttle( ( evt: DeviceOrientationEvent ) => {
-	// 	move( evt.alpha * 100 / 180 );
-	// }, 0, { leading: true } ) );
-
-	// if ( DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function' ) {
-	// 	DeviceOrientationEvent.requestPermission()
-	// 		.then( ( response: string ) => {
-	// 			if ( response === 'rejected' ) {
-	// 				document.addEventListener( 'click', askForPermission );
-	// 			}
-	// 		} )
-	// 		.catch( () => document.addEventListener( 'click', askForPermission ) );
-	// }
-
 	function move( value: number ): void {
 		if ( lastValue === value ) {
 			return;
@@ -73,14 +59,6 @@ export default function parallax( config: Config ): () => void {
 			gsap.to( element, { x, overwrite: true } );
 		}
 	}
-
-	// function askForPermission(): void {
-	// 	DeviceOrientationEvent.requestPermission().then( response => {
-	// 		if ( response === 'granted' ) {
-	// 			window.removeEventListener( 'click', askForPermission );
-	// 		}
-	// 	} );
-	// }
 
 	return function destroy(): void {
 		document.removeEventListener( 'mousemove', throttledMouseMoveHandler );
