@@ -4,29 +4,30 @@ import { throttle, clamp } from 'lodash-es';
 type Item = {
 	element: Element;
 	depth: number;
-	revert?: boolean;
 }
 
 type Config = {
-	scene: HTMLElement;
+	scene: Element;
 	items: Item[];
 };
 
-// Value from 0 - 100 defines how big shift the deepest plan should make.
+// Value from 0 - 100 defines how big shift the deepest plan should do.
 const sensitivity = 6;
 
 export default function parallax( config: Config ): () => void {
-	let sceneRect = config.scene.getBoundingClientRect();
-	let moveRange = sceneRect.width * sensitivity / 100;
+	let sceneRect: DOMRect;
+	let moveRange: number;
 	let lastValue: number;
+
+	updateRects();
 
 	config.scene.classList.add( 'parallax' );
 
 	const throttledMouseMoveHandler = throttle( mouseMoveHandler, 50, { leading: true } );
-	const throttledResizeHandler = throttle( resizeHandler, 100 );
+	const throttledUpdateRects = throttle( updateRects, 100, { leading: false } );
 
 	document.addEventListener( 'mousemove', throttledMouseMoveHandler );
-	document.addEventListener( 'resize', throttledResizeHandler );
+	window.addEventListener( 'resize', throttledUpdateRects );
 
 	function mouseMoveHandler( evt: MouseEvent ): void {
 		requestAnimationFrame( () => {
@@ -39,11 +40,9 @@ export default function parallax( config: Config ): () => void {
 		} );
 	}
 
-	function resizeHandler(): void {
-		window.addEventListener( 'resize', () => {
-			sceneRect = config.scene.getBoundingClientRect();
-			moveRange = sceneRect.width * moveRange / 100;
-		} );
+	function updateRects(): void {
+		sceneRect = config.scene.getBoundingClientRect();
+		moveRange = sceneRect.width * sensitivity / 100;
 	}
 
 	// window.addEventListener( 'deviceorientation', throttle( ( evt: DeviceOrientationEvent ) => {
@@ -69,14 +68,9 @@ export default function parallax( config: Config ): () => void {
 
 		for ( const item of config.items ) {
 			const element = item.element as HTMLElement;
+			const x = -value * item.depth;
 
-			let x = -value * item.depth;
-
-			if ( item.revert ) {
-				x = -x;
-			}
-
-			gsap.to( element, { x } );
+			gsap.to( element, { x, overwrite: true } );
 		}
 	}
 
@@ -90,7 +84,7 @@ export default function parallax( config: Config ): () => void {
 
 	return function destroy(): void {
 		document.removeEventListener( 'mousemove', throttledMouseMoveHandler );
-		window.removeEventListener( 'resize', throttledResizeHandler );
+		window.removeEventListener( 'resize', throttledUpdateRects );
 		config.scene.classList.remove( 'parallax' );
 	};
 }
