@@ -1,7 +1,28 @@
 {
-  "extends": "@oskarwrobel/eslint-config",
-  "env": {
-	"browser": true,
-	"node": true
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "ignorePatterns": [
+    "coverage",
+    "dist"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
+  // Common JS and TS rules.
+  "rules": {
+    "prettier/prettier": ["error", {
+       "useTabs": false,
+       "tabWidth": 2
+    }],
+
+    // ## Possible errors
+    "no-console": "off",
+    "no-constant-condition": "off",
+    "@typescript-eslint/no-use-before-define": "off",
+    "@typescript-eslint/no-explicit-any": "off",
   }
 }

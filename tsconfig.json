@@ -8,7 +8,7 @@
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "lib": [ "es6", "dom", "es2017" ]
+    "lib": ["es6", "dom", "es2017"]
   },
   "files": [
     "node_modules/gsap/types/index.d.ts",

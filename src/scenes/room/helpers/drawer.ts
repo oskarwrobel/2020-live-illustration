@@ -1,44 +1,50 @@
-import { gsap } from 'gsap';
-import Scenes from '../../../core/scenes';
+import { gsap } from "gsap";
+import Scenes from "../../../core/scenes";
 
 const shift = 95;
 const duration = 1;
-const delay = .1;
+const delay = 0.1;
 
-const shadowFrom = '199.5,514 199.5,472.2 524.3,472.2 524.3,514';
-const shadowTo = '199.5,543.9999877929688 199.5,472.2 524.2999877929688,472.2 524.2999877929688,543.9999877929688';
+const shadowFrom = "199.5,514 199.5,472.2 524.3,472.2 524.3,514";
+const shadowTo =
+  "199.5,543.9999877929688 199.5,472.2 524.2999877929688,472.2 524.2999877929688,543.9999877929688";
 
-export default function drawer( scenes: Scenes ): void {
-	const front = document.querySelector( '#front' );
-	const shadow = document.querySelector( '#shadow' );
-	const data = scenes.current.data;
+export default function drawer(scenes: Scenes): void {
+  const front = document.querySelector("#front");
+  const shadow = document.querySelector("#shadow");
+  const data = scenes.current.data;
 
-	let isTweening = false;
+  let isTweening = false;
 
-	if ( data.drawerIsOpened ) {
-		front.setAttribute( 'transform', `translate( ${ shift }, 0 )` );
-		shadow.setAttribute( 'points', shadowTo );
+  if (data.drawerIsOpened) {
+    front.setAttribute("transform", `translate( ${shift}, 0 )`);
+    shadow.setAttribute("points", shadowTo);
 
-		isTweening = true;
-		gsap.to( front, { x: '-=' + shift, duration, delay } );
-		gsap.to( shadow, { attr: { points: shadowFrom }, duration, delay, onComplete: () => ( isTweening = false ) } );
+    isTweening = true;
+    gsap.to(front, { x: "-=" + shift, duration, delay });
+    gsap.to(shadow, {
+      attr: { points: shadowFrom },
+      duration,
+      delay,
+      onComplete: () => (isTweening = false),
+    });
 
-		data.drawerIsOpened = false;
-	}
+    data.drawerIsOpened = false;
+  }
 
-	document.querySelector( '#drawer' ).addEventListener( 'click', () => {
-		if ( isTweening ) {
-			return;
-		}
+  document.querySelector("#drawer").addEventListener("click", () => {
+    if (isTweening) {
+      return;
+    }
 
-		isTweening = true;
-		gsap.to( front, { x: shift, duration } );
-		gsap.to( shadow, { attr: { points: shadowTo }, duration, onComplete } );
-	} );
+    isTweening = true;
+    gsap.to(front, { x: shift, duration });
+    gsap.to(shadow, { attr: { points: shadowTo }, duration, onComplete });
+  });
 
-	function onComplete(): void {
-		isTweening = false;
-		data.drawerIsOpened = true;
-		setTimeout( () => ( scenes.show( 'drawer' ) ), delay * 1000 );
-	}
+  function onComplete(): void {
+    isTweening = false;
+    data.drawerIsOpened = true;
+    setTimeout(() => scenes.show("drawer"), delay * 1000);
+  }
 }

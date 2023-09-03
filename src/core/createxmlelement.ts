@@ -1,25 +1,32 @@
 type Attributes = {
-	[ key: string ]: string | number;
-}
+  [key: string]: string | number;
+};
 
-const defaultNs = 'http://www.w3.org/2000/svg';
+const defaultNs = "http://www.w3.org/2000/svg";
 
 /**
  * Creates XML element with attributes.
  */
-export default function createXmlElement( name: string, attributes: Attributes = {}, ns: string = defaultNs ): Element {
-	const element = document.createElementNS( ns, name );
+export default function createXmlElement(
+  name: string,
+  attributes: Attributes = {},
+  ns: string = defaultNs,
+): Element {
+  const element = document.createElementNS(ns, name);
 
-	updateXmlElement( element, attributes );
+  updateXmlElement(element, attributes);
 
-	return element;
+  return element;
 }
 
 /**
  * Sets value of attributes to XML element.
  */
-export function updateXmlElement( element: Element, attributes: Attributes ): void {
-	for ( const name of Object.keys( attributes ) ) {
-		element.setAttribute( name, attributes[ name ] as string );
-	}
+export function updateXmlElement(
+  element: Element,
+  attributes: Attributes,
+): void {
+  for (const name of Object.keys(attributes)) {
+    element.setAttribute(name, attributes[name] as string);
+  }
 }

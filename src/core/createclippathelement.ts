@@ -1,8 +1,8 @@
-import createXmlElement, { updateXmlElement } from './createxmlelement';
+import createXmlElement, { updateXmlElement } from "./createxmlelement";
 
 type Config = {
-	source: string;
-	targets: string[];
+  source: string;
+  targets: string[];
 };
 
 /**
@@ -12,31 +12,35 @@ type Config = {
  * There is a huge mess with clip paths created by Adobe Illustrator, after hours or even days of fighting
  * with it I found this solution and don't want to dig more now :)
  */
-export default function createClipPathElement( config: Config ): SVGClipPathElement {
-	const id = toHashLike( config.source );
-	const clipPathElement = createXmlElement( 'clipPath', { id } ) as SVGClipPathElement;
-	const source = document.querySelector( config.source );
+export default function createClipPathElement(
+  config: Config,
+): SVGClipPathElement {
+  const id = toHashLike(config.source);
+  const clipPathElement = createXmlElement("clipPath", {
+    id,
+  }) as SVGClipPathElement;
+  const source = document.querySelector(config.source);
 
-	source.removeAttribute( 'id' );
-	source.parentNode.insertBefore( clipPathElement, source );
-	clipPathElement.appendChild( source );
+  source.removeAttribute("id");
+  source.parentNode.insertBefore(clipPathElement, source);
+  clipPathElement.appendChild(source);
 
-	for ( const target of config.targets ) {
-		updateXmlElement( document.querySelector( target ), {
-			'clip-path': `url(${ '#' + id })`
-		} );
-	}
+  for (const target of config.targets) {
+    updateXmlElement(document.querySelector(target), {
+      "clip-path": `url(${"#" + id})`,
+    });
+  }
 
-	return clipPathElement;
+  return clipPathElement;
 }
 
-function toHashLike( value: string ): string {
-	let hash = 0;
+function toHashLike(value: string): string {
+  let hash = 0;
 
-	for ( let i = 0; i < value.length; i++ ) {
-		hash = ( ( hash << 5 ) - hash ) + value.charCodeAt( i );
-		hash |= 0; // Convert to 32bit integer
-	}
+  for (let i = 0; i < value.length; i++) {
+    hash = (hash << 5) - hash + value.charCodeAt(i);
+    hash |= 0; // Convert to 32bit integer
+  }
 
-	return 'e' + hash;
+  return "e" + hash;
 }

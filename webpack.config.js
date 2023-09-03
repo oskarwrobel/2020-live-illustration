@@ -1,132 +1,117 @@
-'use strict';
+"use strict";
 
 /* eslint-env node */
+/* eslint-disable @typescript-eslint/no-var-requires */
 
-const path = require( 'path' );
-const { DefinePlugin } = require( 'webpack' );
-const { CleanWebpackPlugin } = require( 'clean-webpack-plugin' );
-const HtmlWebpackPlugin = require( 'html-webpack-plugin' );
-const CopyPlugin = require( 'copy-webpack-plugin' );
-const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
+const path = require("path");
+const { DefinePlugin } = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-module.exports = ( env = {}, argv = {} ) => {
-	const isProduction = argv.mode === 'production';
+module.exports = (env = {}, argv = {}) => {
+  const isProduction = argv.mode === "production";
 
-	const projectDir = path.dirname( __filename );
-	const entry = [ path.join( projectDir, 'src', 'app.ts' ) ];
+  const projectDir = path.dirname(__filename);
+  const staticDir = path.join(process.cwd(), "dist");
+  const entry = [path.join(projectDir, "src", "app.ts")];
 
-	if ( env.analytics ) {
-		entry.push( path.join( projectDir, 'src', 'analytics.js' ) );
-	}
+  if (env.analytics) {
+    entry.push(path.join(projectDir, "src", "analytics.js"));
+  }
 
-	return {
-		entry,
+  return {
+    entry,
 
-		output: {
-			filename: '[name].[contenthash].js',
-			path: path.join( process.cwd(), 'dist' ),
-			publicPath: '/'
-		},
+    output: {
+      filename: "[name].[contenthash].js",
+      path: staticDir,
+      publicPath: "/",
+      clean: true,
+    },
 
-		context: path.resolve( projectDir ),
+    devServer: {
+      static: {
+        directory: path.join(__dirname, "dist"),
+      },
+      compress: true,
+      port: 8000,
+    },
 
-		resolve: {
-			extensions: [ '.ts' ]
-		},
+    context: path.resolve(projectDir),
 
-		devtool: !isProduction ? 'inline-source-map' : false,
+    resolve: {
+      extensions: [".ts", ".js", ".svg"],
+      modules: ["src", "node_modules"],
+    },
 
-		module: {
-			rules: [
-				{
-					test: /\.(js|ts)$/,
-					exclude: /node_modules/,
-					use: [
-						{
-							loader: 'ts-loader',
-							options: {
-								context: projectDir
-							}
-						}
-					]
-				},
-				{
-					test: /\.css$/,
-					use: [
-						MiniCssExtractPlugin.loader,
-						{
-							loader: 'css-loader',
-							options: {
-								importLoaders: 1
-							}
-						},
-						{
-							loader: 'postcss-loader',
-							options: {
-								map: false,
-								plugins: () => [
-									require( 'postcss-nested' )(),
-									isProduction ? require( 'cssnano' )() : noop
-								]
-							}
-						}
-					]
-				},
-				{
-					test: /.(png|jpg|jpeg|gif|ttf)$/,
-					use: 'file-loader'
-				},
-				{
-					test: /.(svg)$/,
-					use: 'svg-inline-loader?classPrefix=_[contenthash:3]-'
-				},
-				{
-					test: /\.html$/,
-					use: {
-						loader: 'html-loader',
-						options: {
-							attributes: {
-								list: [
-									{
-										tag: 'img',
-										attribute: 'src',
-										type: 'src'
-									},
-									{
-										tag: 'link',
-										attribute: 'href',
-										type: 'src'
-									}
-								]
-							}
-						}
-					}
-				}
-			]
-		},
+    devtool: !isProduction ? "inline-source-map" : false,
 
-		plugins: [
-			!isProduction ? new CleanWebpackPlugin( {
-				verbose: false
-			} ) : noop,
-			new HtmlWebpackPlugin( {
-				template: path.join( projectDir, 'src', 'index.html' ),
-				filename: '2020.html'
-			} ),
-			new CopyPlugin( [
-				{
-					from: path.join( projectDir, 'src', 'assets', '2020-og-image.png' ),
-					to: path.join( process.cwd(), 'dist' )
-				}
-			] ),
-			new MiniCssExtractPlugin( {
-				filename: '[name].[contenthash].css'
-			} ),
-			new DefinePlugin( {
-				ANALYTICS: JSON.stringify( env.analytics )
-			} )
-		]
-	};
+    module: {
+      rules: [
+        {
+          test: /\.(js|ts)$/,
+          exclude: /node_modules/,
+          use: [
+            {
+              loader: "ts-loader",
+              options: {
+                context: projectDir,
+              },
+            },
+          ],
+        },
+        {
+          test: /\.css$/i,
+          use: [
+            "style-loader",
+            "css-loader",
+            {
+              loader: "postcss-loader",
+              options: {
+                postcssOptions: {
+                  plugins: [require("postcss-nesting")()],
+                },
+              },
+            },
+          ],
+        },
+        {
+          test: /.(png|jpg|jpeg|gif|ttf)$/,
+          type: "asset/resource",
+        },
+        {
+          test: /.(svg)$/,
+          use: "svg-inline-loader?classPrefix=_[contenthash:3]-",
+        },
+        {
+          test: /\.html$/,
+          use: {
+            loader: "html-loader",
+          },
+        },
+      ],
+    },
+
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: path.join(projectDir, "src", "index.html"),
+        filename: "2020.html",
+      }),
+      new CopyPlugin({
+        patterns: [
+          {
+            from: path.join(projectDir, "src", "assets", "2020-og-image.png"),
+            to: path.join(process.cwd(), "dist"),
+          },
+        ],
+      }),
+      new MiniCssExtractPlugin({
+        filename: "[name].[contenthash].css",
+      }),
+      new DefinePlugin({
+        ANALYTICS: JSON.stringify(env.analytics),
+      }),
+    ],
+  };
 };
-
-function noop() {}
