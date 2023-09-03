@@ -1,9 +1,7 @@
 2020 - Story of my life
 ========================
 
-[![Dependency Status](https://img.shields.io/david/oskarwrobel/2020-live-illustration.svg)](https://david-dm.org/oskarwrobel/2020-live-illustration)
-[![devDependency Status](https://img.shields.io/david/dev/oskarwrobel/2020-live-illustration.svg)](https://david-dm.org/oskarwrobel/2020-live-illustration?type=dev)
-[![Build Status](https://travis-ci.org/oskarwrobel/2020-live-illustration.svg?branch=master)](https://travis-ci.org/oskarwrobel/2020-live-illustration)
+[![Build status](https://github.com/oskarwrobel/2020-live-illustration/actions/workflows/ci.yaml/badge.svg?event=push)](https://github.com/oskarwrobel/2020-live-illustration/actions/workflows/ci.yaml)
 [![codecov](https://codecov.io/gh/oskarwrobel/2020-live-illustration/branch/master/graph/badge.svg)](https://codecov.io/gh/oskarwrobel/2020-live-illustration)
 
 Interactive version of one of [Joanna's](https://joannalawniczak.com) illustrations.
