@@ -2,7 +2,6 @@
 ========================
 
 [![Build status](https://github.com/oskarwrobel/2020-live-illustration/actions/workflows/ci.yaml/badge.svg?event=push)](https://github.com/oskarwrobel/2020-live-illustration/actions/workflows/ci.yaml)
-[![codecov](https://codecov.io/gh/oskarwrobel/2020-live-illustration/branch/master/graph/badge.svg)](https://codecov.io/gh/oskarwrobel/2020-live-illustration)
 
 Interactive version of one of [Joanna's](https://joannalawniczak.com) illustrations.
 Take a moment to explore it and find all animations and easter eggs.
