@@ -6,8 +6,7 @@ const duration = 1;
 const delay = 0.1;
 
 const shadowFrom = "199.5,514 199.5,472.2 524.3,472.2 524.3,514";
-const shadowTo =
-  "199.5,543.9999877929688 199.5,472.2 524.2999877929688,472.2 524.2999877929688,543.9999877929688";
+const shadowTo = "199.5,543.9999877929688 199.5,472.2 524.2999877929688,472.2 524.2999877929688,543.9999877929688";
 
 export default function drawer(scenes: Scenes): void {
   const front = document.querySelector("#front");

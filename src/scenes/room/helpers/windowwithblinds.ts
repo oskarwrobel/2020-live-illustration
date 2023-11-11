@@ -36,13 +36,7 @@ type TransformedPosition = {
   scale: number;
 };
 
-const hashTags = [
-  "#StayHome",
-  "#QuarantineAndChill",
-  "#WashYourHands",
-  "#CallMom",
-  "#StayHydrated",
-];
+const hashTags = ["#StayHome", "#QuarantineAndChill", "#WashYourHands", "#CallMom", "#StayHydrated"];
 
 let isLoopAnimationInProgress = false;
 
@@ -65,13 +59,9 @@ let currentPlane: SVGGElement;
 const elementToAnimation: Map<SVGGElement, gsap.core.Tween> = new Map();
 
 export default function windowWithBlinds(scenes: Scenes): () => void {
-  windowRect = (
-    document.querySelector("#window-frame") as SVGRectElement
-  ).getBBox();
+  windowRect = (document.querySelector("#window-frame") as SVGRectElement).getBBox();
 
-  const blinds: SVGGElement[] = Array.from(
-    document.querySelectorAll("#blinds > g"),
-  );
+  const blinds: SVGGElement[] = Array.from(document.querySelectorAll("#blinds > g"));
   const rightToLeftPlane = document.querySelector("#plane-1") as SVGGElement;
   const leftToRightPlane = document.querySelector("#plane-2") as SVGGElement;
   const cloud1 = document.querySelector("#cloud-1") as SVGGElement;
@@ -80,13 +70,7 @@ export default function windowWithBlinds(scenes: Scenes): () => void {
 
   if (scenes.current.data.areBlindsOpen) {
     openBlinds(blinds);
-    startAnimation([
-      rightToLeftPlane,
-      leftToRightPlane,
-      cloud1,
-      cloud2,
-      cloud3,
-    ]);
+    startAnimation([rightToLeftPlane, leftToRightPlane, cloud1, cloud2, cloud3]);
     sendEvent("blinds", "open", "init");
   }
 
@@ -98,13 +82,7 @@ export default function windowWithBlinds(scenes: Scenes): () => void {
       // When there are already pending animations it means blinds weren't fully closed before opening.
       // It may happen when someone toggles blinds in a short amount of time.
       if (!isLoopAnimationInProgress) {
-        startAnimation([
-          rightToLeftPlane,
-          leftToRightPlane,
-          cloud1,
-          cloud2,
-          cloud3,
-        ]);
+        startAnimation([rightToLeftPlane, leftToRightPlane, cloud1, cloud2, cloud3]);
       }
 
       sendEvent("blinds", "open", "click");
@@ -124,13 +102,7 @@ export default function windowWithBlinds(scenes: Scenes): () => void {
   };
 }
 
-function startAnimation([
-  rightToLeftPlane,
-  leftToRightPlane,
-  cloud1,
-  cloud2,
-  cloud3,
-]: SVGGElement[]): void {
+function startAnimation([rightToLeftPlane, leftToRightPlane, cloud1, cloud2, cloud3]: SVGGElement[]): void {
   isLoopAnimationInProgress = true;
 
   const planes = [rightToLeftPlane, leftToRightPlane];
@@ -179,10 +151,7 @@ function stopAnimation(): void {
   cloudToLevel.clear();
 }
 
-function animatePlaneInLoop(
-  planes: SVGGElement[],
-  config: AnimationInLoopConfig,
-): void {
+function animatePlaneInLoop(planes: SVGGElement[], config: AnimationInLoopConfig): void {
   if (!isLoopAnimationInProgress) {
     return;
   }
@@ -227,10 +196,7 @@ function animatePlaneInLoop(
   });
 }
 
-function animateCloudInLoop(
-  element: SVGGElement,
-  config: AnimationInLoopConfig,
-): void {
+function animateCloudInLoop(element: SVGGElement, config: AnimationInLoopConfig): void {
   if (!isLoopAnimationInProgress) {
     return;
   }
@@ -271,10 +237,7 @@ function animateCloudInLoop(
   });
 }
 
-function animateElement(
-  element: SVGGElement,
-  config: AnimationConfig,
-): gsap.core.Timeline {
+function animateElement(element: SVGGElement, config: AnimationConfig): gsap.core.Timeline {
   let onUpdate: () => void;
 
   if (config.onProgress) {
@@ -315,11 +278,7 @@ function animateElement(
     );
 }
 
-function transformElementByRect(
-  element: SVGGElement,
-  rect: SVGRect,
-  config: TransformConfig,
-): TransformedPosition {
+function transformElementByRect(element: SVGGElement, rect: SVGRect, config: TransformConfig): TransformedPosition {
   const viewBox = element.viewportElement.getAttribute("viewBox").split(" ");
   const svgWidth = parseInt(viewBox[2]);
   const svgHeight = parseInt(viewBox[3]);
@@ -330,13 +289,10 @@ function transformElementByRect(
   if (config.x > 0) {
     relativeToSvgX = ((rect.x + rect.width - elementRect.x) * 100) / svgWidth;
   } else {
-    relativeToSvgX =
-      ((rect.x - elementRect.width * config.scale - elementRect.x) * 100) /
-      svgWidth;
+    relativeToSvgX = ((rect.x - elementRect.width * config.scale - elementRect.x) * 100) / svgWidth;
   }
 
-  const relativeToSvgY =
-    ((rect.y + config.y - elementRect.y) * 100) / svgHeight;
+  const relativeToSvgY = ((rect.y + config.y - elementRect.y) * 100) / svgHeight;
 
   return {
     x: (svgWidth / elementRect.width) * relativeToSvgX,
@@ -391,11 +347,7 @@ function releaseCloudLevel(element: SVGGElement): void {
   cloudToLevel.delete(element);
 }
 
-function setBannerText(
-  plane: SVGGElement,
-  text: string,
-  stickToRight = false,
-): void {
+function setBannerText(plane: SVGGElement, text: string, stickToRight = false): void {
   const elements = plane.firstChild.firstChild.childNodes as NodeList;
   const backgroundElement = elements[0] as SVGRectElement;
   const tailElement = elements[1] as SVGPolylineElement;
@@ -411,9 +363,7 @@ function setBannerText(
   // 'stickToRight' means the plane direction is 'left to right'
   // and banner should be stretched to the left, right side should stay fixed.
   if (stickToRight) {
-    const leftBound = (
-      plane.firstChild.childNodes[2] as SVGRectElement
-    ).getBBox().x;
+    const leftBound = (plane.firstChild.childNodes[2] as SVGRectElement).getBBox().x;
 
     backgroundElement.setAttribute("x", String(leftBound - textWidth));
 
@@ -430,10 +380,7 @@ function setBannerText(
     const backgroundRect = backgroundElement.getBBox();
 
     // -1 to cover right stroke of background rectangle.
-    movePointsToX(
-      tailElement.points,
-      backgroundRect.x + backgroundRect.width - 1,
-    );
+    movePointsToX(tailElement.points, backgroundRect.x + backgroundRect.width - 1);
   }
 }
 

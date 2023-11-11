@@ -26,12 +26,8 @@ export default function toddEyes(): () => void {
   const leftPupil = leftEyeOpened.querySelector("circle");
   const rightPupil = rightEyeOpened.querySelector("circle");
 
-  let leftWrapperRect = (
-    leftPupil.parentNode as SVGGElement
-  ).getBoundingClientRect();
-  let rightWrapperRect = (
-    rightPupil.parentNode as SVGGElement
-  ).getBoundingClientRect();
+  let leftWrapperRect = (leftPupil.parentNode as SVGGElement).getBoundingClientRect();
+  let rightWrapperRect = (rightPupil.parentNode as SVGGElement).getBoundingClientRect();
 
   const throttledMouseMoveHandler = throttle(mouseMoveHandler, 20, {
     leading: true,
@@ -47,28 +43,18 @@ export default function toddEyes(): () => void {
     moveToCursor(
       evt.clientX,
       evt.clientY,
-      Object.assign(
-        { element: leftPupil, wrapperRect: leftWrapperRect },
-        eyeBounds,
-      ),
+      Object.assign({ element: leftPupil, wrapperRect: leftWrapperRect }, eyeBounds),
     );
     moveToCursor(
       evt.clientX,
       evt.clientY,
-      Object.assign(
-        { element: rightPupil, wrapperRect: rightWrapperRect },
-        eyeBounds,
-      ),
+      Object.assign({ element: rightPupil, wrapperRect: rightWrapperRect }, eyeBounds),
     );
   }
 
   function resizeHandler(): void {
-    leftWrapperRect = (
-      leftPupil.parentNode as SVGGElement
-    ).getBoundingClientRect();
-    rightWrapperRect = (
-      rightPupil.parentNode as SVGGElement
-    ).getBoundingClientRect();
+    leftWrapperRect = (leftPupil.parentNode as SVGGElement).getBoundingClientRect();
+    rightWrapperRect = (rightPupil.parentNode as SVGGElement).getBoundingClientRect();
   }
 
   enableCloseOnHover();
@@ -165,29 +151,14 @@ type MoveToCursorConfig = {
   maxShiftRight: number;
 };
 
-function moveToCursor(
-  clientX: number,
-  clientY: number,
-  config: MoveToCursorConfig,
-): void {
-  const {
-    element,
-    wrapperRect,
-    maxShiftTop,
-    maxShiftBottom,
-    maxShiftLeft,
-    maxShiftRight,
-  } = config;
+function moveToCursor(clientX: number, clientY: number, config: MoveToCursorConfig): void {
+  const { element, wrapperRect, maxShiftTop, maxShiftBottom, maxShiftLeft, maxShiftRight } = config;
 
   const widthHalf = wrapperRect.width / 2;
   const heightHalf = wrapperRect.height / 2;
 
-  let x =
-    ((clientX - (wrapperRect.left + widthHalf)) * Math.abs(maxShiftLeft)) /
-    widthHalf;
-  let y =
-    ((clientY - (wrapperRect.top + heightHalf)) * Math.abs(maxShiftTop)) /
-    heightHalf;
+  let x = ((clientX - (wrapperRect.left + widthHalf)) * Math.abs(maxShiftLeft)) / widthHalf;
+  let y = ((clientY - (wrapperRect.top + heightHalf)) * Math.abs(maxShiftTop)) / heightHalf;
 
   x = clamp(x, maxShiftLeft, maxShiftRight);
   y = clamp(y, maxShiftTop, maxShiftBottom);

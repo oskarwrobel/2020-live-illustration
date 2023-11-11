@@ -12,9 +12,7 @@ type Config = {
  * There is a huge mess with clip paths created by Adobe Illustrator, after hours or even days of fighting
  * with it I found this solution and don't want to dig more now :)
  */
-export default function createClipPathElement(
-  config: Config,
-): SVGClipPathElement {
+export default function createClipPathElement(config: Config): SVGClipPathElement {
   const id = toHashLike(config.source);
   const clipPathElement = createXmlElement("clipPath", {
     id,

@@ -2,10 +2,7 @@ import createSvgElement from "../../core/createsvgelement";
 import backSvgData from "./backbutton.svg";
 import "./backbutton.css";
 
-export default function createBackButton(
-  target: HTMLElement,
-  onClick: () => void,
-): HTMLButtonElement {
+export default function createBackButton(target: HTMLElement, onClick: () => void): HTMLButtonElement {
   const button = document.createElement("button");
 
   button.id = "back-button";

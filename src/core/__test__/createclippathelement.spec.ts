@@ -36,9 +36,7 @@ describe("createClipPathElement", () => {
   });
 
   afterEach(() => {
-    [sourceElement, targetAElement, targetBElement].forEach((el) =>
-      el.remove(),
-    );
+    [sourceElement, targetAElement, targetBElement].forEach((el) => el.remove());
   });
 
   it("should create clipPath element using given shape and applies it to given elements", () => {

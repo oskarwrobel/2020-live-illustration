@@ -15,14 +15,15 @@
   // Common JS and TS rules.
   "rules": {
     "prettier/prettier": ["error", {
-       "useTabs": false,
-       "tabWidth": 2
+      "useTabs": false,
+      "tabWidth": 2,
+      "printWidth": 120
     }],
 
     // ## Possible errors
     "no-console": "off",
     "no-constant-condition": "off",
     "@typescript-eslint/no-use-before-define": "off",
-    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-explicit-any": "off"
   }
 }

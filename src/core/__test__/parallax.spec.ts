@@ -7,9 +7,7 @@ describe("parallax()", () => {
     vi.useFakeTimers();
 
     // RAF + fake timers cause some problems, besides it is better to keep code synchronous.
-    vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb: any) =>
-      cb(),
-    );
+    vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb: any) => cb());
   });
 
   it("should move plans according to cursor position", () => {
@@ -109,9 +107,7 @@ describe("parallax()", () => {
       width: 10,
     };
 
-    vi.spyOn(scene, "getBoundingClientRect").mockImplementation(
-      () => rectMock as DOMRect,
-    );
+    vi.spyOn(scene, "getBoundingClientRect").mockImplementation(() => rectMock as DOMRect);
 
     // Simulate resize.
     rectMock = { left: 0, width: 1000 };

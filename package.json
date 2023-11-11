@@ -5,6 +5,7 @@
   "scripts": {
     "lint": "tsc --noEmit && eslint --quiet '**/*.{js,ts}'",
     "lint:fix": "eslint --fix '**/*.{js,ts}'",
+    "format:css": "prettier --write 'src/**/*.css'",
     "test": "vitest",
     "start": "vite",
     "preview": "vite preview",
@@ -13,8 +14,7 @@
   "author": "Oskar Wrobel <kontakt@oskarwrobel.pl> (https://www.oskarwrobel.pl/)",
   "dependencies": {
     "gsap": "^3.12.2",
-    "lodash-es": "^4.17.21",
-    "vite-svg-loader": "^4.0.0"
+    "lodash-es": "^4.17.21"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.9",

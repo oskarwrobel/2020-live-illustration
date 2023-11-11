@@ -1,103 +1,103 @@
 .scene-room {
-	background: #8DD9FF;
+  background: #8dd9ff;
 
-	#hall {
-		top: 0;
-		left: -3%;
-		height: 100%;
-	}
+  #hall {
+    top: 0;
+    left: -3%;
+    height: 100%;
+  }
 
-	#dog {
-		left: 5%;
-		bottom: 0;
-		height: 37%;
-	}
+  #dog {
+    left: 5%;
+    bottom: 0;
+    height: 37%;
+  }
 
-	#sky {
-		right: -6%;
-		height: 100%;
+  #sky {
+    right: -6%;
+    height: 100%;
 
-		#plane-1 text,
-		#plane-2 text {
-			font-family: 'Walter Turncoat', cursive !important;
-			user-select: none;
-		}
-	}
+    #plane-1 text,
+    #plane-2 text {
+      font-family: "Walter Turncoat", cursive !important;
+      user-select: none;
+    }
+  }
 
-	#wall {
-		right: -6%;
-		height: 100%;
+  #wall {
+    right: -6%;
+    height: 100%;
 
-		#oscar-small,
-		#postcard-small,
-		#blinds {
-			cursor: pointer;
-		}
+    #oscar-small,
+    #postcard-small,
+    #blinds {
+      cursor: pointer;
+    }
 
-		#left-eye-opened,
-		#right-eye-opened {
-			pointer-events: none;
+    #left-eye-opened,
+    #right-eye-opened {
+      pointer-events: none;
 
-			circle {
-				transition: transform .2s;
-			}
-		}
-	}
+      circle {
+        transition: transform 0.2s;
+      }
+    }
+  }
 
-	#lamp {
-		height: 70%;
-		bottom: 10%;
-		right: 25%;
-	}
+  #lamp {
+    height: 70%;
+    bottom: 10%;
+    right: 25%;
+  }
 
-	#tv {
-		right: -11%;
-		bottom: 0;
-		width: 85%;
-		pointer-events: none;
-		overflow: hidden;
+  #tv {
+    right: -11%;
+    bottom: 0;
+    width: 85%;
+    pointer-events: none;
+    overflow: hidden;
 
-		& > g > g {
-			pointer-events: auto;
-		}
+    & > g > g {
+      pointer-events: auto;
+    }
 
-		#screen {
-			cursor: pointer;
-		}
+    #screen {
+      cursor: pointer;
+    }
 
-		#channel-1,
-		#channel-2,
-		#channel-3 {
-			pointer-events: none;
-		}
+    #channel-1,
+    #channel-2,
+    #channel-3 {
+      pointer-events: none;
+    }
 
-		#channel-1,
-		#channel-2 {
-			& > rect:first-child {
-				fill: #222;
-			}
-		}
+    #channel-1,
+    #channel-2 {
+      & > rect:first-child {
+        fill: #222;
+      }
+    }
 
-		#channel-3 {
-			& > rect:first-child {
-				fill: #fff;
-			}
-		}
+    #channel-3 {
+      & > rect:first-child {
+        fill: #fff;
+      }
+    }
 
-		#button-0-on,
-		#button-1-on,
-		#button-2-on,
-		#button-3-on {
-			cursor: pointer;
-		}
+    #button-0-on,
+    #button-1-on,
+    #button-2-on,
+    #button-3-on {
+      cursor: pointer;
+    }
 
-		#tv-off-shape {
-			fill: #fff;
-			opacity: 0;
-		}
+    #tv-off-shape {
+      fill: #fff;
+      opacity: 0;
+    }
 
-		#drawer {
-			cursor: pointer;
-		}
-	}
+    #drawer {
+      cursor: pointer;
+    }
+  }
 }

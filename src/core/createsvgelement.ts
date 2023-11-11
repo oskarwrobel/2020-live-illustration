@@ -10,13 +10,8 @@ type Attributes = {
 /**
  * Creates SVG element from string data.
  */
-export default function createSvgElement(
-  rawData: string,
-  attributes?: Attributes,
-  appendTo?: Element,
-): SVGElement {
-  const element = parser.parseFromString(rawData, "image/svg+xml")
-    .childNodes[0] as SVGElement;
+export default function createSvgElement(rawData: string, attributes?: Attributes, appendTo?: Element): SVGElement {
+  const element = parser.parseFromString(rawData, "image/svg+xml").childNodes[0] as SVGElement;
 
   if (attributes) {
     updateXmlElement(element, attributes);

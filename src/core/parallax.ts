@@ -34,11 +34,9 @@ export default function parallax(config: Config): () => void {
   function mouseMoveHandler(evt: MouseEvent): void {
     requestAnimationFrame(() => {
       const center = sceneRect.width / 2;
-      const distanceFromCenter =
-        ((evt.clientX - sceneRect.left) * 100) / center - 100;
+      const distanceFromCenter = ((evt.clientX - sceneRect.left) * 100) / center - 100;
       const direction = distanceFromCenter < 0 ? -1 : 1;
-      const value =
-        (clamp(Math.abs(distanceFromCenter), 0, 100) * moveRange) / 100;
+      const value = (clamp(Math.abs(distanceFromCenter), 0, 100) * moveRange) / 100;
 
       move(value * direction);
     });

@@ -19,9 +19,7 @@ export function openBlinds(blinds: Element[]): void {
       const mostTopBlind = Math.floor(data.value / singleShift);
 
       for (let i = 0; i <= mostTopBlind; i++) {
-        const top =
-          (mostTopBlind - i) * singleShift +
-          (data.value - mostTopBlind * singleShift);
+        const top = (mostTopBlind - i) * singleShift + (data.value - mostTopBlind * singleShift);
 
         requestAnimationFrame(() => {
           blinds[i].setAttribute("transform", `translate(0,-${top})`);
@@ -46,15 +44,10 @@ export function closeBlinds(blinds: Element[]): gsap.core.Tween {
       const mostTopBlind = Math.floor(maxShift / singleShift);
 
       for (let i = mostTopBlind; i >= 0; i--) {
-        const top =
-          (mostTopBlind - i) * singleShift +
-          (data.value - mostTopBlind * singleShift);
+        const top = (mostTopBlind - i) * singleShift + (data.value - mostTopBlind * singleShift);
 
         requestAnimationFrame(() => {
-          blinds[i].setAttribute(
-            "transform",
-            `translate(0,-${Math.max(top, 0)})`,
-          );
+          blinds[i].setAttribute("transform", `translate(0,-${Math.max(top, 0)})`);
         });
       }
     },

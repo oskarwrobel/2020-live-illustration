@@ -3,10 +3,7 @@ type Config = {
   leave(evt: MouseEvent): void;
 };
 
-export default function hoverHandler(
-  element: HTMLElement,
-  config: Config,
-): () => void {
+export default function hoverHandler(element: HTMLElement, config: Config): () => void {
   element.addEventListener("mouseenter", handleEnter);
   element.addEventListener("mouseleave", handleLeave);
 

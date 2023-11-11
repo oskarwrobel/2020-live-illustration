@@ -1,6 +1,4 @@
-export default function escHandler(
-  callback: (evt: KeyboardEvent) => void,
-): () => void {
+export default function escHandler(callback: (evt: KeyboardEvent) => void): () => void {
   function handler(evt: KeyboardEvent): void {
     if (evt.key === "Escape") {
       callback(evt);

@@ -18,13 +18,11 @@ export default class Scenes {
   readonly proportions: string;
   current: Scene;
 
-  private _resizeHandler = (): void =>
-    setProportions(this.element, this.proportions);
+  private _resizeHandler = (): void => setProportions(this.element, this.proportions);
   private _throttledResizeHandler = throttle(this._resizeHandler, 100, {
     leading: true,
   });
-  private _popstateHandler = (evt: PopStateEvent): Promise<void> =>
-    this._show(evt.state.path);
+  private _popstateHandler = (evt: PopStateEvent): Promise<void> => this._show(evt.state.path);
 
   constructor(element: HTMLElement, proportions: string) {
     this.element = element;
@@ -57,9 +55,7 @@ export default class Scenes {
   }
 
   has(nameOrPath: string): boolean {
-    return (
-      this._nameToScene.has(nameOrPath) || this._pathToScene.has(nameOrPath)
-    );
+    return this._nameToScene.has(nameOrPath) || this._pathToScene.has(nameOrPath);
   }
 
   async show(nameOrPath: string): Promise<void> {
@@ -68,8 +64,7 @@ export default class Scenes {
   }
 
   private async _show(nameOrPath: string): Promise<void> {
-    const scene =
-      this._nameToScene.get(nameOrPath) || this._pathToScene.get(nameOrPath);
+    const scene = this._nameToScene.get(nameOrPath) || this._pathToScene.get(nameOrPath);
 
     if (!scene) {
       throw new Error("Scene does not exist.");

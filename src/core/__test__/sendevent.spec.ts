@@ -10,14 +10,7 @@ describe("sendEvent", () => {
     sendEvent("Category", "Action", "Label", "Value");
 
     expect(spy.mock.calls.length).equal(1);
-    expect(spy.mock.lastCall).deep.equal([
-      "send",
-      "event",
-      "Category",
-      "Action",
-      "Label",
-      "Value",
-    ]);
+    expect(spy.mock.lastCall).deep.equal(["send", "event", "Category", "Action", "Label", "Value"]);
   });
 
   it("should send event through ga object if it is defined (required parameter)", () => {
@@ -28,14 +21,7 @@ describe("sendEvent", () => {
     sendEvent("Category", "Action");
 
     expect(spy.mock.calls.length).equal(1);
-    expect(spy.mock.lastCall).deep.equal([
-      "send",
-      "event",
-      "Category",
-      "Action",
-      undefined,
-      undefined,
-    ]);
+    expect(spy.mock.lastCall).deep.equal(["send", "event", "Category", "Action", undefined, undefined]);
   });
 
   it("should work fine when ga object is not defined", () => {
