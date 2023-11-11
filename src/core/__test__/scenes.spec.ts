@@ -1,10 +1,10 @@
-import { expect } from "chai";
-import Scenes from "../../src/core/scenes";
+import Scenes from "../scenes";
+import { describe, it, vi, beforeEach, expect } from "vitest";
 
 describe("Scenes", () => {
   let element: HTMLElement;
 
-  jest.useFakeTimers();
+  vi.useFakeTimers();
 
   function mockWindowSize(innerWidth: number, innerHeight: number) {
     Object.defineProperty(window, "innerWidth", { value: innerWidth });
@@ -42,12 +42,12 @@ describe("Scenes", () => {
 
       mockWindowSize(1200, 1500);
       window.dispatchEvent(new Event("resize"));
-      jest.advanceTimersByTime(50);
+      vi.advanceTimersByTime(50);
 
       expect(scenes.element.style.width).to.equal("1100px");
       expect(scenes.element.style.height).to.equal("1100px");
 
-      jest.advanceTimersByTime(50);
+      vi.advanceTimersByTime(50);
       expect(scenes.element.style.width).to.equal("1200px");
       expect(scenes.element.style.height).to.equal("1200px");
 
@@ -76,7 +76,7 @@ describe("Scenes", () => {
 
       scenes.add("scene-1", {
         path: "/scene-1",
-        creator: jest.fn(() => jest.fn()),
+        creator: vi.fn(() => vi.fn()),
       });
 
       expect(scenes.current).to.undefined;
@@ -89,7 +89,7 @@ describe("Scenes", () => {
         }),
       );
 
-      jest.advanceTimersByTime(160);
+      vi.advanceTimersByTime(160);
 
       expect(scenes.current.name).to.equal("scene-1");
 
@@ -103,7 +103,7 @@ describe("Scenes", () => {
 
       scenes.add("scene-1", {
         path: "/scene-1-path",
-        creator: jest.fn(),
+        creator: vi.fn(),
       });
 
       expect(scenes.has("scene-1")).to.true;
@@ -119,13 +119,13 @@ describe("Scenes", () => {
 
       scenes.add("scene-1", {
         path: "/scene-1-path",
-        creator: jest.fn(),
+        creator: vi.fn(),
       });
 
       expect(() => {
         scenes.add("scene-1", {
           path: "/scene-2-path",
-          creator: jest.fn(),
+          creator: vi.fn(),
         });
       }).to.throw(Error, "Scene with the same name already created.");
 
@@ -137,13 +137,13 @@ describe("Scenes", () => {
 
       scenes.add("scene-1", {
         path: "/scene-1-path",
-        creator: jest.fn(),
+        creator: vi.fn(),
       });
 
       expect(() => {
         scenes.add("scene-2", {
           path: "/scene-1-path",
-          creator: jest.fn(),
+          creator: vi.fn(),
         });
       }).to.throw(Error, "Scene with the same path already created.");
 
@@ -171,8 +171,8 @@ describe("Scenes", () => {
 
     it("should show initial scene using scene name", async () => {
       const scenes = new Scenes(element, "1:1");
-      const destructorSpy = jest.fn();
-      const creatorSpy = jest.fn().mockReturnValue(destructorSpy);
+      const destructorSpy = vi.fn();
+      const creatorSpy = vi.fn().mockReturnValue(destructorSpy);
 
       scenes.add("scene-1", {
         path: "/scene-1-path",
@@ -180,7 +180,7 @@ describe("Scenes", () => {
       });
 
       scenes.show("scene-1");
-      await jest.runAllTimersAsync();
+      await vi.runAllTimersAsync();
 
       expect(scenes.current.name).to.equal("scene-1");
       expect(element.classList.contains("scene-scene-1"));
@@ -192,8 +192,8 @@ describe("Scenes", () => {
 
     it("should show initial scene using scene path", async () => {
       const scenes = new Scenes(element, "1:1");
-      const destructorSpy = jest.fn();
-      const creatorSpy = jest.fn().mockReturnValue(destructorSpy);
+      const destructorSpy = vi.fn();
+      const creatorSpy = vi.fn().mockReturnValue(destructorSpy);
 
       scenes.add("scene-1", {
         path: "/scene-1-path",
@@ -201,7 +201,7 @@ describe("Scenes", () => {
       });
 
       scenes.show("/scene-1-path");
-      await jest.runAllTimersAsync();
+      await vi.runAllTimersAsync();
 
       expect(scenes.current.name).to.equal("scene-1");
       expect(element.classList.contains("scene-scene-1"));
@@ -213,10 +213,10 @@ describe("Scenes", () => {
 
     it("should switch scenes using scene name", async () => {
       const scenes = new Scenes(element, "1:1");
-      const destructor1Spy = jest.fn();
-      const destructor2Spy = jest.fn();
-      const creator1Spy = jest.fn().mockReturnValue(destructor1Spy);
-      const creator2Spy = jest.fn().mockReturnValue(destructor2Spy);
+      const destructor1Spy = vi.fn();
+      const destructor2Spy = vi.fn();
+      const creator1Spy = vi.fn().mockReturnValue(destructor1Spy);
+      const creator2Spy = vi.fn().mockReturnValue(destructor2Spy);
 
       scenes.add("scene-1", {
         path: "/scene-1-path",
@@ -229,10 +229,10 @@ describe("Scenes", () => {
       });
 
       scenes.show("scene-1");
-      await jest.runAllTimersAsync();
+      await vi.runAllTimersAsync();
 
       scenes.show("scene-2");
-      await jest.runAllTimersAsync();
+      await vi.runAllTimersAsync();
 
       expect(scenes.current.name).to.equal("scene-2");
       expect(element.classList.contains("scene-scene-1")).to.false;
@@ -269,7 +269,7 @@ describe("Scenes", () => {
 
     scenes.add("scene-1", {
       path: "/scene-1",
-      creator: jest.fn().mockReturnValue(jest.fn()),
+      creator: vi.fn().mockReturnValue(vi.fn()),
     });
 
     scenes.destroy();
@@ -282,15 +282,15 @@ describe("Scenes", () => {
       }),
     );
 
-    jest.advanceTimersByTime(160);
+    vi.advanceTimersByTime(160);
 
     expect(scenes.current).to.undefined;
   });
 
   it("should clear current scene", async () => {
     const scenes = new Scenes(element, "1:1");
-    const destructorSpy = jest.fn();
-    const creatorSpy = jest.fn().mockReturnValue(destructorSpy);
+    const destructorSpy = vi.fn();
+    const creatorSpy = vi.fn().mockReturnValue(destructorSpy);
 
     scenes.add("scene-1", {
       path: "/scene-1",
@@ -298,7 +298,7 @@ describe("Scenes", () => {
     });
 
     scenes.show("scene-1");
-    await jest.runAllTimersAsync();
+    await vi.runAllTimersAsync();
 
     expect(scenes.current.name).to.equal("scene-1");
 

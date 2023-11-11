@@ -1,6 +1,6 @@
-import { expect } from "chai";
-import createClipPathElement from "../../src/core/createclippathelement";
-import createXmlElement from "../../src/core/createxmlelement";
+import { describe, it, beforeEach, afterEach, expect } from "vitest";
+import createClipPathElement from "../createclippathelement";
+import createXmlElement from "../createxmlelement";
 
 describe("createClipPathElement", () => {
   let sourceElement: SVGRectElement;

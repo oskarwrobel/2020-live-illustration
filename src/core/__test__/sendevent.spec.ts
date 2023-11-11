@@ -1,9 +1,9 @@
-import { expect } from "chai";
-import sendEvent from "../../src/core/sendevent";
+import sendEvent from "../sendevent";
+import { describe, it, vi, expect } from "vitest";
 
 describe("sendEvent", () => {
   it("should send event through ga object if it is defined (all parameters)", () => {
-    const spy = jest.fn();
+    const spy = vi.fn();
 
     (window as any).ga = spy;
 
@@ -21,7 +21,7 @@ describe("sendEvent", () => {
   });
 
   it("should send event through ga object if it is defined (required parameter)", () => {
-    const spy = jest.fn();
+    const spy = vi.fn();
 
     (window as any).ga = spy;
 

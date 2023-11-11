@@ -1,5 +1,5 @@
-import { expect } from "chai";
-import createSvgElement from "../../src/core/createsvgelement";
+import createSvgElement from "../createsvgelement";
+import { describe, it, expect } from "vitest";
 
 describe("createSvgElement", () => {
   const svgRawData = "<svg><g></g></svg>";

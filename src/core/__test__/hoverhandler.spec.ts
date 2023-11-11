@@ -1,12 +1,12 @@
-import { expect } from "chai";
-import hoverHandler from "../../src/core/hoverhandler";
+import hoverHandler from "../hoverhandler";
+import { describe, it, vi, expect } from "vitest";
 
 describe("hoverHandler", () => {
   it("should allow to attach callbacks for enter and leave events", () => {
     const element = document.createElement("div");
 
-    const hoverSpy = jest.fn();
-    const leaveSpy = jest.fn();
+    const hoverSpy = vi.fn();
+    const leaveSpy = vi.fn();
 
     hoverHandler(element, {
       enter: hoverSpy,
@@ -27,8 +27,8 @@ describe("hoverHandler", () => {
   it("should return destructor function to detach events", () => {
     const element = document.createElement("div");
 
-    const hoverSpy = jest.fn();
-    const leaveSpy = jest.fn();
+    const hoverSpy = vi.fn();
+    const leaveSpy = vi.fn();
 
     const destructor = hoverHandler(element, {
       enter: hoverSpy,

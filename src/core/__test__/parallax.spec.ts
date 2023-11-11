@@ -1,15 +1,15 @@
-import { expect } from "chai";
-import parallax from "../../src/core/parallax";
+import parallax from "../parallax";
 import { gsap } from "gsap";
+import { describe, it, beforeEach, vi, expect } from "vitest";
 
 describe("parallax()", () => {
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
 
     // RAF + fake timers cause some problems, besides it is better to keep code synchronous.
-    jest
-      .spyOn(window, "requestAnimationFrame")
-      .mockImplementation((cb: any) => cb());
+    vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb: any) =>
+      cb(),
+    );
   });
 
   it("should move plans according to cursor position", () => {
@@ -18,7 +18,7 @@ describe("parallax()", () => {
     const planMiddle = document.createElement("div");
     const planBack = document.createElement("div");
 
-    jest.spyOn(scene, "getBoundingClientRect").mockReturnValue({
+    vi.spyOn(scene, "getBoundingClientRect").mockReturnValue({
       left: 0,
       width: 1000,
     } as DOMRect);
@@ -47,32 +47,32 @@ describe("parallax()", () => {
     expect(gsap.getTweensOf(planBack)[0].vars.x).to.equal(60);
 
     document.dispatchEvent(new MouseEvent("mousemove", { clientX: 250 }));
-    jest.advanceTimersByTime(50);
+    vi.advanceTimersByTime(50);
     expect(gsap.getTweensOf(planFront)[0].vars.x).to.equal(0);
     expect(gsap.getTweensOf(planMiddle)[0].vars.x).to.equal(15);
     expect(gsap.getTweensOf(planBack)[0].vars.x).to.equal(30);
 
     // Nothing haas changed, values are the same (code coverage).
     document.dispatchEvent(new MouseEvent("mousemove", { clientX: 250 }));
-    jest.advanceTimersByTime(50);
+    vi.advanceTimersByTime(50);
     expect(gsap.getTweensOf(planFront)[0].vars.x).to.equal(0);
     expect(gsap.getTweensOf(planMiddle)[0].vars.x).to.equal(15);
     expect(gsap.getTweensOf(planBack)[0].vars.x).to.equal(30);
 
     document.dispatchEvent(new MouseEvent("mousemove", { clientX: 500 }));
-    jest.advanceTimersByTime(50);
+    vi.advanceTimersByTime(50);
     expect(gsap.getTweensOf(planFront)[0].vars.x).to.equal(0);
     expect(gsap.getTweensOf(planMiddle)[0].vars.x).to.equal(0);
     expect(gsap.getTweensOf(planBack)[0].vars.x).to.equal(0);
 
     document.dispatchEvent(new MouseEvent("mousemove", { clientX: 750 }));
-    jest.advanceTimersByTime(50);
+    vi.advanceTimersByTime(50);
     expect(gsap.getTweensOf(planFront)[0].vars.x).to.equal(0);
     expect(gsap.getTweensOf(planMiddle)[0].vars.x).to.equal(-15);
     expect(gsap.getTweensOf(planBack)[0].vars.x).to.equal(-30);
 
     document.dispatchEvent(new MouseEvent("mousemove", { clientX: 1200 }));
-    jest.advanceTimersByTime(50);
+    vi.advanceTimersByTime(50);
     expect(gsap.getTweensOf(planFront)[0].vars.x).to.equal(0);
     expect(gsap.getTweensOf(planMiddle)[0].vars.x).to.equal(-30);
     expect(gsap.getTweensOf(planBack)[0].vars.x).to.equal(-60);
@@ -109,18 +109,18 @@ describe("parallax()", () => {
       width: 10,
     };
 
-    jest
-      .spyOn(scene, "getBoundingClientRect")
-      .mockImplementation(() => rectMock as DOMRect);
+    vi.spyOn(scene, "getBoundingClientRect").mockImplementation(
+      () => rectMock as DOMRect,
+    );
 
     // Simulate resize.
     rectMock = { left: 0, width: 1000 };
     window.dispatchEvent(new Event("resize"));
-    jest.advanceTimersByTime(100);
+    vi.advanceTimersByTime(100);
 
     // Simulate mousemove.
     document.dispatchEvent(new MouseEvent("mousemove", { clientX: 250 }));
-    jest.advanceTimersByTime(50);
+    vi.advanceTimersByTime(50);
     expect(gsap.getTweensOf(planFront)[0].vars.x).to.equal(0);
     expect(gsap.getTweensOf(planMiddle)[0].vars.x).to.equal(15);
     expect(gsap.getTweensOf(planBack)[0].vars.x).to.equal(30);
@@ -128,11 +128,11 @@ describe("parallax()", () => {
     // Simulate resize.
     rectMock = { left: 0, width: 100 };
     window.dispatchEvent(new Event("resize"));
-    jest.advanceTimersByTime(100);
+    vi.advanceTimersByTime(100);
 
     // Simulate mousemove.
     document.dispatchEvent(new MouseEvent("mousemove", { clientX: 75 }));
-    jest.advanceTimersByTime(50);
+    vi.advanceTimersByTime(50);
     expect(gsap.getTweensOf(planFront)[0].vars.x).to.equal(0);
     expect(gsap.getTweensOf(planMiddle)[0].vars.x).to.equal(-1.5);
     expect(gsap.getTweensOf(planBack)[0].vars.x).to.equal(-3);
@@ -146,7 +146,7 @@ describe("parallax()", () => {
     const planMiddle = document.createElement("div");
     const planBack = document.createElement("div");
 
-    jest.spyOn(scene, "getBoundingClientRect").mockReturnValue({
+    vi.spyOn(scene, "getBoundingClientRect").mockReturnValue({
       left: 0,
       width: 1000,
     } as DOMRect);
@@ -176,7 +176,7 @@ describe("parallax()", () => {
     expect(scene.classList.contains("parallax")).to.false;
 
     document.dispatchEvent(new MouseEvent("mousemove", { clientX: 750 }));
-    jest.advanceTimersByTime(50);
+    vi.advanceTimersByTime(50);
     expect(gsap.getTweensOf(planFront)).to.length(0);
     expect(gsap.getTweensOf(planMiddle)).to.length(0);
     expect(gsap.getTweensOf(planBack)).to.length(0);

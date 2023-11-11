@@ -1,7 +1,5 @@
-import { expect } from "chai";
-import createXmlElement, {
-  updateXmlElement,
-} from "../../src/core/createxmlelement";
+import createXmlElement, { updateXmlElement } from "../createxmlelement";
+import { describe, it, expect } from "vitest";
 
 describe("createXmlElement()", () => {
   it("should create XML element by default", () => {

@@ -5,6 +5,7 @@ import oscarSceneCreator from "./scenes/oscar/creator";
 import drawerSceneCreator from "./scenes/drawer/creator";
 import postcardSceneCreator from "./scenes/postcard/creator";
 
+import "./analytics";
 import "./app.css";
 
 const wrapperElement = document.querySelector("#scene") as HTMLDivElement;

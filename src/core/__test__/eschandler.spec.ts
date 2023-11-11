@@ -1,9 +1,9 @@
-import { expect } from "chai";
-import escHandler from "../../src/core/eschandler";
+import escHandler from "../eschandler";
+import { describe, it, vi, expect } from "vitest";
 
 describe("escHandler", () => {
   it("should handle esc key press", () => {
-    const spy = jest.fn();
+    const spy = vi.fn();
     const destructor = escHandler(spy);
 
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
@@ -19,7 +19,7 @@ describe("escHandler", () => {
   });
 
   it("should return destructor function to detach event", () => {
-    const spy = jest.fn();
+    const spy = vi.fn();
     const destructor = escHandler(spy);
 
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));

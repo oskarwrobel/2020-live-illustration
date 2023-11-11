@@ -1,5 +1,5 @@
-import { expect } from "chai";
-import toUnit from "../../src/core/tounit";
+import toUnit from "../tounit";
+import { describe, it, expect } from "vitest";
 
 describe("toUnit", () => {
   it("should return function that adds specified suffix to given value", () => {

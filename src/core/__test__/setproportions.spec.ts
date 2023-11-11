@@ -1,8 +1,8 @@
-import { expect } from "chai";
-import setProportions from "../../src/core/setproportions";
+import setProportions from "../setproportions";
+import { describe, it, vi, afterAll, expect } from "vitest";
 
 describe("setProportions", () => {
-  const windowSpy = jest.spyOn(window, "window", "get");
+  const windowSpy = vi.spyOn(window, "window", "get");
   function mockWindowSize(innerWidth: number, innerHeight: number) {
     const val = { innerWidth, innerHeight } as Window & typeof global;
     windowSpy.mockReturnValue(val);
