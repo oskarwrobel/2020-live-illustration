@@ -14,7 +14,8 @@
   "author": "Oskar Wrobel <kontakt@oskarwrobel.pl> (https://www.oskarwrobel.pl/)",
   "dependencies": {
     "gsap": "^3.12.2",
-    "lodash-es": "^4.17.21"
+    "lodash-es": "^4.17.21",
+    "url-join": "^5.0.0"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.9",

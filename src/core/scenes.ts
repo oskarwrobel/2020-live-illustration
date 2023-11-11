@@ -1,4 +1,5 @@
 import { throttle } from "lodash-es";
+import urlJoin from "url-join";
 import setProportions from "./setproportions";
 
 export type SceneCreator = (scenes: Scenes) => SceneDestructor;
@@ -91,7 +92,7 @@ export default class Scenes {
   }
 
   private _updateUrl(path: string): void {
-    history.pushState({ path }, "", window.location.pathname + "#" + path);
+    history.pushState({ path }, "", urlJoin(window.location.pathname, "#", path));
   }
 
   destroy(): void {
