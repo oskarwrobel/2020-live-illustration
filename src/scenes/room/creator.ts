@@ -23,32 +23,12 @@ import "./style.css";
 export default function roomSceneCreator(scenes: Scenes): SceneDestructor {
   const element = scenes.element;
 
-  const hallSvg = createSvgElement(
-    hallSvgString,
-    { id: "hall", class: "plan" },
-    element,
-  );
-  const dogSvg = createSvgElement(
-    dogSvgString,
-    { id: "dog", class: "plan" },
-    element,
-  );
+  const hallSvg = createSvgElement(hallSvgString, { id: "hall", class: "plan" }, element);
+  const dogSvg = createSvgElement(dogSvgString, { id: "dog", class: "plan" }, element);
   createSvgElement(skySvgString, { id: "sky", class: "plan" }, element);
-  const wallSvg = createSvgElement(
-    wallSvgString,
-    { id: "wall", class: "plan" },
-    element,
-  );
-  const lampSvg = createSvgElement(
-    lampSvgString,
-    { id: "lamp", class: "plan" },
-    element,
-  );
-  const tvSvg = createSvgElement(
-    tvSvgString,
-    { id: "tv", class: "plan" },
-    element,
-  );
+  const wallSvg = createSvgElement(wallSvgString, { id: "wall", class: "plan" }, element);
+  const lampSvg = createSvgElement(lampSvgString, { id: "lamp", class: "plan" }, element);
+  const tvSvg = createSvgElement(tvSvgString, { id: "tv", class: "plan" }, element);
 
   // Initialize parallax
   // -------------------------------------------------------------------------------------------------------------- //

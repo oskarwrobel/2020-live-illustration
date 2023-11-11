@@ -5,7 +5,8 @@
   "scripts": {
     "lint": "tsc --noEmit && eslint --quiet '**/*.{js,ts}'",
     "lint:fix": "eslint --fix '**/*.{js,ts}'",
-    "format:css": "prettier --write 'src/**/*.css'",
+    "lintCss": "prettier --check 'src/**/*.css'",
+    "lintCss:fix": "prettier --write 'src/**/*.css'",
     "test": "vitest",
     "start": "vite",
     "preview": "vite preview",
