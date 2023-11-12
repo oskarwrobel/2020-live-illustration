@@ -3,10 +3,8 @@
   "version": "0.0.1",
   "description": "Interactive illustration.",
   "scripts": {
-    "lint": "tsc --noEmit && eslint --quiet '**/*.{js,ts}'",
-    "lint:fix": "eslint --fix '**/*.{js,ts}'",
-    "lintCss": "prettier --check 'src/**/*.css'",
-    "lintCss:fix": "prettier --write 'src/**/*.css'",
+    "lint": "tsc --noEmit && eslint --quiet '**/*.{js,ts}' && prettier --check 'src/**/*.css'",
+    "lint:fix": "eslint --fix '**/*.{js,ts}' && prettier --write 'src/**/*.css'",
     "test": "vitest",
     "start": "vite",
     "preview": "vite preview",
@@ -30,7 +28,6 @@
     "lint-staged": "^15.1.0",
     "postcss-nesting": "^12.0.1",
     "prettier": "^3.0.3",
-    "ts-jest": "^29.1.1",
     "typescript": "^5.2.2",
     "vite": "^4.5.0",
     "vite-plugin-html": "^3.2.0",
@@ -42,11 +39,6 @@
       "eslint --quiet"
     ]
   },
-  "eslintIgnore": [
-    "dist/**",
-    "node_modules/**",
-    "src/analytics.js"
-  ],
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"

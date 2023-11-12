@@ -17,8 +17,5 @@ jobs:
     - name: Lint
       run: npm run lint
 
-    - name: CSS Lint
-      run: npm run lintCss
-
     - name: Test
       run: npm test -- --coverage
