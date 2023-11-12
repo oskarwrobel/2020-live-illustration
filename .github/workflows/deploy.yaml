@@ -18,7 +18,7 @@ jobs:
         run: npm ci
 
       - name: Building
-        run: npm run build
+        run: npm run build -- --base="/2020"
 
       - name: rsync deployments
         uses: burnett01/rsync-deployments@6.0.0
