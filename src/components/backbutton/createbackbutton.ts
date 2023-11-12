@@ -1,5 +1,5 @@
 import createSvgElement from "../../core/createsvgelement";
-import backSvgData from "./backbutton.svg";
+import backSvgData from "./images/backbutton.svg";
 import "./backbutton.css";
 
 export default function createBackButton(target: HTMLElement, onClick: () => void): HTMLButtonElement {

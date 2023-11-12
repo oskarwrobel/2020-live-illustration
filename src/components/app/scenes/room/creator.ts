@@ -1,7 +1,7 @@
-import Scenes, { SceneDestructor } from "../../core/scenes";
+import Scenes, { SceneDestructor } from "../../../../core/scenes";
 
-import createSvgElement from "../../core/createsvgelement";
-import parallax from "../../core/parallax";
+import createSvgElement from "../../../../core/createsvgelement";
+import parallax from "../../../../core/parallax";
 
 import windowWithBlinds from "./helpers/windowwithblinds";
 import dog from "./helpers/dog";

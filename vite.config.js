@@ -13,7 +13,7 @@ export default defineConfig({
   },
   plugins: [
     createHtmlPlugin({
-      entry: "/src/app.ts",
+      entry: "/src/index.ts",
       template: "public/index.html",
     }),
     svgo({

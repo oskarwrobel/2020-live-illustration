@@ -1,7 +1,7 @@
 import { gsap } from "gsap";
 import { random } from "lodash-es";
-import createClipPathElement from "../../../core/createclippathelement";
-import sendEvent from "../../../core/sendevent";
+import createClipPathElement from "../../../../../core/createclippathelement";
+import sendEvent from "../../../../../core/sendevent";
 
 type Channel = {
   screen: SVGGElement;

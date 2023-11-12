@@ -5,8 +5,7 @@
   },
   "ignorePatterns": [
     "coverage",
-    "dist",
-    "src/analytics.js"
+    "dist"
   ],
   "extends": [
     "eslint:recommended",

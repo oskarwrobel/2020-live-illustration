@@ -1,5 +1,5 @@
 import { random, throttle, clamp } from "lodash-es";
-import sendEvent from "../../../core/sendevent";
+import sendEvent from "../../../../../core/sendevent";
 
 let leftEyeOpened: HTMLElement;
 let leftEyeClosed: HTMLElement;

@@ -1,5 +1,4 @@
-import Scenes from "./core/scenes";
-
+import Scenes from "../../core/scenes";
 import roomSceneCreator from "./scenes/room/creator";
 import oscarSceneCreator from "./scenes/oscar/creator";
 import drawerSceneCreator from "./scenes/drawer/creator";
@@ -17,7 +16,9 @@ scenes
   .add("drawer", { creator: drawerSceneCreator, path: "/drawer" })
   .add("postcard", { creator: postcardSceneCreator, path: "/postcard" });
 
-showInitPage();
+export function app() {
+  showInitPage();
+}
 
 function showInitPage(): void {
   if (window.location.hash) {

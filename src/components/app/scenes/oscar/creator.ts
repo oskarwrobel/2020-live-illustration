@@ -1,10 +1,10 @@
-import Scenes, { SceneDestructor } from "../../core/scenes";
+import Scenes, { SceneDestructor } from "../../../../core/scenes";
 
-import createSvgElement from "../../core/createsvgelement";
-import createBackButton from "../../components/backbutton/createbackbutton";
-import parallax from "../../core/parallax";
-import escHandler from "../../core/eschandler";
-import sendEvent from "../../core/sendevent";
+import createSvgElement from "../../../../core/createsvgelement";
+import createBackButton from "../../../backbutton/createbackbutton";
+import parallax from "../../../../core/parallax";
+import escHandler from "../../../../core/eschandler";
+import sendEvent from "../../../../core/sendevent";
 
 import oscarSvgData from "./images/oscar.svg";
 import plantSvgData from "./images/plant.svg";

@@ -1,6 +1,6 @@
 import { gsap } from "gsap";
-import Scenes from "../../../core/scenes";
-import createClipPathElement from "../../../core/createclippathelement";
+import Scenes from "../../../../../core/scenes";
+import createClipPathElement from "../../../../../core/createclippathelement";
 
 export default function postcard(scenes: Scenes): () => void {
   document.querySelector("#postcard-small").addEventListener("click", () => {

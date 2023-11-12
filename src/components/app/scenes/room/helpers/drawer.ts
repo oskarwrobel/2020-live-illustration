@@ -1,5 +1,5 @@
 import { gsap } from "gsap";
-import Scenes from "../../../core/scenes";
+import Scenes from "../../../../../core/scenes";
 
 const shift = 95;
 const duration = 1;

@@ -1,11 +1,11 @@
-import Scenes, { SceneDestructor } from "../../core/scenes";
+import Scenes, { SceneDestructor } from "../../../../core/scenes";
 import { gsap } from "gsap";
 
-import createSvgElement from "../../core/createsvgelement";
-import escHandler from "../../core/eschandler";
-import hoverHandler from "../../core/hoverhandler";
-import sendEvent from "../../core/sendevent";
-import createBackButton from "../../components/backbutton/createbackbutton";
+import createSvgElement from "../../../../core/createsvgelement";
+import escHandler from "../../../../core/eschandler";
+import hoverHandler from "../../../../core/hoverhandler";
+import sendEvent from "../../../../core/sendevent";
+import createBackButton from "../../../backbutton/createbackbutton";
 
 import drawerSvgData from "./images/drawer.svg";
 

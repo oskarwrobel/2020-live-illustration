@@ -1,6 +1,6 @@
 import { gsap } from "gsap";
-import sendEvent from "../../../core/sendevent";
-import hoverHandler from "../../../core/hoverhandler";
+import sendEvent from "../../../../../core/sendevent";
+import hoverHandler from "../../../../../core/hoverhandler";
 
 export default function dog(): () => void {
   const smileAnimation = gsap.to("#smile", {
