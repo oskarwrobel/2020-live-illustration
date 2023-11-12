@@ -7,7 +7,6 @@ import { createHtmlPlugin } from "vite-plugin-html";
 import svgo from "vite-plugin-svgo";
 
 export default defineConfig({
-  base: process.env.base ?? "/",
   test: {
     environment: "jsdom",
   },
@@ -39,6 +38,6 @@ export default defineConfig({
     }),
   ],
   define: {
-    ANALYTICS: JSON.stringify(process.env.analytics),
+    ANALYTICS: JSON.stringify(process.env.ANALYTICS),
   },
 });

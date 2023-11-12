@@ -22,7 +22,7 @@ jobs:
       run: npm test -- --coverage
 
     - name: Build
-      run: npm run build -- --base="/2020"
+      run: ANALYTICS="UA-11153361-29" npm run build -- --base="/2020"
 
     - name: Deploy to production
       if: github.ref == 'refs/heads/master'
