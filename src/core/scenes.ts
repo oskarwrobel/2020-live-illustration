@@ -92,7 +92,7 @@ export default class Scenes {
   }
 
   private _updateUrl(path: string): void {
-    history.pushState({ path }, "", urlJoin(window.location.pathname, "#", path));
+    history.pushState({ path }, "", urlJoin(window.location.pathname, "/", "#", path));
   }
 
   destroy(): void {
