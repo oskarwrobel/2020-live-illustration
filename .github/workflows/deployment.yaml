@@ -1,25 +1,27 @@
-name: CI-CD
+name: Deployment
 
 on:
   push:
     branches:
-      - '*'
+      - master
 
 jobs:
-  CI-CD:
+  Test:
+    uses: ./.github/workflows/development.yaml
+
+  Deploy:
     runs-on: ubuntu-latest
+    needs: Test
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
 
     - name: Install modules
       run: npm ci
-
-    - name: Lint
-      run: npm run lint
-
-    - name: Test
-      run: npm test -- --coverage
 
     - name: Build
       run: ANALYTICS="UA-11153361-29" npm run build -- --base="/2020"
