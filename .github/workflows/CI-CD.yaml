@@ -1,4 +1,4 @@
-name: Deployment
+name: CI-CD
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   Test:
-    uses: ./.github/workflows/development.yaml
+    uses: ./.github/workflows/CI.yaml
 
   Deploy:
     runs-on: ubuntu-latest
